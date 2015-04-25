@@ -1,0 +1,6 @@
+Notes
+
+The push notifications section of this project is based on the HTML 5 Rocks post:
+Push Notifications on the Open Web -- 
+http://updates.html5rocks.com/2015/03/push-notificatons-on-the-open-web
+
