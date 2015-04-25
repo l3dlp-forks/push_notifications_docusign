@@ -9,5 +9,6 @@ cp ../push_notifications_docusign_private/config.js src/js/config.js
 cp ../push_notifications_docusign_private/manifest.json assets/manifest.json
 
 cp src/js/service-worker.js assets/service-worker.js
+cp src/js/demo.js assets/demo.js
 cat src/js/config.js src/js/register-service-worker.js > assets/main.js
 
