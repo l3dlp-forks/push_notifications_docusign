@@ -1,3 +1,6 @@
+assets/manifest.json
+src/js/config.js
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db

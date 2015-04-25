@@ -1,0 +1,6 @@
+//build.txt
+
+cp src/js/service-worker.js assets/service-worker.js
+
+cat src/js/config.js src/js/register-service-worker.js > assets/main.js
+
