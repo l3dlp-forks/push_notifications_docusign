@@ -3,6 +3,11 @@
 # cd ~/widgetsign.com; rm -rf push_notifications_docusign; git clone git://github.com/larrykluger/push_notifications_docusign; cd push_notifications_docusign; sh ./src/build.txt
 
 mkdir -p assets
+
+# move private files into dir
+cp ../push_notifications_docusign_private/config.js src/js/config.js
+cp ../push_notifications_docusign_private/manifest.json assets/manifest.json
+
 cp src/js/service-worker.js assets/service-worker.js
 cat src/js/config.js src/js/register-service-worker.js > assets/main.js
 
