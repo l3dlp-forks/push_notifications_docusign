@@ -1,5 +1,5 @@
 {
     "require": {
-        "larrykluger/php-gds": "@dev"
+		"larrykluger/php-gds": "1.0.*@beta"
     }
 }
