@@ -1,6 +1,7 @@
 assets/manifest.json
 src/js/config.js
 vendor
+composer.lock
 
 
 # Windows image file caches
