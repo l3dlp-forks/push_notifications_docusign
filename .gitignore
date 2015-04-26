@@ -1,5 +1,5 @@
-assets/manifest.json
-src/js/config.js
+client/assets/manifest.json
+src/client/js/config.js
 
 # Windows image file caches
 Thumbs.db

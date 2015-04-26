@@ -1,7 +1,6 @@
 // config-example.js
 
 var pnds = {}; // Push Notifications DocuSign
-pnds.service_worker_url = "/assets/service-worker.js";
 pnds.API_KEY = '<YOUR API KEY>';
 
 ///////////////////////////////////////////////////////////////////////
