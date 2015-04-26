@@ -1,5 +1,5 @@
 {
     "require": {
-        "larrykluger/php-gds": "dev-master"
+        "larrykluger/php-gds": "@dev"
     }
 }
