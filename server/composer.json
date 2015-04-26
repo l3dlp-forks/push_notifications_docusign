@@ -1,5 +1,20 @@
 {
-    "require": {
-		"larrykluger/php-gds": "1.0.*@beta"
+"repositories": [{
+    "type": "package",
+    "package": {
+        "version": "dev-master",
+        "name": "larrykluger/php-gds",
+        "source": {
+            "url": "https://github.com/larrykluger/php-gds",
+            "type": "git",
+            "reference": "master"
+        }
     }
+}],
+"require": {
+    "php": ">=5.3.3",
+    "larrykluger/php-gds": "dev-master",
+	"google/apiclient": "1.0.*@beta"
+}
+
 }
