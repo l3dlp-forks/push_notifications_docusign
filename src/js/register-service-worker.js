@@ -4,6 +4,7 @@
 
 'use strict';
 pnds.isPushEnabled = false;
+pnds.service_worker_url = "service-worker.js";
 
 var curlCommandDiv = document.querySelector('.js-curl-command');
 
