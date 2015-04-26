@@ -4,7 +4,7 @@
 
 # move private files into dir
 cp ../push_notifications_docusign_private/config.js src/client/js/config.js
-cp ../push_notifications_docusign_private/manifest.json assets/manifest.json
+cp ../push_notifications_docusign_private/manifest.json client/assets/manifest.json
 
 cat src/client/js/config.js src/client/js/register-service-worker.js > client/assets/main.js
 
