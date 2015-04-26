@@ -2,6 +2,7 @@ client/assets/manifest.json
 src/client/js/config.js
 server/vendor/google
 server/vendor/larrykluger
+server/vendor/composer
 
 
 # Windows image file caches
