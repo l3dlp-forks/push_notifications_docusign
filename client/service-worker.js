@@ -1,4 +1,8 @@
 // Based on https://github.com/GoogleChrome/samples/blob/gh-pages/push-messaging-and-notifications/service-worker.js
+// More information:
+// Spec - http://slightlyoff.github.io/ServiceWorker/spec/service_worker
+// Info - https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorker_API/Using_Service_Workers
+
 
 'use strict';
 
@@ -7,16 +11,19 @@ self.addEventListener('push', function(event) {
 
   var title = 'Yay a message.';
   var body = 'We have received a push message.';
-  var icon = '/images/icon-192x192.png';
+  var icon = 'images/icon-192x192.png';
   var tag = 'simple-push-demo-notification-tag';
+  
+  self.registration.pushManager.getSubscription()
+	.then(function(subscription) {
+		body = "Sub ID = " + subscription.subscriptionId +
+			"Endpoint = " + subscription.endpoint;
 
-  event.waitUntil(
-    self.registration.showNotification(title, {
-      body: body,
-      icon: icon,
-      tag: tag
-    })
-  );
+		event.waitUntil(
+			self.registration.showNotification(title, {
+				body: body, icon: icon, tag: tag})
+		);
+	});
 });
 
 
