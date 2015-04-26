@@ -8,3 +8,8 @@ cp ../push_notifications_docusign_private/manifest.json client/assets/manifest.j
 
 cat src/client/js/config.js src/client/js/register-service-worker.js > client/assets/main.js
 
+# bring in repos for server
+(cd server; composer update)
+
+
+
