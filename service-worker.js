@@ -14,16 +14,27 @@ self.addEventListener('push', function(event) {
   var icon = 'images/icon-192x192.png';
   var tag = 'simple-push-demo-notification-tag';
   
-  self.registration.pushManager.getSubscription()
-	.then(function(subscription) {
-		body = "Sub ID = " + subscription.subscriptionId +
-			"Endpoint = " + subscription.endpoint;
-
-		event.waitUntil(
-			self.registration.showNotification(title, {
-				body: body, icon: icon, tag: tag})
-		);
-	});
+  // private state...
+  var subscription;
+  
+  var process_push = function(sub) {
+	subscription = sub;
+	fetch_info();
+	// Notify the user
+	event.waitUntil(
+		self.registration.showNotification(title, {
+			body: body, icon: icon, tag: tag})
+	);
+  }
+  
+  function fetch_info() {
+  // http://updates.html5rocks.com/2015/03/introduction-to-fetch
+  
+  
+  }
+  
+  // mainline
+  self.registration.pushManager.getSubscription().then(process_push);
 });
 
 
