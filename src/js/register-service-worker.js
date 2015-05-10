@@ -36,7 +36,7 @@ function unsubscribe() {
   curlCommandDiv.textContent = '';
 
   navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
-    // To unsubscribe from push messaging, you need get the
+    // To unsubscribe from push messaging, you need to get the
     // subscription object, which you can call unsubscribe() on.
     serviceWorkerRegistration.pushManager.getSubscription().then(
       function(pushSubscription) {

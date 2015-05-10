@@ -7,3 +7,20 @@ http://updates.html5rocks.com/2015/03/push-notificatons-on-the-open-web
 GOOGLE DATASTORE
 Intro: https://cloud.google.com/datastore/docs/concepts/overview
 php library: https://github.com/tomwalder/php-gds
+google api client php  -- https://developers.google.com/api-client-library/php/start/installation
+
+
+fetch
+http://updates.html5rocks.com/2015/03/introduction-to-fetch#disqus_thread
+
+push demo
+https://github.com/gauntface/simple-push-demo
+
+push demo author blog post
+https://gauntface.com/blog/2014/12/15/push-notifications-service-worker
+
+another sample push example
+https://github.com/GoogleChrome/samples/tree/gh-pages/push-messaging-and-notifications
+
+google developers panel
+https://console.developers.google.com/project/lsk-push-ds1
