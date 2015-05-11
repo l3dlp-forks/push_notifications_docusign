@@ -188,10 +188,10 @@ $(document).ready(function () {
 //
 // utilities
 	function post_message(msg) { // msg can include html
-		$('#butter-bar).show().html(msg);
+		$('#butter-bar').show().html(msg);
 	}
 	function hide_message() {
-		$('#butter-bar).hide();
+		$('#butter-bar').hide();
 	}
 
 ///////////////////////////////////////////////////////////////////////
