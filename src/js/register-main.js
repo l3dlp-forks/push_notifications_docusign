@@ -208,7 +208,7 @@ $(document).ready(function () {
 		.then(initialiseState);
 	} else {
 		// The specific problem is that service workers aren't supported. 
-		post_message('Problem: this browser does not support notifications. Please see below. <br /><small>Issue: Service workers aren\'t supported</small>');
+		post_message('<p>Problem: this browser does not support notifications. <br />Please see below. </p><small>Issue: Service workers aren\'t supported</small>');
 	}
 
 });
