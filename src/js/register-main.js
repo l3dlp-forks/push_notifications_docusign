@@ -193,6 +193,10 @@ $(document).ready(function () {
 	function hide_message() {
 		$('#butter-bar').hide();
 	}
+	function prepare_butter_bar() {
+		// switch from css to js invisibility
+		$('#butter-bar').hide().removeClass('invisible');
+	}
 
 ///////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////
@@ -201,6 +205,7 @@ $(document).ready(function () {
 	pnds.isPushEnabled = false;
 	pnds.service_worker_url = "service-worker.js";
 	add_events();
+	prepare_butter_bar();
 	// Check that service workers are supported, if so, progressively
 	// enhance and add push messaging support, otherwise continue without it.
 	if (! 'serviceWorker' in navigator) {
@@ -208,7 +213,7 @@ $(document).ready(function () {
 		.then(initialiseState);
 	} else {
 		// The specific problem is that service workers aren't supported. 
-		post_message('<p>Problem: this browser does not support notifications. <br />Please see below. </p><small>Issue: Service workers aren\'t supported</small>');
+		post_message('<p>Problem: this browser does not support notifications. <br />Please see the browser support information below. </p><small>Issue: Service workers aren\'t supported</small>');
 	}
 
 });
