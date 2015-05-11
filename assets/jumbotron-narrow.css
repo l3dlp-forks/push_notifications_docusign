@@ -89,3 +89,6 @@ body {
 @media screen and (min-width: 768px) {
 	.jumbotron .h1, .jumbotron h1 {font-size: 43px;}
 }
+.bg-warning {
+  background-color: #FFDE18;
+}

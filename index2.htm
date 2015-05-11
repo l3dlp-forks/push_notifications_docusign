@@ -46,12 +46,12 @@ define ('INDEX', true);
         <h1>DocuSign Push Notifications Example</h1>
         <p class="lead">Uses the HTML5 Notifications API to alert you when your document has been DocuSigned.</p>
         <p class="invisible"><a class="btn btn-lg btn-success" href="#" role="button">Sign up today</a></p>
-		<p class="bg-warning">Problem: Your browser does not support the Notifications API</p>
+		<p class="bg-warning">Problem: Your browser does not support the Notifications API. Please see below for more information</p>
       </div>
 
       <div class="row marketing">
         <div class="col-lg-6">
-          <h4>Subheading</h4>
+          <h4>Browser Support</h4>
           <p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>
         </div>
       </div>
@@ -70,19 +70,6 @@ define ('INDEX', true);
 	
     <script src="https://code.jquery.com/jquery.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-	<script>
-	$(document).ready(function () {
-      // Use .ready may not be necessary, see http://goo.gl/aAhs  but we'll be
-	  // conservative and include it.
-      function add_events(){
-        $('#sign_btn').on('click', function (e) {
-		  window.location="sign_start.php";
-		  // See http://goo.gl/ltHjD
-		  $('#start_signing').modal({keyboard: false, backdrop: 'static'});
-		});
-      }
-	  add_events();
-    });
-    </script>	
+    <script src="assets/register.js"></script>
   </body>
 </html>
