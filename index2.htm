@@ -45,7 +45,15 @@ define ('INDEX', true);
       <div class="jumbotron">
         <h1>DocuSign Push Notifications Example</h1>
         <p class="lead">Uses the HTML5 Notifications API to alert you when your document has been DocuSigned.</p>
-        <p class="invisible"><a id="btn-subscribe" class="btn btn-lg btn-success" href="#" role="button">Notify me!</a></p>
+
+		<form class="form-inline invisible" id="form-subscribe">
+			<div class="checkbox">
+				<label>
+				  <input id="private" type="checkbox"> Private machine
+				</label>
+			</div>
+			<button type="submit" id="btn-subscribe" class="btn btn-lg btn-primary">Notify me!</button>
+		</form>		
 		<div class="bg-warning invisible" id="butter-bar"></div>
       </div>
 
@@ -58,9 +66,9 @@ define ('INDEX', true);
     </div> <!-- /container -->
 
 	<!-- Modal - See http://twitter.github.io/bootstrap/javascript.html#modals  -->
-	<div id="start_signing" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div id="subscribe" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	  <div class="modal-header">
-		<h3 id="myModalLabel">Processing…</h3>
+		<h3 id="myModalLabel">Subscribe to Push Notifications</h3>
 	  </div>
 	  <div class="modal-body">
 		<p>We're processing your request.</p>

@@ -7,7 +7,8 @@
 $(document).ready(function () {
     // Use .ready may not be necessary, see http://goo.gl/aAhs  but we'll be
 	// conservative and include it.
-    function add_events(){
+    function add_eventsXXXXXXXXXXXXXXXXXXXXXXXXX(){
+	// need to do this for each button shown in subscription list
 		$('#btn-subscribe').on('click', function (e) {
 			if (pnds.isPushEnabled) {unsubscribe();} else {subscribe();}
 		});
@@ -132,7 +133,7 @@ $(document).ready(function () {
 	function initialiseState() {
 	  // Are Notifications supported in the service worker?
 	  if (!('showNotification' in ServiceWorkerRegistration.prototype)) {
-		window.Demo.debug.log('Notifications aren\'t supported.');
+		post_message('<p>Problem: this browser does not support notifications. <br />Please see the browser support information below. </p><small>Issue: showNotification isn\'t supported by ServiceWorkerRegistration</small>');
 		return;
 	  }
 
@@ -140,13 +141,13 @@ $(document).ready(function () {
 	  // If its denied, it's a permanent block until the
 	  // user changes the permission
 	  if (Notification.permission === 'denied') {
-		window.Demo.debug.log('The user has blocked notifications.');
+		post_message('<p>Problem: you or someone else, has blocked notifications.</p><small>Issue: Notification.permission is \'denied\'</small>');
 		return;
 	  }
 
 	  // Check if push messaging is supported
 	  if (!('PushManager' in window)) {
-		window.Demo.debug.log('Push messaging isn\'t supported.');
+		post_message('<p>Problem: this browser does not support notifications. <br />Please see the browser support information below. </p><small>Issue: Push messaging isn\'t supported.</small>');
 		return;
 	  }
 
@@ -155,25 +156,23 @@ $(document).ready(function () {
 		// Do we already have a push message subscription?
 		serviceWorkerRegistration.pushManager.getSubscription()
 		  .then(function(subscription) {
-			// Enable any UI which subscribes / unsubscribes from
+			// Enable the UI which subscribes / unsubscribes from
 			// push messages.
-			var pushButton = document.querySelector('.js-push-button');
-			pushButton.disabled = false;
 
 			if (!subscription) {
-			  // We aren’t subscribed to push, so set UI
-			  // to allow the user to enable push
-			  return;
+				// We aren’t subscribed to push, so set UI
+				// to allow the user to enable push
+				add_subscription_enable();
+				return;
 			}
 
 			// Keep your server in sync with the latest subscriptionId
 			sendSubscriptionToServer(subscription);
 			
-			showCurlCommand(subscription);
-
-			// Set your UI to show they have subscribed for
+			// Set UI to show they have subscribed for
 			// push messages
-			pushButton.textContent = 'Disable Push Messages';
+			show_subscriptions(subscription);
+			add_subscription_enable();
 			pnds.isPushEnabled = true;
 		  })
 		  .catch(function(err) {
@@ -182,21 +181,41 @@ $(document).ready(function () {
 	  });
 	}
 
+	
+///////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////
+//
+// 	Enable user to add a subscription
+	function add_subscription_enable() (
+		$('#form-subscribe').show();
+	}
+	var subscribe_click = function(e) {
+		  $('#subscribe').modal({keyboard: false, backdrop: 'static'});
+
+	
+	
 
 ///////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////
 //
 // utilities
+	function prepare_invisible() {
+		// switch from css to js invisibility
+		$('.invisible').hide().removeClass('invisible');
+	}
+	function add_events(){
+        $('#btn-subscribe').on('click', subscribe_click);
+      }
+
 	function post_message(msg) { // msg can include html
 		$('#butter-bar').show().html(msg);
 	}
 	function hide_message() {
 		$('#butter-bar').hide();
 	}
-	function prepare_butter_bar() {
-		// switch from css to js invisibility
-		$('#butter-bar').hide().removeClass('invisible');
-	}
+
+// pushbutton
+	
 
 ///////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////
@@ -205,10 +224,10 @@ $(document).ready(function () {
 	pnds.isPushEnabled = false;
 	pnds.service_worker_url = "service-worker.js";
 	add_events();
-	prepare_butter_bar();
+	prepare_invisible();
 	// Check that service workers are supported, if so, progressively
 	// enhance and add push messaging support, otherwise continue without it.
-	if (! 'serviceWorker' in navigator) {
+	if ('serviceWorker' in navigator) {
 		navigator.serviceWorker.register(pnds.service_worker_url)
 		.then(initialiseState);
 	} else {

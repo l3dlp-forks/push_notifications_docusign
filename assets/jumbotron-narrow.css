@@ -90,5 +90,9 @@ body {
 	.jumbotron .h1, .jumbotron h1 {font-size: 43px;}
 }
 .bg-warning {
-  background-color: #FFDE18;
+	background-color: #FFDE18;
+}
+#butter-bar {
+	padding: 15px;
+	border-radius: 6px;
 }
