@@ -186,12 +186,12 @@ $(document).ready(function () {
 ///////////////////////////////////////////////////////////////////////
 //
 // 	Enable user to add a subscription
-	function add_subscription_enable() (
+	function add_subscription_enable() {
 		$('#form-subscribe').show();
 	}
 	var subscribe_click = function(e) {
 		  $('#subscribe').modal({keyboard: false, backdrop: 'static'});
-
+    }
 	
 	
 
