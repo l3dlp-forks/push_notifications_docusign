@@ -41,9 +41,9 @@ $(document).ready(function () {
 //
 // unsubscribe
 	function unsubscribe() {
-	  var pushButton = document.querySelector('.js-push-button');
-	  pushButton.disabled = true;
-	  curlCommandDiv.textContent = '';
+	//  var pushButton = document.querySelector('.js-push-button');
+	//  pushButton.disabled = true;
+	//  curlCommandDiv.textContent = '';
 
 	  navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
 		// To unsubscribe from push messaging, you need to get the
@@ -55,8 +55,8 @@ $(document).ready(function () {
 			  // No subscription object, so set the state
 			  // to allow the user to subscribe to push
 			  pnds.isPushEnabled = false;
-			  pushButton.disabled = false;
-			  pushButton.textContent = 'Enable Push Messages';
+		//	  pushButton.disabled = false;
+		//	  pushButton.textContent = 'Enable Push Messages';
 			  return;
 			}
 			
@@ -67,8 +67,8 @@ $(document).ready(function () {
 
 			// We have a subscription, so call unsubscribe on it
 			pushSubscription.unsubscribe().then(function(successful) {
-			  pushButton.disabled = false;
-			  pushButton.textContent = 'Enable Push Messages';
+			//  pushButton.disabled = false;
+			//  pushButton.textContent = 'Enable Push Messages';
 			  pnds.isPushEnabled = false;
 			}).catch(function(e) {
 			  // We failed to unsubscribe, this can lead to
@@ -81,8 +81,8 @@ $(document).ready(function () {
 			  // ####################################################################			  
 			  // ####################################################################
 			  // rm all debug log calls
-			  window.Demo.debug.log('Unsubscription error: ', e);
-			  pushButton.disabled = false;
+			  //window.Demo.debug.log('Unsubscription error: ', e);
+			  //pushButton.disabled = false;
 			});
 		  }).catch(function(e) {
 			window.Demo.debug.log('Error thrown while unsubscribing from push messaging.', e);
@@ -97,18 +97,18 @@ $(document).ready(function () {
 	function subscribe() {
 	  // Disable the button so it can't be changed while
 	  // we process the permission request
-	  var pushButton = document.querySelector('.js-push-button');
-	  pushButton.disabled = true;
+	  //var pushButton = document.querySelector('.js-push-button');
+	  //pushButton.disabled = true;
 
 	  navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
 		serviceWorkerRegistration.pushManager.subscribe()
 		  .then(function(subscription) {
 			// The subscription was successful
 			pnds.isPushEnabled = true;
-			pushButton.textContent = 'Disable Push Messages';
-			pushButton.disabled = false;
+		//	pushButton.textContent = 'Disable Push Messages';
+		//	pushButton.disabled = false;
 
-			showCurlCommand(subscription);
+		//	showCurlCommand(subscription);
 
 			// TODO: Send the subscription.subscriptionId and 
 			// subscription.endpoint to your server
