@@ -236,7 +236,7 @@ $(document).ready(function () {
 	}
 	function add_events(){
         $('#btn-subscribe').on('click', subscribe_click);
-		$('#private').on('click', private_click);
+		$('#private').on('change', private_click);
       }
 
 	function post_message(msg) { // msg can include html
