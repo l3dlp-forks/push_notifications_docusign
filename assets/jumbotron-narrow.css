@@ -96,3 +96,24 @@ body {
 	padding: 15px;
 	border-radius: 6px;
 }
+
+.jumbotron .btn {
+  padding: 6px 12px;
+  font-size: 14px;
+}
+
+.checkbox {
+  margin-right: 15px;
+}
+#private {
+  width: 40px;
+  height: 40px;
+}
+#private {
+  margin-bottom: 15px;
+  font-size: 21px;
+  font-weight: 200;
+}
+
+
+
