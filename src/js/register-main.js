@@ -204,9 +204,9 @@ $(document).ready(function () {
 		// The user clicked the Private checkbox.
 		// Set disabled state of the subscribe pushbutton
 		if ($('#private').is(':checked')) {
-			$('#subscribe').removeAttr('disabled');
+			$('#btn-subscribe').removeAttr('disabled');
 		} else {
-			$('#subscribe').attr('disabled', 'disabled');
+			$('#btn-subscribe').attr('disabled', 'disabled');
 		}
     }
 	
