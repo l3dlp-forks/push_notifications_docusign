@@ -7,7 +7,11 @@
 $(document).ready(function () {
     // Use .ready may not be necessary, see http://goo.gl/aAhs  but we'll be
 	// conservative and include it.
-    function add_eventsXXXXXXXXXXXXXXXXXXXXXXXXX(){
+    
+	var cookie_name = 'push_subscriber';
+	
+	
+	function add_eventsXXXXXXXXXXXXXXXXXXXXXXXXX(){
 	// need to do this for each button shown in subscription list
 		$('#btn-subscribe').on('click', function (e) {
 			if (pnds.isPushEnabled) {unsubscribe();} else {subscribe();}
@@ -176,8 +180,8 @@ $(document).ready(function () {
 			
 			// Set UI to show they have subscribed for
 			// push messages
-			show_subscription(subscription);
 			pnds.isPushEnabled = true;
+			show_subscription(subscription);
 		  })
 		  .catch(function(err) {
 			window.Demo.debug.log('Error during getSubscription()', err);
@@ -212,6 +216,13 @@ $(document).ready(function () {
 //
 // 	Show current subscription
 	function show_subscription() {
+		// Check that our cookie is present
+		var cookie_val = Cookies.get(cookie_name);
+		if (!cookie_val || cookie_val.length < 1) {			
+			post_message('<p>Problem: Notification issue. Please re-subscribe.</p><small>Issue: Subscribed but missing cookie</small>');
+			unsubscribe();
+			return;
+		}
 	
 	}
 	
