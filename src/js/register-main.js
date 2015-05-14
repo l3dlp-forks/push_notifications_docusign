@@ -176,8 +176,7 @@ $(document).ready(function () {
 			
 			// Set UI to show they have subscribed for
 			// push messages
-			show_subscriptions(subscription);
-			add_subscription_enable();
+			show_subscription(subscription);
 			pnds.isPushEnabled = true;
 		  })
 		  .catch(function(err) {
@@ -195,15 +194,24 @@ $(document).ready(function () {
 		$('#form-subscribe').show();
 	}
 	var subscribe_click = function(e) {
-		  $('#subscribe').modal({keyboard: false, backdrop: 'static'});
+		$('#subscribe').modal({keyboard: false, backdrop: 'static'});
+    }
+	var private_click = function(e) {
+		// The user clicked the Private checkbox.
+		// Set disabled state of the subscribe pushbutton
+		if ($('#private').is(':checked')) {
+			$('#subscribe').removeAttr('disabled');
+		} else {
+			$('#subscribe').attr('disabled', 'disabled');
+		}
     }
 	
 	
 ///////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////
 //
-// 	Show current subscriptions
-	function show_subscriptions() {
+// 	Show current subscription
+	function show_subscription() {
 	
 	}
 	
@@ -217,6 +225,7 @@ $(document).ready(function () {
 	}
 	function add_events(){
         $('#btn-subscribe').on('click', subscribe_click);
+		$('#private').on('click', private_click);
       }
 
 	function post_message(msg) { // msg can include html
