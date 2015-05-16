@@ -49,15 +49,32 @@ define ('INDEX', true);
 		<form class="form-inline invisible" id="form-subscribe">
 			<div class="checkbox">
 				<label>
-				  <input id="private" type="checkbox"> This is not a public computer
+				  Please confirm: <input id="private" type="checkbox"> This is not a public computer
 				</label>
 			</div>
 			<button type="submit" id="btn-subscribe" class="btn btn-primary" disabled="disabled">Notify me!</button>
-		</form>		
+		</form>
+		<form class="form-inline" invisible id="form-auth">
+		  <span>Please enter your DocuSign user information</span>
+		  <div class="form-group">
+			<label for="email">Email</label>
+			<input type="text" class="form-control" id="email">
+		  </div>
+		  <div class="form-group">
+			<label for="pw">Password</label>
+			<input type="password" class="form-control" id="pw">
+		  </div>
+		  <button type="submit" class="btn btn-default">Authenticate with DocuSign</button>
+		</form>
+		
 		<div class="bg-warning invisible" id="butter-bar"></div>
       </div>
 
       <div class="row marketing">
+        <div class="col-lg-6">
+          <h4>Overall Status</h4>
+          <p id="status"></p>
+        </div>
         <div class="col-lg-6">
           <h4>Browser Support</h4>
           <p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>

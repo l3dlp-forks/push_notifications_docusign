@@ -18,11 +18,18 @@ $(document).ready(function () {
 		});
     }
 
-	function sendSubscriptionToServer(subscription) {
+	function send_subscription_to_server(subscription) {
 	  // TODO: Send the subscription.subscriptionId and 
 	  // subscription.endpoint to your server and save 
 	  // it to send a push message at a later date
-	  console.log('TODO: Implement sendSubscriptionToServer()');
+	  console.log('TODO: Implement send_subscription_to_server()');
+	}
+
+	function send_unsubscribe_to_server(subscription) {
+	  // TODO: Send the subscription.subscriptionId and 
+	  // subscription.endpoint to your server and save 
+	  // it to send a push message at a later date
+	  console.log('TODO: Implement send_subscription_to_server()');
 	}
 
 	function showCurlCommand(subscription) {
@@ -43,52 +50,50 @@ $(document).ready(function () {
 	function unsubscribe() {
 	//  var pushButton = document.querySelector('.js-push-button');
 	//  pushButton.disabled = true;
-	//  curlCommandDiv.textContent = '';
 
-	  navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
-		// To unsubscribe from push messaging, you need to get the
-		// subscription object, which you can call unsubscribe() on.
-		serviceWorkerRegistration.pushManager.getSubscription().then(
-		  function(pushSubscription) {
-			// Check we have a subscription to unsubscribe
-			if (!pushSubscription) {
-			  // No subscription object, so set the state
-			  // to allow the user to subscribe to push
-			  pnds.isPushEnabled = false;
-		//	  pushButton.disabled = false;
-		//	  pushButton.textContent = 'Enable Push Messages';
-			  return;
-			}
-			
-			var subscriptionId = pushSubscription.subscriptionId;
-			// TODO: Make a request to your server to remove
-			// the subscriptionId from your data store so you 
-			// don't attempt to send them push messages anymore
-
-			// We have a subscription, so call unsubscribe on it
-			pushSubscription.unsubscribe().then(function(successful) {
-			//  pushButton.disabled = false;
-			//  pushButton.textContent = 'Enable Push Messages';
-			  pnds.isPushEnabled = false;
-			}).catch(function(e) {
-			  // We failed to unsubscribe, this can lead to
-			  // an unusual state, so may be best to remove 
-			  // the subscription id from your data store and 
-			  // inform the user that you disabled push
-
-			  
-			  // ####################################################################
-			  // ####################################################################			  
-			  // ####################################################################
-			  // rm all debug log calls
-			  //window.Demo.debug.log('Unsubscription error: ', e);
-			  //pushButton.disabled = false;
+		navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
+			// To unsubscribe from push messaging, you need to get the
+			// subscription object, which you can call unsubscribe() on.
+			serviceWorkerRegistration.pushManager.getSubscription().then(
+				function(subscription) {
+					// Check we have a subscription to unsubscribe
+					if (!subscription) {
+						// No subscription object, so reset state
+						pnds.isPushEnabled = false;
+						add_subscription_enable();
+						return;
+					}
+				
+					// We have a subscription, so call unsubscribe on it
+					internal_unsubscribe(subscription);
+				}
+			).catch(function(e) {
+				window.Demo.debug.log('Problem from Push Manager.', e);
+				post_message('<p>Unsubscribed.</p><small>Issue: Problem with Push Manager</small>');
 			});
-		  }).catch(function(e) {
-			window.Demo.debug.log('Error thrown while unsubscribing from push messaging.', e);
-		  });
-	  });
+		});
 	}
+
+	function internal_unsubscribe(subscription) {
+		subscription.unsubscribe().then(function(successful) {
+			unsubscribed(subscription);
+			post_message('<p>Unsubscribed.</p>');
+		}).catch(function(e) {
+			// We failed to unsubscribe, this can lead to
+			// an unusual state, so may be best to remove 
+			// the subscription id from your data store and 
+			// inform the user that you disabled push
+			unsubscribed(subscription);
+			post_message('<p>Unsubscribed.</p><small>Issue: Problem with unsubscribing</small>');
+		});
+	}
+	
+	function unsubscribed(subscription) {
+		pnds.isPushEnabled = false;
+		send_unsubscribe_to_server(subscription);
+		add_subscription_enable();	
+	}
+
 
 ///////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////
@@ -113,7 +118,7 @@ $(document).ready(function () {
 			// TODO: Send the subscription.subscriptionId and 
 			// subscription.endpoint to your server
 			// and save it to send a push message at a later date
-			return sendSubscriptionToServer(subscription);
+			return send_subscription_to_server(subscription);
 		  })
 		  .catch(function(e) {
 			if (Notification.permission === 'denied') {
@@ -142,6 +147,7 @@ $(document).ready(function () {
 	function initialiseState() {
 	  // Are Notifications supported in the service worker?
 	  if (!('showNotification' in ServiceWorkerRegistration.prototype)) {
+		post_status('Notifications are not enabled.');
 		post_message('<p>Problem: this browser does not support notifications. <br />Please see the browser support information below. </p><small>Issue: showNotification isn\'t supported by ServiceWorkerRegistration</small>');
 		return;
 	  }
@@ -150,12 +156,14 @@ $(document).ready(function () {
 	  // If its denied, it's a permanent block until the
 	  // user changes the permission
 	  if (Notification.permission === 'denied') {
-		post_message('<p>Problem: you or someone else, has blocked notifications.</p><small>Issue: Notification.permission is \'denied\'</small>');
+		post_status('Notifications are not enabled.');
+		post_message('<p>Problem: A user has blocked notifications.</p><small>Issue: Notification.permission is \'denied\'</small>');
 		return;
 	  }
 
 	  // Check if push messaging is supported
 	  if (!('PushManager' in window)) {
+		post_status('Notifications are not enabled.');
 		post_message('<p>Problem: this browser does not support notifications. <br />Please see the browser support information below. </p><small>Issue: Push messaging isn\'t supported.</small>');
 		return;
 	  }
@@ -165,31 +173,38 @@ $(document).ready(function () {
 		// Do we already have a push message subscription?
 		serviceWorkerRegistration.pushManager.getSubscription()
 		  .then(function(subscription) {
-			// Enable the UI which subscribes / unsubscribes from
-			// push messages.
-
+		  
 			if (!subscription) {
 				// We aren’t subscribed to push, so set UI
-				// to allow the user to enable push
+				// to allow the user to request push subscription
+				post_status('Notifications are not enabled.');
 				add_subscription_enable();
-				return;
+				return; //// early return
 			}
 
-			// Keep your server in sync with the latest subscriptionId
-			sendSubscriptionToServer(subscription);
-			
-			// Set UI to show they have subscribed for
-			// push messages
+			// We're currently subscribed!!
+			// Check that our cookie is present
+			var cookie_val = Cookies.get(cookie_name);
+			if (!cookie_val || cookie_val.length < 1) {			
+				post_status('Notifications are not enabled.');
+				post_message('<p>Problem: Notification issue. Please re-subscribe.</p><small>Issue: Subscribed but missing cookie</small>');
+				internal_unsubscribe(subscription);
+				return;
+			}
 			pnds.isPushEnabled = true;
+			// Keep server in sync with the latest subscriptionId
+			send_subscription_to_server(subscription);
+			// Set UI to show that we are subscribed for push messages
+			post_status('Notifications are enabled!');
 			show_subscription(subscription);
 		  })
 		  .catch(function(err) {
-			window.Demo.debug.log('Error during getSubscription()', err);
+    		post_status('Notifications are not enabled.');
+			post_message('<p>Problem with current notification subscription</p><small>Issue: Error from Push Manager.</small>');
 		  });
 	  });
 	}
 
-	
 ///////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////
 //
@@ -216,13 +231,6 @@ $(document).ready(function () {
 //
 // 	Show current subscription
 	function show_subscription() {
-		// Check that our cookie is present
-		var cookie_val = Cookies.get(cookie_name);
-		if (!cookie_val || cookie_val.length < 1) {			
-			post_message('<p>Problem: Notification issue. Please re-subscribe.</p><small>Issue: Subscribed but missing cookie</small>');
-			unsubscribe();
-			return;
-		}
 	
 	}
 	
@@ -239,6 +247,9 @@ $(document).ready(function () {
 		$('#private').on('change', private_click);
       }
 
+	function post_status(msg) {
+		$('#status').html(msg);	
+	}
 	function post_message(msg) { // msg can include html
 		$('#butter-bar').show().html(msg);
 	}
