@@ -210,7 +210,7 @@ $(document).ready(function () {
 //
 // 	Enable user to add a subscription
 	function add_subscription_enable() {
-		$('#form-subscribe').show();
+		$('#form-subscribe').collapse('show');
 	}
 	var subscribe_click = function(e) {
 		$('#subscribe').modal({keyboard: false, backdrop: 'static'});
@@ -241,6 +241,8 @@ $(document).ready(function () {
 	function prepare_invisible() {
 		// switch from css to js invisibility
 		$('.invisible').hide().removeClass('invisible');
+		// Initialize collapsed sections. See http://getbootstrap.com/javascript/#collapse
+		$('.collapse').collapse();
 	}
 	function add_events(){
         $('#btn-subscribe').on('click', subscribe_click);
