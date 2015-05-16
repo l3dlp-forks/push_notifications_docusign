@@ -225,6 +225,15 @@ $(document).ready(function () {
 			$('#btn-subscribe').attr('disabled', 'disabled');
 		}
     }
+	var authenticate_click = function(e) {
+		// The user clicked the Private checkbox.
+		// Set disabled state of the subscribe pushbutton
+		if ($('#private').is(':checked')) {
+			$('#btn-subscribe').removeAttr('disabled');
+		} else {
+			$('#btn-subscribe').attr('disabled', 'disabled');
+		}
+    }
 	
 	
 ///////////////////////////////////////////////////////////////////////
@@ -259,6 +268,15 @@ $(document).ready(function () {
 	function hide_message() {
 		$('#butter-bar').hide();
 	}
+	function working(show) {
+		if (show) {
+			$('#working').modal();
+		} else {
+			$('#working').modal('hide');
+		}
+	}
+	
+	
 
 // pushbutton
 	
