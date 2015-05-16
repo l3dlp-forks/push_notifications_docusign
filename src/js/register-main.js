@@ -213,7 +213,8 @@ $(document).ready(function () {
 		$('#form-subscribe').collapse('show');
 	}
 	var subscribe_click = function(e) {
-		$('#subscribe').modal({keyboard: false, backdrop: 'static'});
+		$('#form-subscribe').collapse('hide');
+		$('#form-authenticate').collapse('show');
     }
 	var private_click = function(e) {
 		// The user clicked the Private checkbox.
