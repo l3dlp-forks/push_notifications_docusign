@@ -226,13 +226,8 @@ $(document).ready(function () {
 		}
     }
 	var authenticate_click = function(e) {
-		// The user clicked the Private checkbox.
-		// Set disabled state of the subscribe pushbutton
-		if ($('#private').is(':checked')) {
-			$('#btn-subscribe').removeAttr('disabled');
-		} else {
-			$('#btn-subscribe').attr('disabled', 'disabled');
-		}
+		// The user clicked Authenticate
+		working(true);
     }
 	
 	
@@ -256,6 +251,7 @@ $(document).ready(function () {
 	}
 	function add_events(){
         $('#btn-subscribe').on('click', subscribe_click);
+        $('#btn-authenticate').on('click', authenticate_click);
 		$('#private').on('change', private_click);
       }
 
