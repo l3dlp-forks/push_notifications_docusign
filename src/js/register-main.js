@@ -266,7 +266,7 @@ $(document).ready(function () {
 	}
 	function working(show) {
 		if (show) {
-			$('#working').modal();
+			$('#working').modal({keyboard: false});
 		} else {
 			$('#working').modal('hide');
 		}
