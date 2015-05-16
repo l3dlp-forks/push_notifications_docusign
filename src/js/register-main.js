@@ -242,7 +242,7 @@ $(document).ready(function () {
 		// switch from css to js invisibility
 		$('.invisible').hide().removeClass('invisible');
 		// Initialize collapsed sections. See http://getbootstrap.com/javascript/#collapse
-		$('.collapse').collapse();
+		$('.collapse').collapse('hide');
 	}
 	function add_events(){
         $('#btn-subscribe').on('click', subscribe_click);
