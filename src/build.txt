@@ -8,6 +8,8 @@ cp ../push_notifications_docusign_private/manifest.json assets/manifest.json
 
 cat src/js/js.cookie.js src/js/config.js src/js/register-main.js > assets/register.js
 
+
+
 # bring in repos for server
 composer update
 
