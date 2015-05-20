@@ -283,6 +283,7 @@ $(document).ready(function () {
 ///////////////////////////////////////////////////////////////////////
 //
 // MAIN LINE
+	pnds = {};
 	pnds.isPushEnabled = false;
 	pnds.service_worker_url = "service-worker.js";
 	add_events();
