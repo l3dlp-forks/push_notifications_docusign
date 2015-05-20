@@ -1,6 +1,6 @@
 <?php
 if (!defined('APP')) {exit("Buzz off";}
-include (LIB_PATH . "bootstrap.php");
+include (realpath(dirname(__FILE__) . '/src/bootstrap.php');
 
 /*	api file for the Push Notifications DocuSign app
 
@@ -58,7 +58,6 @@ $handlers = new PND_HandlerChain();
 $handlers->addHandler( new UserCommand() );
 $handlers->addHandler( new MailCommand() );
 $handlers->handle( 'addUser');
-$handlers->handle( 'mail');
 
 
 

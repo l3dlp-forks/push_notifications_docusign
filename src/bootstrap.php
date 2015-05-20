@@ -6,7 +6,7 @@ if (!defined('APP')) {exit("Buzz off";}
     ex. require_once(LIBRARY_PATH . "Paginator.php")
 */
 defined("LIB_PATH")
-    or define("LIB_PATH", realpath(dirname(__FILE__) . '../library'));
+    or define("LIB_PATH", realpath(dirname(__FILE__) . '../src'));
 
 #  Error reporting.
 ini_set("error_reporting", "true");

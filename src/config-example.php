@@ -2,23 +2,12 @@
 if (!defined('APP')) {exit("Buzz off";}
  
 $config = array(
-    "db" => array(
-            "dbname" => "database1",
-            "username" => "dbUser",
-            "password" => "pa$$",
-            "host" => "localhost"
-    ),
+    "google_api_key" => '123',
 
-    "urls" => array(
-        "baseUrl" => "http://example.com"
-    ),
-    "paths" => array(
-        "resources" => "/path/to/resources",
-        "images" => array(
-            "content" => $_SERVER["DOCUMENT_ROOT"] . "/images/content",
-            "layout" => $_SERVER["DOCUMENT_ROOT"] . "/images/layout"
-        )
-    )
+    "docusign_api_key" => '123',
+    "docusign_admin_user" => '123',
+    "docusign_admin_pw" => '123',
+
 );
  
  
