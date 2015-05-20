@@ -213,7 +213,7 @@ $(document).ready(function () {
 		$('#form-subscribe').collapse('show');
 	}
 	var subscribe_click = function(e) {
-		$('#form-subscribe').on('hidden.bs.modal', function (e) {
+		$('#form-subscribe').on('hidden.bs.collapse', function (e) {
 			$('#form-authenticate').collapse('show');})	
 
 		$('#form-subscribe').collapse('hide');		
