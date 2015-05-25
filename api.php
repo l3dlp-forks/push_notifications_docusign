@@ -1,5 +1,5 @@
 <?php
-if (!defined('APP')) {exit("Buzz off";}
+define("APP", "Push Notifications for DocuSign");
 include (realpath(dirname(__FILE__) . '/src/bootstrap.php');
 
 /*	api file for the Push Notifications DocuSign app
@@ -34,16 +34,6 @@ class PND_HandlerChain
       if ( $handler->request( $op ) )
         return;
     }
-  }
-}
-
-class PND_UserCommand implements PND_Request
-{
-  public function request( $op )
-  {
-    if ( $op != 'addUser' ) return false;
-    echo( "UserCommand handling 'addUser'\n" );
-    return true;
   }
 }
 
