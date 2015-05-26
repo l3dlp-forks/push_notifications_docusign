@@ -21,7 +21,7 @@ include (realpath(dirname(__FILE__) . '/public/bootstrap.php'));
 
 interface PND_Request
 {
-  function request( $name, $args );
+  function request( $op );
 }
 
 class PND_HandlerChain

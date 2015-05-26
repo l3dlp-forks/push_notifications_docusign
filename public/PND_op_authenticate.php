@@ -1,6 +1,6 @@
 <?php
 if (!defined('APP')) {exit("Buzz off");}
- 
+
 class PND_op_authenticate implements PND_Request
 {
 	# op = authenticate
