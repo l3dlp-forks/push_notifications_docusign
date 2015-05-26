@@ -13,6 +13,7 @@ ini_set("error_reporting", "true");
 error_reporting(E_ALL|E_STRCT);
 
 # Includes
+require 'vendor/autoload.php'; # See https://getcomposer.org/doc/01-basic-usage.md
+require (LIB_PATH . "config.php");
+require (LIB_PATH . "PND_utils.php");
 
-include (LIB_PATH . "config.php");
-include (LIB_PATH . "PND_utils.php");
