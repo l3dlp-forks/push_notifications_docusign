@@ -5,7 +5,7 @@ class PND_utils
 {
   public function return_data( $data, $code = 200 )
   {
-	http_response_code($code);
+	http_response_code($code);  # in php 5.4 and later
 	header('Content-Type: application/json');
 	echo json_encode($data);
   }

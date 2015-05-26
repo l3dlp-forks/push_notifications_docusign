@@ -15,8 +15,9 @@ class PND_op_authenticate implements PND_Request
 
   public function request( $op )
   {
-    if ( $op != 'authenticate' ) return false;
-		
+    global $pnd_utils;
+	if ( $op != 'authenticate' ) return false;
+	
 	
 	
 	# check incoming
