@@ -22,12 +22,12 @@ class PND_op_authenticate implements PND_Request
 	# check incoming
 	if (!isset($_POST['email']) || strlen($_POST['email']) < 1) {
 		$pnd_utils->return_data( 
-			array( bad_data: ['email'], msg: 'Please enter your email address' ), 400);
+			array( bad_data =>['email'], msg => 'Please enter your email address' ), 400);
 		return true;
 	}
 	if (!isset($_POST['pw']) || strlen($_POST['pw']) < 1) {
 		$pnd_utils->return_data( 
-			array( bad_data: ['pw'], msg: 'Please enter your password' ), 400);
+			array( bad_data => ['pw'], msg => 'Please enter your password' ), 400);
 		return true;
 	}
 
@@ -37,13 +37,13 @@ class PND_op_authenticate implements PND_Request
 	if( $ds_client->hasError() )
 	{
 		$pnd_utils->return_data(
-			array( bad_data: ['pw'], msg: 'DocuSign problem: ' .  $ds_client->getErrorMessage()), 400);
+			array( bad_data => ['pw'], msg => 'DocuSign problem: ' .  $ds_client->getErrorMessage()), 400);
 		return true;
 	}
 
 	$service = new DocuSign_LoginService($ds_client);
 	$response = $service->login->getLoginInformation();	
-	$pnd_utils->return_data(array(msg: 'getLoginInformation: ' . var_export($response, true)));
+	$pnd_utils->return_data(array(msg => 'getLoginInformation: ' . var_export($response, true)));
 
     return true;
   }
