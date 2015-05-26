@@ -3,14 +3,14 @@ if (!defined('APP')) {exit("Buzz off");}
  
 class PND_utils
 {
-  public function return_data( $data, $code => 200 )
+  public function return_data( $data, $code = 200 )
   {
 	http_response_code($code);
 	header('Content-Type: application/json');
 	echo json_encode($data);
   }
   
-  public function new_docusign_client($email, $pw, $account => false)
+  public function new_docusign_client($email, $pw, $account = false)
   {
 	$ds_config = array(
 		'integrator_key' => $config["docusign_integrator_key"], 
