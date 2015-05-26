@@ -1,12 +1,18 @@
 <?php
 define("APP", "Push Notifications for DocuSign");
-include (realpath(dirname(__FILE__) . '/src/bootstrap.php');
+include (realpath(dirname(__FILE__) . '/public/bootstrap.php'));
 
 /*	api file for the Push Notifications DocuSign app
 
 	All requests include url parameter op.
-	Some calls should only use POST
-	All calls should only use HTTPS
+	Some calls are GET, others are POST 
+	Calls should only use HTTPS
+	
+	ops
+	authenticate 
+		POST
+		params: email and pw
+	
 	
 */
 
@@ -44,10 +50,14 @@ class PND_HandlerChain
 # 
 # Mainline
 
-$handlers = new PND_HandlerChain();
-$handlers->addHandler( new UserCommand() );
-$handlers->addHandler( new MailCommand() );
-$handlers->handle( 'addUser');
+$pnd_handlers = new PND_HandlerChain();
+$pnd_handlers->addHandler( new PND_op_authenticate() );
+if (!isset($_GET['op']) || strlen($_GET['op']) < 1) {
+ 	$pnd_utils->return_data( 
+		{ bad_data: [], msg: 'Missing op' }, 400);
+	exit 0;
+}
+$pnd_handlers->handle($_GET['op']);
 
 
 
