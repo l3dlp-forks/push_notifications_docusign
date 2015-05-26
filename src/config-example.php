@@ -1,5 +1,5 @@
 <?php
-if (!defined('APP')) {exit("Buzz off";}
+if (!defined('APP')) {exit("Buzz off");}
  
 $config = array(
     "google_api_key" => '123',

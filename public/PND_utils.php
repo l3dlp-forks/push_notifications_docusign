@@ -1,5 +1,5 @@
 <?php
-if (!defined('APP')) {exit("Buzz off";}
+if (!defined('APP')) {exit("Buzz off");}
  
 class PND_utils
 {

@@ -1,5 +1,5 @@
 <?php
-if (!defined('APP')) {exit("Buzz off";}
+if (!defined('APP')) {exit("Buzz off");}
 
 /*
     Creating constants for heavily used paths makes things a lot easier.
