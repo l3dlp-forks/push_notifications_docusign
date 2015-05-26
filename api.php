@@ -54,7 +54,7 @@ $pnd_handlers = new PND_HandlerChain();
 $pnd_handlers->addHandler( new PND_op_authenticate() );
 if (!isset($_GET['op']) || strlen($_GET['op']) < 1) {
  	$pnd_utils->return_data( 
-		{ bad_data: [], msg: 'Missing op' }, 400);
+		[ 'bad_data' => [], 'msg' => 'Missing op' ], 400);
 	exit 0;
 }
 $pnd_handlers->handle($_GET['op']);
