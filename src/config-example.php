@@ -1,5 +1,7 @@
 <?php
-if (!defined('APP')) {exit("Buzz off");}
+if (!defined('APP')) {
+	exit("Buzz off");
+}
  
 $pnd_config = array(
     "google_api_key" => '123',
