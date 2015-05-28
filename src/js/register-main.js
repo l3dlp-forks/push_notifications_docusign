@@ -239,7 +239,12 @@ $(document).ready(function () {
 			post_status("<h2>Success -- Status:" + textStatus + "</h2>" + "<p><pre>" + JSON.stringify(data, null, 4) + "</pre></p>");
 		})
 		.fail(function(jqXHR, textStatus, errorThrown) {
-			post_message("<h2>Problem: " + textStatus + "</h2>"); 
+			if (jqXHR.status === 400 && jqXHR.responseJSON && jqXHR.responseJSON.hasOwnProperty('api')) {
+				// Error message from api
+				post_message("<h2>Problem: " + jqXHR.responseJSON.msg + "</h2>");
+			} else {
+				post_message("<h2>Problem: " + textStatus + "</h2>"); 
+			}
 		})
 		.always(function() {
 			working(false);
