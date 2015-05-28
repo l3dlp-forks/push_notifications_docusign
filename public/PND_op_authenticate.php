@@ -33,6 +33,8 @@ class PND_op_authenticate implements PND_Request
 	}
 
 	# authenticate with DocuSign
+	$email = $_POST['email'];
+	$pw = $_POST['pw'];
 	$ds_client = $pnd_utils->new_docusign_client($email, $pw);
 	
 	if( $ds_client->hasError() )
