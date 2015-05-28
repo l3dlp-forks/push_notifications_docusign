@@ -23,7 +23,7 @@ class PND_utils
 	if ($account) {
 		$ds_config['account_id'] = $account;
 	}	
-	$ds = new mrferos\DocuSign_Client($ds_config);
+	$ds = new DocuSign_Client($ds_config);
 	return $ds;
   }
 

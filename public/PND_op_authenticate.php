@@ -44,7 +44,7 @@ class PND_op_authenticate implements PND_Request
 		return true;
 	}
 
-	$service = new mrferos\DocuSign_LoginService($ds_client);
+	$service = new DocuSign_LoginService($ds_client);
 	$response = $service->login->getLoginInformation();	
 	$pnd_utils->return_data(array('msg' => 'getLoginInformation: ' . var_export($response, true), 'data' => $response));
 

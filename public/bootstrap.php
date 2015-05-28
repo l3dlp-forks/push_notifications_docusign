@@ -7,7 +7,10 @@ if (!defined('APP')) {exit("Buzz off");}
 */
 defined("LIB_PATH")
     or define("LIB_PATH", realpath(dirname(__FILE__) . '../public'));
+defined("VENDOR_PATH")
+    or define("VENDOR_PATH", realpath(dirname(__FILE__) . '../vendor'));
 
+	
 #  Error reporting.
 ini_set("error_reporting", "true");
 error_reporting(E_ALL|E_STRCT);
@@ -17,4 +20,6 @@ require 'vendor/autoload.php'; # See https://getcomposer.org/doc/01-basic-usage.
 require (LIB_PATH . "config.php");
 require (LIB_PATH . "PND_utils.php");
 require (LIB_PATH . "PND_op_authenticate.php");
+require (VENDOR_PATH . "mrferos/src/DocuSign_Client.php");
+
 
