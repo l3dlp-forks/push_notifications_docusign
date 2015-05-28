@@ -12,12 +12,13 @@ class PND_utils
   
   public function new_docusign_client($email, $pw, $account = false)
   {
+	global $pnd_config;
 	$ds_config = array(
-		'integrator_key' => $config["docusign_integrator_key"], 
+		'integrator_key' => $pnd_config["docusign_integrator_key"], 
 		'email' => $email,
 		'password' => $pw,
-		'version' => $config["docusign_version"],
-		'environment' => $config["docusign_environment"],
+		'version' => $pnd_config["docusign_version"],
+		'environment' => $pnd_config["docusign_environment"],
 	);
 	if ($account) {
 		$ds_config['account_id'] = $account;

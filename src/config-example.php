@@ -1,7 +1,7 @@
 <?php
 if (!defined('APP')) {exit("Buzz off");}
  
-$config = array(
+$pnd_config = array(
     "google_api_key" => '123',
 
     "docusign_integrator_key" => '123',
