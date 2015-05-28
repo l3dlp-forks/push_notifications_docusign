@@ -16,10 +16,9 @@ ini_set("error_reporting", "true");
 error_reporting(E_ALL|E_STRCT);
 
 # Includes
-require 'vendor/autoload.php'; # See https://getcomposer.org/doc/01-basic-usage.md
 require (LIB_PATH . "config.php");
+require 'vendor/autoload.php'; # See https://getcomposer.org/doc/01-basic-usage.md
 require (LIB_PATH . "PND_utils.php");
 require (LIB_PATH . "PND_op_authenticate.php");
-# require (VENDOR_PATH . "DocuSign_Client.php");
 
 
