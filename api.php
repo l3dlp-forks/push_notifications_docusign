@@ -35,11 +35,17 @@ class PND_HandlerChain
 
   public function handle( $op )
   {
-    foreach( $this->_handlers as $handler )
+    global $pnd_utils;
+	
+	foreach( $this->_handlers as $handler )
     {
       if ( $handler->request( $op ) )
         return;
     }
+	
+	# bad op
+	$pnd_utils->return_data( 
+		array( 'bad_data' => array(), 'msg' => 'Bad op' ), 501); # 501 - Not implemented
   }
 }
 

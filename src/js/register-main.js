@@ -229,7 +229,24 @@ $(document).ready(function () {
     }
 	var authenticate_click = function(e) {
 		// The user clicked Authenticate
+		e.preventDefault(); // Don't submit to the server
 		working(true);
+		hide_message();
+		$.ajax(pnds.api_url + "?op=authenticate",  // Ajax Methods: https://github.com/jquery/api.jquery.com/issues/49
+			{method: "POST",
+			 data: {email: $('#email').val(), pw: $('#pw').val()}})
+		.done(function(data, textStatus, jqXHR){
+			post_status("<h2>Success -- Status:" + textStatus + "</h2>" + "<p><pre>" + JSON.stringify(data, null, 4) + "</pre></p>");
+		})
+		.fail(function(jqXHR, textStatus, errorThrown) {
+			post_message("<h2>Problem: " + textStatus + "</h2>"); 
+		})
+		.always(function() {
+			working(false);
+		});
+		
+		
+		
     }
 	
 	
@@ -284,6 +301,7 @@ $(document).ready(function () {
 //
 // MAIN LINE
 	pnds = {};
+	pnds.api_url = 'api.php'; // the api.php url relative to the index page
 	pnds.isPushEnabled = false;
 	pnds.service_worker_url = "service-worker.js";
 	add_events();
