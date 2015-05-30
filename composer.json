@@ -6,7 +6,7 @@
   "homepage": "https://github.com/larrykluger/push_notifications_docusign",
   "require": {
     "tomwalder/php-gds": "dev-master",
-    "larrykluger/docusign-lib": "dev-master"
+    "larrykluger/DocuSign-PHP-Client": "dev-master"
   },
   "minimum-stability": "dev",
   "autoload": {
