@@ -30,3 +30,17 @@ Libraries used
 js-cookie 
 https://github.com/js-cookie/js-cookie
 
+jQuery Ajax promise parameters
+https://github.com/jquery/api.jquery.com/issues/49
+
+Debugging statement
+echo var_export($ds_config,true);
+
+Notice:  Undefined property: stdClass::$loginAccounts in /home/widgetsign/widgetsign.com/push_notifications_docusign/vendor/mrferos/docusign-lib/src/DocuSign_Client.php on line 108
+
+Notice:  Undefined property: stdClass::$loginAccounts in /home/widgetsign/widgetsign.com/push_notifications_docusign/vendor/mrferos/docusign-lib/src/DocuSign_Client.php on line 111
+
+Warning:  Invalid argument supplied for foreach() in /home/widgetsign/widgetsign.com/push_notifications_docusign/vendor/mrferos/docusign-lib/src/DocuSign_Client.php on line 111
+
+Fatal error:  Class 'DocuSign_LoginService' not found in /home/widgetsign/widgetsign.com/push_notifications_docusign/public/PND_op_authenticate.php on line 47
+
