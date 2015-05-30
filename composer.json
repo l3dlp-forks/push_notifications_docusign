@@ -7,7 +7,7 @@
   "repositories": [
 			{
 				"type": "vcs",
-				"url": "https://github.com/larrykluger/DocuSign-PHP-Client"
+				"url": "git@github.com:larrykluger/DocuSign-PHP-Client"
 			}
 		],
   "require": {
