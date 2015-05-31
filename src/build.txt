@@ -13,5 +13,7 @@ cat src/js/js.cookie.js src/js/register-main.js > assets/register.js
 # bring in repos for server
 composer update
 
+# bring in larrykluger fork of the DocuSign library
+git checkout-index -a -f --prefix=vendor/ https://github.com/larrykluger/DocuSign-PHP-Client
 
 
