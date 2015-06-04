@@ -5,10 +5,8 @@
   "keywords": [],
   "homepage": "https://github.com/larrykluger/push_notifications_docusign",
   "require": {
-    "tomwalder/php-gds": "dev-master"
+    "tomwalder/php-gds": "v1.2.0"
   },
   "minimum-stability": "dev",
-  "autoload": {
-    "classmap": []
-  }
+  "autoload": {"classmap": []}
 }

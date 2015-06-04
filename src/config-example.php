@@ -5,6 +5,7 @@ if (!defined('APP')) {
  
 $pnd_config = array(
     "google_api_key" => '123',
+	"cookie_salt" = '123', # Use a long salt from https://api.wordpress.org/secret-key/1.1/salt/  or similar.
 
     "docusign_integrator_key" => '123',
     "docusign_admin_user" => '123', # used to configure and request DocuSign Connect 

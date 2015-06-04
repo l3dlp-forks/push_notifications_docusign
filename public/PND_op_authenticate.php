@@ -18,8 +18,6 @@ class PND_op_authenticate implements PND_Request
     global $pnd_utils;
 	if ( $op != 'authenticate' ) return false;
 	
-	
-	
 	# check incoming
 	if (!isset($_POST['email']) || strlen($_POST['email']) < 1) {
 		$pnd_utils->return_data( 
