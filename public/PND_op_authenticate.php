@@ -43,8 +43,23 @@ class PND_op_authenticate implements PND_Request
 	}
 
 	$service = new DocuSign_LoginService($ds_client);
-	$response = $service->login->getLoginInformation();	
-	$pnd_utils->return_data(array('msg' => 'getLoginInformation: ' . var_export($response, true), 'data' => $response));
+	$response = $service->login->getLoginInformation();
+	# Response:  {
+    #   "loginAccounts": [
+    #        {
+    #            "name": "DocuSign",
+    #            "accountId": "103111",
+    #            "baseUrl": "https://demo.docusign.net/restapi/v2/accounts/103111",
+    #            "isDefault": "true",
+    #            "userName": "Larry Kluger",
+    #            "userId": "14499850-43f1-4184-944f-xxx",
+    #            "email": "foo@woof.bark.com",
+    #            "siteDescription": ""
+    #        }
+    #    ]
+    # }	
+
+	$pnd_utils->return_data(array('msg' => 'getLoginInformation: ' , 'data' => $response));
 
     return true;
   }
