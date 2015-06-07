@@ -25,8 +25,12 @@ class PND_op_authenticate implements PND_Request
 	$ds_client = $pnd_utils->new_docusign_client($pnd_api->email(), $pnd_api->pw());
 	
 	if( $ds_client->hasError()) {
+		$msgs = array();
+		$msgs = explode(": ", $ds_client->getErrorMessage(), 2);
+		$msg = $msgs[0] === "USER_AUTHENTICATION_FAILED" ? $msgs[1] : $ds_client->getErrorMessage();
+		
 		$pnd_utils->return_data(
-			array( 'api' => true, 'bad_data' => array('pw'), 'msg' => 'DocuSign problem: ' .  $ds_client->getErrorMessage()), 400);
+			array( 'api' => true, 'bad_data' => array('pw'), 'msg' => $msg), 400);
 		return true;
 	}
 
