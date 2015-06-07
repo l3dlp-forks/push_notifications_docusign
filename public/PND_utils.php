@@ -1,8 +1,7 @@
 <?php
 if (!defined('APP')) {exit("Buzz off");}
  
-class PND_utils
-{
+class PND_utils {
   private $_pnd_google_db = null;
   
   public function return_data( $data, $code = 200 )
@@ -36,11 +35,6 @@ class PND_utils
 	$ds = new DocuSign_Client($ds_config);
 	return $ds;
   }
-  
-  public func
-
-
-  
 }
 
 $pnd_utils = new PND_utils;
