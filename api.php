@@ -50,8 +50,8 @@ class PND_API {
 	private $_email = null;
 	private $_pw = null;
 	
-	public function email() {return $_email;}
-	public function pw() {return $_pw;}
+	public function email() {return $this->_email;}
+	public function pw() {return $this->_pw;}
   
 	public function check_email_pw() {
 		global $pnd_utils;
@@ -65,8 +65,8 @@ class PND_API {
 				array( 'api' => true, 'bad_data' => array('pw'), 'msg' => 'Please enter your password' ), 400);
 			return false;
 		}
-		$_email = $_POST['email'];
-		$_pw = $_POST['pw'];
+		$this->_email = $_POST['email'];
+		$this->_pw = $_POST['pw'];
 		return true;
 	}
 }
