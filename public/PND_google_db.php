@@ -27,8 +27,8 @@
 #  -- the browser should be private to a person to receive notifications.
 
 	# Definitions for cookies
-	define ("COOKIE_NOTIFY", "PushDemoNotify"); # yes or no
-	define ("COOKIE_NOTIFY_ID", "PushDemoNotifyID"); # unique id
+	define ("COOKIE_NOTIFY", "PushNotifyDocuSign"); # yes or no
+	define ("COOKIE_NOTIFY_ID", "PushNotifyDocuSignID"); # unique id
 	
 class PND_google_db {
 
@@ -42,57 +42,84 @@ class PND_google_db {
 	
 	function __construct() {
 		// We'll need a Google_Client, use our convenience method
-		$gds_client = GDS\Gateway::createGoogleClient(GDS_APP_NAME, GDS_SERVICE_ACCOUNT_NAME, GDS_KEY_FILE_PATH);
+		$this->gds_client = GDS\Gateway::createGoogleClient(GDS_APP_NAME, GDS_SERVICE_ACCOUNT_NAME, GDS_KEY_FILE_PATH);
 
 		// Gateway requires a Google_Client and Dataset ID
-		$gds_gateway = new GDS\Gateway($obj_client, GDS_DATASET_ID);
+		$this->gds_gateway = new GDS\Gateway($this->gds_client, GDS_DATASET_ID);
 
-		$notify_db = new NotifyDB($gds_gateway);
+		$this->notify_db = new NotifyDB($this->gds_gateway);
 		setup_id_cookie();
 	}
 
 	private function setup_id_cookie() {
 		global $pnd_config;
 		if (array_key_exists ( COOKIE_NOTIFY_ID , $_COOKIE ) && strlen($_COOKIE[COOKIE_NOTIFY_ID]) > 5) {
-			$cookie_notify_id = $_COOKIE[COOKIE_NOTIFY_ID];
-			$cookie_notify_id_created = false;
+			$this->cookie_notify_id = $_COOKIE[COOKIE_NOTIFY_ID];
+			$this->cookie_notify_id_created = false;
 			return;
 		}
 		# No cookie: create and set the id cookie
-		$cookie_notify_id = md5(uniqid($pnd_config['cookie_salt'], true)); # see http://stackoverflow.com/a/1293860/64904
-		setcookie(COOKIE_NOTIFY_ID, $cookie_notify_id, time()+60*60*24*365); # 1 year
-		$cookie_notify_id_created = true;
+		$this->cookie_notify_id = md5(uniqid($pnd_config['cookie_salt'], true)); # see http://stackoverflow.com/a/1293860/64904
+		setcookie(COOKIE_NOTIFY_ID, $this->cookie_notify_id, time()+60*60*24*365); # 1 year
+		$this->cookie_notify_id_created = true;
 	} 
 	private function cookie_on() {
 		# Are the cookies telling us that notification is on?
-		return (!$cookie_notify_id_created && 
-			array_key_exists ( COOKIE_NOTIFY, $_COOKIE ) &&
-			$_COOKIE[COOKIE_NOTIFY] === 'yes');
+		return (!$this->cookie_notify_id_created && array_key_exists ( COOKIE_NOTIFY, $_COOKIE ) && $_COOKIE[COOKIE_NOTIFY] === 'yes');
+	}
+	private function set_cookie_notify($on) {
+		# sets the cookie to be 'yes' or 'no'
+		setcookie(COOKIE_NOTIFY, $on ? 'yes' : 'no', time()+60*60*24*365); # 1 year
 	}
 	
 	public function refresh ($notify_url) {
 		# Whenever the page is loaded, if the service worker is already installed,
 		# we need to update our db since the notification url may have changed. 
 		#
-		# If cookie_notify is on and the cookie_notify_id is present,
-		# then update the db entries with the new notify_url
-		#
-		# If cookie_notify is off or missing, then remove any db entries that
-		# use this notify_url
+		$notifications = 
+			$notify_db->fetchAll("SELECT * FROM Notifications WHERE cookie_notify_id = @id",
+			['id' => $this->cookie_notify_id]);
+
 		if (cookie_on()) {
-			$notifications = 
-				$notify_db->fetchAll("SELECT * FROM Notifications WHERE cookie_notify_id = @id",
-				['id' => $cookie_notify_id]);
+			# If cookie_notify is on and the cookie_notify_id is present,
+			# then update the db entries with the new notify_url
 			foreach($notifications as $notification) {
-				$notification->notify_url = $notify_url;
-				$notify_db->upsert($notification); # see https://github.com/tomwalder/php-gds/blob/master/src/GDS/Store.php
+				$notification->notify_url = $this->notify_url;
+				$this->notify_db->upsert($notification); # see https://github.com/tomwalder/php-gds/blob/master/src/GDS/Store.php
 			}
+			set_cookie_notify(true);
+		} else {
+			# If cookie_notify is off or missing, then remove any db entries that
+			# use this notify_url
+			foreach($notifications as $notification) {
+				$this->notify_db->delete($notification); # see https://github.com/tomwalder/php-gds/blob/master/src/GDS/Store.php
+			}
+			set_cookie_notify(false);
+		}		
+	}
+	
+	public function notifications () {
+		# Get the notifications for this id
+		$_notifications = 
+			$this->notify_db->fetchAll("SELECT * FROM Notifications WHERE cookie_notify_id = @id",
+			['id' => $this->cookie_notify_id]);
+		
+		$results = array();
+		foreach($_notifications as $notification) {
+			$results[] = array(
+				'notify_url' => $notification->notify_url,
+				'cookie_notify_id' => $notification->cookie_notify_id,
+				'ds_account_id' => $notification->ds_account_id,
+				'ds_account_name' => $notification->ds_account_name,
+				'ds_email' => $notification->ds_email,
+				'ds_user_name' => $notification->ds_user_name,
+				'ds_user_id' => $notification->ds_user_id
+			);
 		}
-		
-		
+		return ($results);
 	}
 }
-	
+
 class Notify extends GDS\Entity {}
 class NotifyDB extends GDS\Store {
     /**
@@ -106,8 +133,11 @@ class NotifyDB extends GDS\Store {
         return (new GDS\Schema('Notifications'))
             ->addString('cookie_notify_id')
             ->addString('notify_url')
-            ->addString('ds_account')
-			->addString('ds_email');
+            ->addString('ds_account_id')
+            ->addString('ds_account_name')
+			->addString('ds_email')
+			->addString('ds_user_name')
+			->addString('ds_user_id');
     }
 }
 	
