@@ -24,21 +24,17 @@ interface PND_Request
   function request( $op );
 }
 
-class PND_HandlerChain
-{
+class PND_HandlerChain {
   private $_handlers = array();
 
-  public function addHandler( $handler )
-  {
+  public function addHandler( $handler ) {
     $this->_handlers []= $handler;
   }
 
-  public function handle( $op )
-  {
+  public function handle( $op ) {
     global $pnd_utils;
 	
-	foreach( $this->_handlers as $handler )
-    {
+	foreach( $this->_handlers as $handler ) {
       if ( $handler->request( $op ) )
         return;
     }
@@ -49,6 +45,31 @@ class PND_HandlerChain
   }
 }
 
+class PND_API {
+	# API Support
+	private $_email = null;
+	private $_pw = null;
+	
+	public function email() {return $_email;}
+	public function pw() {return $_pw;}
+  
+	public function check_email_pw() {
+		global $pnd_utils;
+		if (!isset($_POST['email']) || strlen($_POST['email']) < 1) {
+			$pnd_utils->return_data( 
+				array( 'api' => true, 'bad_data' =>array('email'), 'msg' => 'Please enter your email address' ), 400);
+			return false;
+		}
+		if (!isset($_POST['pw']) || strlen($_POST['pw']) < 1) {
+			$pnd_utils->return_data( 
+				array( 'api' => true, 'bad_data' => array('pw'), 'msg' => 'Please enter your password' ), 400);
+			return false;
+		}
+		$_email = $_POST['email'];
+		$_pw = $_POST['pw'];
+		return true;
+	}
+}
 
 ##############################################################################
 ##############################################################################
@@ -56,6 +77,7 @@ class PND_HandlerChain
 # 
 # Mainline
 
+$pnd_api = new PND_API();
 $pnd_handlers = new PND_HandlerChain();
 $pnd_handlers->addHandler( new PND_op_authenticate() );
 if (!isset($_GET['op']) || strlen($_GET['op']) < 1) {

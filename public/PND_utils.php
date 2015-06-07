@@ -3,11 +3,21 @@ if (!defined('APP')) {exit("Buzz off");}
  
 class PND_utils
 {
+  private $_pnd_google_db = null;
+  
   public function return_data( $data, $code = 200 )
   {
 	http_response_code($code);  # in php 5.4 and later
 	header('Content-Type: application/json');
 	echo json_encode($data);
+  }
+  
+  public function pnd_google_db() {
+	if (! $_pnd_google_db) {
+		$_pnd_google_db = new PND_google_db();
+	}
+	
+    return $_pnd_google_db;
   }
   
   public function new_docusign_client($email, $pw, $account = false)
@@ -26,6 +36,8 @@ class PND_utils
 	$ds = new DocuSign_Client($ds_config);
 	return $ds;
   }
+  
+  public func
 
 
   
