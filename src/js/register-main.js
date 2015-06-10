@@ -271,7 +271,7 @@ $(document).ready(function () {
 		// Populate the form
 		var add_admin = false;
 		data.accounts.forEach(function(account, i, accounts){
-			$('#account-table tbody').after(
+			$('#account-table tbody').append(
 				"<tr><td>" + account.account_name + "</td><td>" +
 					(account.available ? "yes" : "no*") + "</td></tr>");
 				if (account.available) {
