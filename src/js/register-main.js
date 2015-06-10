@@ -1,4 +1,4 @@
-// Register service worker.js
+// Register service-main.js
 // Based on https://github.com/GoogleChrome/samples/blob/gh-pages/push-messaging-and-notifications/main.js
 // first execute config.js
 
@@ -10,9 +10,7 @@ $(document).ready(function () {
     
 	var cookie_name = 'push_subscriber';
 	
-	
 	function add_eventsXXXXXXXXXXXXXXXXXXXXXXXXX(){
-	// need to do this for each button shown in subscription list
 		$('#btn-subscribe').on('click', function (e) {
 			if (pnds.isPushEnabled) {unsubscribe();} else {subscribe();}
 		});
@@ -48,8 +46,9 @@ $(document).ready(function () {
 //
 // unsubscribe
 	function unsubscribe() {
-	//  var pushButton = document.querySelector('.js-push-button');
-	//  pushButton.disabled = true;
+		working(true);
+		hide_message();
+		post_status();	
 
 		navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
 			// To unsubscribe from push messaging, you need to get the
@@ -61,15 +60,18 @@ $(document).ready(function () {
 						// No subscription object, so reset state
 						pnds.isPushEnabled = false;
 						add_subscription_enable();
+						working(false);
 						return;
 					}
 				
 					// We have a subscription, so call unsubscribe on it
 					internal_unsubscribe(subscription);
+					working(false);
 				}
 			).catch(function(e) {
 				window.Demo.debug.log('Problem from Push Manager.', e);
 				post_message('<p>Unsubscribed.</p><small>Issue: Problem with Push Manager</small>');
+				working(false);
 			});
 		});
 	}
@@ -100,44 +102,46 @@ $(document).ready(function () {
 //
 // subscribe
 	function subscribe() {
-	  // Disable the button so it can't be changed while
-	  // we process the permission request
-	  //var pushButton = document.querySelector('.js-push-button');
-	  //pushButton.disabled = true;
+		working(true);
+		hide_message();
+		post_status();	
+		navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
+			serviceWorkerRegistration.pushManager.subscribe({userVisibleOnly: true})
+			.then(function(subscription) {
+				// The subscription was successful
+				pnds.isPushEnabled = true;
+			//	pushButton.textContent = 'Disable Push Messages';
+			//	pushButton.disabled = false;
 
-	  navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
-		serviceWorkerRegistration.pushManager.subscribe({userVisibleOnly: true})
-		  .then(function(subscription) {
-			// The subscription was successful
-			pnds.isPushEnabled = true;
-		//	pushButton.textContent = 'Disable Push Messages';
-		//	pushButton.disabled = false;
+			//	showCurlCommand(subscription);
 
-		//	showCurlCommand(subscription);
-
-			// TODO: Send the subscription.subscriptionId and 
-			// subscription.endpoint to your server
-			// and save it to send a push message at a later date
-			return send_subscription_to_server(subscription);
-		  })
-		  .catch(function(e) {
-			if (Notification.permission === 'denied') {
-			  // The user denied the notification permission which
-			  // means we failed to subscribe and the user will need
-			  // to manually change the notification permission to
-			  // subscribe to push messages
-			  window.Demo.debug.log('Permission for Notifications was denied');
-			  pushButton.disabled = true;
-			} else {
-			  // A problem occurred with the subscription, this can
-			  // often be down to an issue or lack of the gcm_sender_id
-			  // and / or gcm_user_visible_only
-			  window.Demo.debug.log('Unable to subscribe to push.', e);
-			  pushButton.disabled = false;
-			  pushButton.textContent = 'Enable Push Messages';
-			}
-		  });
-	  });
+				// TODO: Send the subscription.subscriptionId and 
+				// subscription.endpoint to your server
+				// and save it to send a push message at a later date
+				
+				send_subscription_to_server(subscription);
+				working(false);
+				return;
+			})
+			.catch(function(e) {
+				if (Notification.permission === 'denied') {
+				  // The user denied the notification permission which
+				  // means we failed to subscribe and the user will need
+				  // to manually change the notification permission to
+				  // subscribe to push messages
+				  window.Demo.debug.log('Permission for Notifications was denied');
+				  pushButton.disabled = true;
+				} else {
+				  // A problem occurred with the subscription, this can
+				  // often be down to an issue or lack of the gcm_sender_id
+				  // and / or gcm_user_visible_only
+				  window.Demo.debug.log('Unable to subscribe to push.', e);
+				  pushButton.disabled = false;
+				  pushButton.textContent = 'Enable Push Messages';
+				}
+				working(false);
+			});
+		});
 	}
 
 ///////////////////////////////////////////////////////////////////////
@@ -232,11 +236,13 @@ $(document).ready(function () {
 		e.preventDefault(); // Don't submit to the server
 		working(true);
 		hide_message();
+		post_status();
+		
 		$.ajax(pnds.api_url + "?op=authenticate",  // Ajax Methods: https://github.com/jquery/api.jquery.com/issues/49
 			{method: "POST",
 			 data: {email: $('#email').val(), pw: $('#pw').val()}})
 		.done(function(data, textStatus, jqXHR){
-			post_status("<h2>Success -- Status:" + textStatus + "</h2>" + "<p><pre>" + JSON.stringify(data, null, 4) + "</pre></p>");
+			authenticated(data);
 		})
 		.fail(function(jqXHR, textStatus, errorThrown) {
 			if (jqXHR.status === 400 && jqXHR.responseJSON && jqXHR.responseJSON.hasOwnProperty('api')) {
@@ -248,11 +254,36 @@ $(document).ready(function () {
 		})
 		.always(function() {
 			working(false);
-		});
-		
-		
+		});		
 		return false;
     }
+	
+	function authenticated(data) {
+		// The user authenticated successfully.
+		// Show the do-subscribe form with the potential subscription information
+		//
+		// Show the modal
+		$('#form-authenticate').on('hidden.bs.collapse', function (e) {
+			$('#form-subscribe-button').collapse('show');})	
+
+		$('#form-authenticate').collapse('hide');		
+	
+		// Populate the form
+		var add_admin = false;
+		data.accounts.foreach(function(account, i, accounts){
+			$('#account-table tbody').html(
+				"<tr><td>" + account.account_name + "</td><td>" +
+					(account.available ? "yes" : "no*") + "</td></tr>");
+				if (account.available) {
+					add_admin = true;
+				}
+			})
+		if (add_admin) {
+			$('#post-account-table').html("* For these accounts, add the system user " + data.admin_email +
+				" as an Administrator to the account.");
+		}
+	}
+	
 	
 	
 ///////////////////////////////////////////////////////////////////////
