@@ -67,7 +67,7 @@ class PND_utils {
 	
 	foreach ($user_settings->userSettings as $setting) {
 		if ($setting->name === "canManageAccount") {
-			return $setting->value === true;  # admin?
+			return $setting->value === "true";  # admin? (values are not converted.)
 		}
 	}
 
