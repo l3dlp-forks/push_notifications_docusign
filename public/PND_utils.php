@@ -65,7 +65,7 @@ class PND_utils {
 		return false;
 	}
 	
-	foreach ($user_settings["userSettings"], as $setting) {
+	foreach ($user_settings["userSettings"] as $setting) {
 		if ($setting["name"] === "canManageAccount") {
 			return $setting["value"] === true;  # admin?
 		}
