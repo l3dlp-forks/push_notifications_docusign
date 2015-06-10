@@ -8,7 +8,8 @@ $(document).ready(function () {
     // Use .ready may not be necessary, see http://goo.gl/aAhs  but we'll be
 	// conservative and include it.
     
-	var cookie_name = 'push_subscriber';
+	var cookie_name = 'push_subscriber',
+		user_email;
 	
 	function add_eventsXXXXXXXXXXXXXXXXXXXXXXXXX(){
 		$('#btn-subscribe').on('click', function (e) {
@@ -237,10 +238,11 @@ $(document).ready(function () {
 		working(true);
 		hide_message();
 		post_status();
+		user_email = $('#email').val();
 		
 		$.ajax(pnds.api_url + "?op=authenticate",  // Ajax Methods: https://github.com/jquery/api.jquery.com/issues/49
 			{method: "POST",
-			 data: {email: $('#email').val(), pw: $('#pw').val()}})
+			 data: {email: user_email, pw: $('#pw').val()}})
 		.done(function(data, textStatus, jqXHR){
 			authenticated(data);
 		})
@@ -269,19 +271,35 @@ $(document).ready(function () {
 		$('#form-authenticate').collapse('hide');		
 	
 		// Populate the form
-		var add_admin = false;
+		var add_admin = false, can_subscribe = false;
 		data.accounts.forEach(function(account, i, accounts){
 			$('#account-table tbody').append(
 				"<tr><td>" + account.account_name + "</td><td>" +
 					(account.available ? "yes" : "no*") + "</td></tr>");
 				if (account.available) {
+					can_subscribe = true;
+				} else {
 					add_admin = true;
 				}
+			$('#account-table caption').text("Account Information for " + user_email); 
 			})
 		if (add_admin) {
 			$('#post-account-table').html("<p>* For these accounts, add the system user " + data.admin_email +
 				" as an Administrator to the account.</p>");
 		}
+		if (!can_subscribe) {
+			$('#post-account-table').html("<p>Problem: The system user, " + data.admin_email +
+				" does not have admin rights for any of your accounts. Solution: add the system user " +
+				"as an Administrator to your accounts.</p>");
+			$('#btn-do-subscribe').addAttr('disabled');			
+		}
+	}
+	
+	var do_subscribe_click = function(e) {
+		// The user clicked the subscribe button
+		e.preventDefault(); // Don't submit to the server
+	
+		return false;
 	}
 	
 	
@@ -307,6 +325,7 @@ $(document).ready(function () {
 	function add_events(){
         $('#btn-subscribe').on('click', subscribe_click);
         $('#btn-authenticate').on('click', authenticate_click);
+		$('#btn-do-subscribe').on('click', do_subscribe_click);
 		$('#private').on('change', private_click);
       }
 
