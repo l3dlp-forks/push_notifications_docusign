@@ -60,7 +60,7 @@ class PND_utils {
   public function is_admin($user_settings) {
     # parameter is returned data from User Setting List
 	
-	if (! ( is_object($user_settings) && property_exists  ( "userSettings" , $user_settings ))) {
+	if (! ( is_object($user_settings) && property_exists  ( $user_settings, "userSettings" ))) {
 		throw new UnexpectedValueException('is_admin: bad data from DS.'); # trouble in river city!
 		return false;
 	}
