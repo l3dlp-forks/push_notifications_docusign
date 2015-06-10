@@ -53,7 +53,7 @@ class PND_op_authenticate implements PND_Request
 
 	$accounts = $pnd_utils->available_accounts();
 	
-	$pnd_utils->return_data(array('msg' => 'getLoginInformation: ' , 'data' => ["login" => $login_info), "accounts" => $accounts);
+	$pnd_utils->return_data(array('msg' => 'getLoginInformation: ' , 'data' => ["login" => $login_info, "accounts" => $accounts]));
 
     return true;
   }
