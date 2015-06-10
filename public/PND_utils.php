@@ -41,7 +41,7 @@ class PND_utils {
     $service = new DocuSign_LoginService($ds_client);
 	$login_info = $service->login->getLoginInformation();
 	$accounts_raw = array(); # array of {user_id=> x, account_id=> y}
-	foreach($login_info["loginAccounts"] as $account_info) {
+	foreach($login_info->loginAccounts as $account_info) {
 		$accounts_raw[] = array("account_id" => $account_info["accountId"], "user_id" => $account_info["userId"]);
 	}
 	
