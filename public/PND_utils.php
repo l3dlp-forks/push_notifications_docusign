@@ -42,7 +42,7 @@ class PND_utils {
 	$login_info = $service->login->getLoginInformation();
 	$accounts_raw = array(); # array of {user_id=> x, account_id=> y}
 	foreach($login_info->loginAccounts as $account_info) {
-		$accounts_raw[] = array("account_id" => $account_info["accountId"], "user_id" => $account_info["userId"]);
+		$accounts_raw[] = array("account_id" => $account_info->accountId, "user_id" => $account_info->userId);
 	}
 	
 	# next find where he's an admin
@@ -60,14 +60,14 @@ class PND_utils {
   public function is_admin($user_settings) {
     # parameter is returned data from User Setting List
 	
-	if (! ( is_array($user_settings) && array_key_exists ( "userSettings" , $user_settings ))) {
+	if (! ( is_object($user_settings) && property_exists  ( "userSettings" , $user_settings ))) {
 		throw new UnexpectedValueException('is_admin: bad data from DS.'); # trouble in river city!
 		return false;
 	}
 	
-	foreach ($user_settings["userSettings"] as $setting) {
-		if ($setting["name"] === "canManageAccount") {
-			return $setting["value"] === true;  # admin?
+	foreach ($user_settings->userSettings as $setting) {
+		if ($setting->name === "canManageAccount") {
+			return $setting=>value === true;  # admin?
 		}
 	}
 
