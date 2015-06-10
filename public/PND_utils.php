@@ -23,7 +23,7 @@ class PND_utils {
 	if ($email === true && $pw === true) {
 		# use admin credentials
 		$email = $pnd_config["docusign_admin_email"];
-		$ps = $pnd_config["docusign_admin_pw"];
+		$pw = $pnd_config["docusign_admin_pw"];
 	}
 		
 	$ds_config = array(
