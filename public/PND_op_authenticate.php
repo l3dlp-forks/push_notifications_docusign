@@ -65,7 +65,7 @@ class PND_op_authenticate implements PND_Request
 	#	available  # true/false -- can notifications be received from the account?
 	#		(Is our admin user an admin for this account?)
 	foreach ($login_info->loginAccounts as $account_info) {
-		$accounts[] = $array(
+		$accounts[] = array(
 			'user_name' => $account_info->userName,
 			'user_email' => $account_info->email,
 			'user_id' => $account_info->userId,
