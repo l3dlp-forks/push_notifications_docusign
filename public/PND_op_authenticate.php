@@ -34,9 +34,9 @@ class PND_op_authenticate implements PND_Request
 		return true;
 	}
 
-	$service = new DocuSign_LoginService($ds_client);
-	$response = $service->login->getLoginInformation();
-	# Response:  {
+	$service = new DocuSign_Service($ds_client);
+	$login_info = $service->login->getLoginInformation();
+	# $login_info:  {
     #   "loginAccounts": [
     #        {
     #            "name": "DocuSign",
@@ -51,7 +51,9 @@ class PND_op_authenticate implements PND_Request
     #    ]
     # }	
 
-	$pnd_utils->return_data(array('msg' => 'getLoginInformation: ' , 'data' => $response));
+	$accounts = $pnd_utils->available_accounts();
+	
+	$pnd_utils->return_data(array('msg' => 'getLoginInformation: ' , 'data' => ["login" => $login_info), "accounts" => $accounts);
 
     return true;
   }
