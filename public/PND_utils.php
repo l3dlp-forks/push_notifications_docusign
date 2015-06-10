@@ -51,7 +51,7 @@ class PND_utils {
 		$ds_client = $this->new_docusign_client($pnd_config["docusign_admin_user"], $pnd_config["docusign_admin_pw"],
 			$account_user["account_id"]); # create a new client
 		$service = new DocuSign_UserService($ds_client);
-		$user_settings = $service->getUserSettingList($account_user["user_id"]);
+		$user_settings = $service->user->getUserSettingList($account_user["user_id"]);
 		if ($this->is_admin($user_settings)) { $accounts[] = $account_user["account_id"]; }
 	}
 	return $accounts;
