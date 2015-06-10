@@ -55,7 +55,7 @@ class PND_op_authenticate implements PND_Request
 
 	$admin_accounts = $pnd_utils->admin_accounts();
 	$accounts = array();
-	$results = array('admin_email' => $pnd_config["docusign_admin_email"], 'accounts' => $accounts);
+	$results = array('admin_email' => $pnd_config["docusign_admin_email"]); # and 'accounts'
 	# Each account item is an associative array with these fields:
 	#	user_name
 	# 	user_email
@@ -73,7 +73,7 @@ class PND_op_authenticate implements PND_Request
 			'account_id' => $account_info->accountId,
 			'available' => in_array ($account_info->accountId, $admin_accounts, true));
 	}
-	
+	$results['accounts'] = $accounts;
 	$pnd_utils->return_data($results);
 
     return true;
