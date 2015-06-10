@@ -34,7 +34,7 @@ class PND_op_authenticate implements PND_Request
 		return true;
 	}
 
-	$service = new DocuSign_Service($ds_client);
+	$service = new DocuSign_LoginService($ds_client);
 	$login_info = $service->login->getLoginInformation();
 	# $login_info:  {
     #   "loginAccounts": [

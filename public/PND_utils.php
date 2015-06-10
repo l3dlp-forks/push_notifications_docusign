@@ -38,7 +38,7 @@ class PND_utils {
 	# return array of the accounts that the admin user has access to
 	global $pnd_config;
 	$ds_client = $this->new_docusign_client($pnd_config["docusign_admin_user"], $pnd_config["docusign_admin_pw"]);
-    $service = new DocuSign_Service($ds_client);
+    $service = new DocuSign_LoginService($ds_client);
 	$login_info = $service->login->getLoginInformation();
 	$accounts_raw = array(); # array of {user_id=> x, account_id=> y}
 	foreach($login_info["loginAccounts"] as $account_info) {
@@ -50,7 +50,7 @@ class PND_utils {
 	foreach($accounts_raw as $account_user) {
 		$ds_client = $this->new_docusign_client($pnd_config["docusign_admin_user"], $pnd_config["docusign_admin_pw"],
 			$account_user["account_id"]); # create a new client
-		$service = new DocuSign_Service($ds_client);
+		$service = new DocuSign_UserService($ds_client);
 		$user_settings = $service->getUserSettingList($account_user["user_id"]);
 		if ($this->is_admin($user_settings)) { $accounts[] = $account_user["account_id"]; }
 	}
