@@ -271,7 +271,7 @@ $(document).ready(function () {
 		// Populate the form
 		var add_admin = false;
 		data.accounts.forEach(function(account, i, accounts){
-			$('#account-table tbody').html(
+			$('#account-table tbody').after(
 				"<tr><td>" + account.account_name + "</td><td>" +
 					(account.available ? "yes" : "no*") + "</td></tr>");
 				if (account.available) {
@@ -279,8 +279,8 @@ $(document).ready(function () {
 				}
 			})
 		if (add_admin) {
-			$('#post-account-table').html("* For these accounts, add the system user " + data.admin_email +
-				" as an Administrator to the account.");
+			$('#post-account-table').html("<p>* For these accounts, add the system user " + data.admin_email +
+				" as an Administrator to the account.</p>");
 		}
 	}
 	
