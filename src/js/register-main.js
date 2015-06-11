@@ -199,6 +199,7 @@ $(document).ready(function () {
 		$('#form-subscribe').on('hidden.bs.collapse', function (e) {
 			$('#form-authenticate').collapse('show');})	
 
+		hide_message();
 		$('#form-subscribe').collapse('hide');		
     }
 	var private_click = function(e) {
