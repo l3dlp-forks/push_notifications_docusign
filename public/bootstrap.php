@@ -24,5 +24,6 @@ require 'vendor_lsk/DocuSign-PHP-Client/src/service/DocuSign_UserService.php';
 
 require (LIB_PATH . "PND_utils.php");
 require (LIB_PATH . "PND_op_authenticate.php");
+require (LIB_PATH . "PND_op_subscribe.php");
 
 

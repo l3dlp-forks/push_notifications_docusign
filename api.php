@@ -76,16 +76,17 @@ class PND_API {
 ##############################################################################
 # 
 # Mainline
-
+#
+# Setup:
 $pnd_api = new PND_API();
 $pnd_handlers = new PND_HandlerChain();
 $pnd_handlers->addHandler( new PND_op_authenticate() );
+$pnd_handlers->addHandler( new PND_op_subscribe() );
+
+# Here we go...
 if (!isset($_GET['op']) || strlen($_GET['op']) < 1) {
  	$pnd_utils->return_data( 
 		array( 'bad_data' => array(), 'msg' => 'Missing op' ), 400);
 	exit (0);
 }
 $pnd_handlers->handle($_GET['op']);
-
-
-

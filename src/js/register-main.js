@@ -9,20 +9,14 @@ $(document).ready(function () {
 	// conservative and include it.
     
 	var cookie_name = 'push_subscriber',
-		user_email;
+		user_email,
+		accounts;
 	
 	function add_eventsXXXXXXXXXXXXXXXXXXXXXXXXX(){
 		$('#btn-subscribe').on('click', function (e) {
 			if (pnds.isPushEnabled) {unsubscribe();} else {subscribe();}
 		});
     }
-
-	function send_subscription_to_server(subscription) {
-	  // TODO: Send the subscription.subscriptionId and 
-	  // subscription.endpoint to your server and save 
-	  // it to send a push message at a later date
-	  console.log('TODO: Implement send_subscription_to_server()');
-	}
 
 	function send_unsubscribe_to_server(subscription) {
 	  // TODO: Send the subscription.subscriptionId and 
@@ -103,44 +97,28 @@ $(document).ready(function () {
 //
 // subscribe
 	function subscribe() {
-		working(true);
-		hide_message();
-		post_status();	
 		navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
 			serviceWorkerRegistration.pushManager.subscribe({userVisibleOnly: true})
 			.then(function(subscription) {
-				// The subscription was successful
+				// The subscription was successfully created.
+				// We are called with the subscription
 				pnds.isPushEnabled = true;
-			//	pushButton.textContent = 'Disable Push Messages';
-			//	pushButton.disabled = false;
-
-			//	showCurlCommand(subscription);
-
-				// TODO: Send the subscription.subscriptionId and 
-				// subscription.endpoint to your server
-				// and save it to send a push message at a later date
-				
 				send_subscription_to_server(subscription);
-				working(false);
 				return;
 			})
 			.catch(function(e) {
 				if (Notification.permission === 'denied') {
-				  // The user denied the notification permission which
-				  // means we failed to subscribe and the user will need
-				  // to manually change the notification permission to
-				  // subscribe to push messages
-				  window.Demo.debug.log('Permission for Notifications was denied');
-				  pushButton.disabled = true;
+					// The user denied the notification permission which
+					// means we failed to subscribe and the user will need
+					// to manually change the notification permission to
+					// subscribe to push messages
+					subscription_failed("Permission to receive push notifications was denied.");
 				} else {
-				  // A problem occurred with the subscription, this can
-				  // often be down to an issue or lack of the gcm_sender_id
-				  // and / or gcm_user_visible_only
-				  window.Demo.debug.log('Unable to subscribe to push.', e);
-				  pushButton.disabled = false;
-				  pushButton.textContent = 'Enable Push Messages';
+					// A problem occurred with the subscription, this can
+					// often be down to an issue or lack of the gcm_sender_id
+					// and / or gcm_user_visible_only
+					subscription_failed("Unable to subscribe to push notification.");
 				}
-				working(false);
 			});
 		});
 	}
@@ -264,6 +242,8 @@ $(document).ready(function () {
 		// The user authenticated successfully.
 		// Show the do-subscribe form with the potential subscription information
 		//
+		// Store the accounts information
+		accounts = data.accounts;
 		// Show the modal
 		$('#form-authenticate').on('hidden.bs.collapse', function (e) {
 			$('#form-subscribe-button').collapse('show');})	
@@ -298,10 +278,49 @@ $(document).ready(function () {
 	var do_subscribe_click = function(e) {
 		// The user clicked the subscribe button
 		e.preventDefault(); // Don't submit to the server
-	
+		working(true);
+		hide_message();
+		post_status();
+		subscribe();
 		return false;
 	}
+
+	function send_subscription_to_server(subscription) {
+		// We try to get the server to subscribe us to DocuSign. 
+		// If it doesn't work then we need to remove the local subscription
+		
+		data = {subscription: subscription, accounts: accounts};
+		
+		$.ajax(pnds.api_url + "?op=subscribe",  // Ajax Methods: https://github.com/jquery/api.jquery.com/issues/49
+			{method: "POST",
+			 contentType: "application/json; charset=UTF-8",
+			 processData: false,
+			 data: JSON.stringify(data)})
+		.done(function(data, textStatus, jqXHR){
+			subscribed(data);
+		})
+		.fail(function(jqXHR, textStatus, errorThrown) {
+			$this.data.subscription.unsubscribe();
+			if (jqXHR.status === 400 && jqXHR.responseJSON && jqXHR.responseJSON.hasOwnProperty('api')) {
+				// Error message from api
+				post_message("<h2>Problem: " + jqXHR.responseJSON.msg + "</h2>");
+			} else {
+				post_message("<h2>Problem: " + textStatus + "</h2>"); 
+			}
+		})
+		.always(function() {
+			working(false);
+		});		
+	}
 	
+	function subscribed(data) {
+		post_status("Subscribed!" + JSON.stringify(data));
+	}
+	
+	function subscription_failed(msg) {
+		post_message(msg);
+		working(false);
+	}
 	
 	
 ///////////////////////////////////////////////////////////////////////
