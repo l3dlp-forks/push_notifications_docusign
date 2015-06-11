@@ -12,12 +12,6 @@ $(document).ready(function () {
 		user_email,
 		accounts;
 	
-	function add_eventsXXXXXXXXXXXXXXXXXXXXXXXXX(){
-		$('#btn-subscribe').on('click', function (e) {
-			if (pnds.isPushEnabled) {unsubscribe();} else {subscribe();}
-		});
-    }
-
 	function send_unsubscribe_to_server(subscription) {
 	  // TODO: Send the subscription.subscriptionId and 
 	  // subscription.endpoint to your server and save 
@@ -107,6 +101,7 @@ $(document).ready(function () {
 				return;
 			})
 			.catch(function(e) {
+				pnds.isPushEnabled = false;
 				if (Notification.permission === 'denied') {
 					// The user denied the notification permission which
 					// means we failed to subscribe and the user will need
@@ -151,6 +146,7 @@ $(document).ready(function () {
 		return;
 	  }
 
+	  working(true); // starting async operations
 	  // We need the service worker registration to check for a subscription
 	  navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
 		// Do we already have a push message subscription?
@@ -161,6 +157,7 @@ $(document).ready(function () {
 				// We aren’t subscribed to push, so set UI
 				// to allow the user to request push subscription
 				post_status('Notifications are not enabled.');
+				working(false);
 				add_subscription_enable();
 				return; //// early return
 			}
@@ -172,6 +169,7 @@ $(document).ready(function () {
 				post_status('Notifications are not enabled.');
 				post_message('<p>Problem: Notification issue. Please re-subscribe.</p><small>Issue: Subscribed but missing cookie</small>');
 				internal_unsubscribe(subscription);
+				working(false);
 				return;
 			}
 			pnds.isPushEnabled = true;
@@ -180,10 +178,12 @@ $(document).ready(function () {
 			// Set UI to show that we are subscribed for push messages
 			post_status('Notifications are enabled!');
 			show_subscription(subscription);
+			working(false);
 		  })
 		  .catch(function(err) {
     		post_status('Notifications are not enabled.');
 			post_message('<p>Problem with current notification subscription</p><small>Issue: Error from Push Manager.</small>');
+		    working(false);
 		  });
 	  });
 	}
@@ -289,18 +289,20 @@ $(document).ready(function () {
 		// We try to get the server to subscribe us to DocuSign. 
 		// If it doesn't work then we need to remove the local subscription
 		
-		data = {subscription: subscription, accounts: accounts};
+		data = {subscription: subscription.endpoint, accounts: accounts};
 		
 		$.ajax(pnds.api_url + "?op=subscribe",  // Ajax Methods: https://github.com/jquery/api.jquery.com/issues/49
 			{method: "POST",
 			 contentType: "application/json; charset=UTF-8",
 			 processData: false,
-			 data: JSON.stringify(data)})
+			 data: JSON.stringify(data),
+			 context: subscription})
 		.done(function(data, textStatus, jqXHR){
 			subscribed(data);
 		})
 		.fail(function(jqXHR, textStatus, errorThrown) {
-			$this.data.subscription.unsubscribe();
+			this.unsubscribe(); // Unsubscribe from the subscription object
+			pnds.isPushEnabled = false;			
 			if (jqXHR.status === 400 && jqXHR.responseJSON && jqXHR.responseJSON.hasOwnProperty('api')) {
 				// Error message from api
 				post_message("<h2>Problem: " + jqXHR.responseJSON.msg + "</h2>");
