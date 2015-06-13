@@ -188,7 +188,7 @@ $(document).ready(function () {
     }
 //
 // 	4. The user clicked Authenticate
-	var authenticate_click = function(e) 
+	var authenticate_click = function(e) {
 		e.preventDefault(); // Don't submit to the server
 		working(true);
 		hide_message();
