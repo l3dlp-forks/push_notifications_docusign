@@ -177,7 +177,7 @@ $(document).ready(function () {
 		$('#form-unsubscribe').on('hidden.bs.collapse', function (e) {
 			$('#form-subscribe').collapse('show');})	
 
-		if ($('#form-unsubscribe').visible()) {
+		if ($('#form-unsubscribe').is(':visible')) {
 			$('#form-unsubscribe').collapse('hide');		
 		} else {
 			$('#form-subscribe').collapse('show');
