@@ -326,6 +326,12 @@ $(document).ready(function () {
 // 	9.  Fully subscribed. Post info to user	
 	function subscribed(data) {
 		post_status("Subscribed!" + JSON.stringify(data));
+		
+		// Show unsubscribe form
+		$('#form-subscribe-button').on('hidden.bs.collapse', function (e) {
+			$('#form-unsubscribe').collapse('show');})	
+
+		$('#form-subscribe-button').collapse('hide');		
 	}
 //
 // 	9.  Browser subscription failed....		
