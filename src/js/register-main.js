@@ -34,6 +34,13 @@ $(document).ready(function () {
 ///////////////////////////////////////////////////////////////////////
 //
 // unsubscribe
+	var unsubscribe_click = function(e) {
+		// The user clicked the unsubscribe button
+		e.preventDefault(); // Don't submit to the server
+		unsubscribe();
+		return false;
+	}
+
 	function unsubscribe() {
 		working(true);
 		hide_message();
@@ -55,7 +62,6 @@ $(document).ready(function () {
 				
 					// We have a subscription, so call unsubscribe on it
 					internal_unsubscribe(subscription);
-					working(false);
 				}
 			).catch(function(e) {
 				window.Demo.debug.log('Problem from Push Manager.', e);
@@ -69,6 +75,7 @@ $(document).ready(function () {
 		subscription.unsubscribe().then(function(successful) {
 			unsubscribed(subscription);
 			post_message('<p>Unsubscribed.</p>');
+			working(false);
 		}).catch(function(e) {
 			// We failed to unsubscribe, this can lead to
 			// an unusual state, so may be best to remove 
@@ -76,6 +83,7 @@ $(document).ready(function () {
 			// inform the user that you disabled push
 			unsubscribed(subscription);
 			post_message('<p>Unsubscribed.</p><small>Issue: Problem with unsubscribing</small>');
+			working(false);
 		});
 	}
 	
@@ -124,8 +132,8 @@ $(document).ready(function () {
 				// We aren’t subscribed to push, so set UI
 				// to allow the user to request push subscription
 				post_status('Notifications are not enabled.');
-				working(false);
 				add_subscription_enable();
+				working(false);
 				return; //// early return
 			}
 
@@ -136,7 +144,6 @@ $(document).ready(function () {
 				post_status('Notifications are not enabled.');
 				post_message('<p>Problem: Notification issue. Please re-subscribe.</p><small>Issue: Subscribed but missing cookie</small>');
 				internal_unsubscribe(subscription);
-				working(false);
 				return;
 			}
 			pnds.isPushEnabled = true;
@@ -150,6 +157,7 @@ $(document).ready(function () {
 		  .catch(function(err) {
     		post_status('Notifications are not enabled.');
 			post_message('<p>Problem with current notification subscription</p><small>Issue: Error from Push Manager.</small>');
+			add_subscription_enable();
 		    working(false);
 		  });
 	  });
@@ -165,7 +173,15 @@ $(document).ready(function () {
 // 	1. Enable user to start the subscription process:
 //     Show the form that confirms this is a private browser
 	function add_subscription_enable() {
-		$('#form-subscribe').collapse('show');
+		// if the unsubscribe form is visible, then first make it go away
+		$('#form-unsubscribe').on('hidden.bs.collapse', function (e) {
+			$('#form-subscribe').collapse('show');})	
+
+		if ($('#form-unsubscribe').visible()) {
+			$('#form-unsubscribe').collapse('hide');		
+		} else {
+			$('#form-subscribe').collapse('show');
+		}
 	}
 //
 // 	2. The user clicked the Private checkbox. 
@@ -359,6 +375,7 @@ $(document).ready(function () {
 	}
 	function add_events(){
         $('#btn-subscribe').on('click', subscribe_click);
+		$('#btn-unsubscribe').on('click', unsubscribe_click);
         $('#btn-authenticate').on('click', authenticate_click);
 		$('#btn-do-subscribe').on('click', do_subscribe_click);
 		$('#private').on('change', private_click);
