@@ -237,12 +237,6 @@ $(document).ready(function () {
 	function authenticated(data) {
 		// Store the accounts information for future use
 		accounts = data.accounts;
-		// Show the modal
-		$('#form-authenticate').on('hidden.bs.collapse', function (e) {
-			$('#form-subscribe-button').collapse('show');})	
-
-		$('#form-authenticate').collapse('hide');		
-	
 		// Populate the form
 		var add_admin = false, can_subscribe = false;
 		data.accounts.forEach(function(account, i, a){
@@ -266,6 +260,12 @@ $(document).ready(function () {
 				"as an Administrator to your accounts.</p>");
 			$('#btn-do-subscribe').addAttr('disabled');			
 		}
+		
+		// Show the modal
+		$('#form-authenticate').on('hidden.bs.collapse', function (e) {
+			$('#form-subscribe-button').collapse('show');})	
+
+		$('#form-authenticate').collapse('hide');		
 	}
 //
 // 	6. 	The user wants to subscribe.
