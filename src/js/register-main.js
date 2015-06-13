@@ -239,6 +239,7 @@ $(document).ready(function () {
 		accounts = data.accounts;
 		// Populate the form
 		var add_admin = false, can_subscribe = false;
+		$('#account-table tbody').html(""); // clear any prior information
 		data.accounts.forEach(function(account, i, a){
 			$('#account-table tbody').append(
 				"<tr><td>" + account.account_name + "</td><td>" +
