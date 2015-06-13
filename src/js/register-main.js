@@ -46,6 +46,7 @@ $(document).ready(function () {
 		hide_message();
 		post_status();	
 
+		accounts = null;
 		navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
 			// To unsubscribe from push messaging, you need to get the
 			// subscription object, which you can call unsubscribe() on.
