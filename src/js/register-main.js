@@ -244,7 +244,7 @@ $(document).ready(function () {
 	
 		// Populate the form
 		var add_admin = false, can_subscribe = false;
-		data.accounts.forEach(function(account, i, accounts){
+		data.accounts.forEach(function(account, i, a){
 			$('#account-table tbody').append(
 				"<tr><td>" + account.account_name + "</td><td>" +
 					(account.available ? "yes" : "no*") + "</td></tr>");
