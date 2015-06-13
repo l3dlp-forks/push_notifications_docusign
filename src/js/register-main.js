@@ -85,39 +85,6 @@ $(document).ready(function () {
 		add_subscription_enable();	
 	}
 
-
-///////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////
-//
-// subscribe
-	function subscribe() {
-		navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
-			serviceWorkerRegistration.pushManager.subscribe({userVisibleOnly: true})
-			.then(function(subscription) {
-				// The subscription was successfully created.
-				// We are called with the subscription
-				pnds.isPushEnabled = true;
-				send_subscription_to_server(subscription);
-				return;
-			})
-			.catch(function(e) {
-				pnds.isPushEnabled = false;
-				if (Notification.permission === 'denied') {
-					// The user denied the notification permission which
-					// means we failed to subscribe and the user will need
-					// to manually change the notification permission to
-					// subscribe to push messages
-					subscription_failed("Permission to receive push notifications was denied.");
-				} else {
-					// A problem occurred with the subscription, this can
-					// often be down to an issue or lack of the gcm_sender_id
-					// and / or gcm_user_visible_only
-					subscription_failed("Unable to subscribe to push notification.");
-				}
-			});
-		});
-	}
-
 ///////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////
 //
@@ -190,11 +157,28 @@ $(document).ready(function () {
 
 ///////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////
 //
-// 	Enable user to add a subscription
+//  Subscription functions
+//
+// 	1. Enable user to start the subscription process:
+//     Show the form that confirms this is a private browser
 	function add_subscription_enable() {
 		$('#form-subscribe').collapse('show');
 	}
+//
+// 	2. The user clicked the Private checkbox. 
+//     Enable/disable the subscribe pushbutton
+	var private_click = function(e) {
+		if ($('#private').is(':checked')) {
+			$('#btn-subscribe').removeAttr('disabled');
+		} else {
+			$('#btn-subscribe').attr('disabled', 'disabled');
+		}
+    }
+//
+// 	3. Show the Authentication form to get the user's email and pw
 	var subscribe_click = function(e) {
 		$('#form-subscribe').on('hidden.bs.collapse', function (e) {
 			$('#form-authenticate').collapse('show');})	
@@ -202,17 +186,9 @@ $(document).ready(function () {
 		hide_message();
 		$('#form-subscribe').collapse('hide');		
     }
-	var private_click = function(e) {
-		// The user clicked the Private checkbox.
-		// Set disabled state of the subscribe pushbutton
-		if ($('#private').is(':checked')) {
-			$('#btn-subscribe').removeAttr('disabled');
-		} else {
-			$('#btn-subscribe').attr('disabled', 'disabled');
-		}
-    }
-	var authenticate_click = function(e) {
-		// The user clicked Authenticate
+//
+// 	4. The user clicked Authenticate
+	var authenticate_click = function(e) 
 		e.preventDefault(); // Don't submit to the server
 		working(true);
 		hide_message();
@@ -238,12 +214,11 @@ $(document).ready(function () {
 		});		
 		return false;
     }
-	
+//
+// 	5. 	The user authenticated successfully.
+// Show the do-subscribe form with the potential subscription information
 	function authenticated(data) {
-		// The user authenticated successfully.
-		// Show the do-subscribe form with the potential subscription information
-		//
-		// Store the accounts information
+		// Store the accounts information for future use
 		accounts = data.accounts;
 		// Show the modal
 		$('#form-authenticate').on('hidden.bs.collapse', function (e) {
@@ -265,8 +240,8 @@ $(document).ready(function () {
 			$('#account-table caption').text("Account Information for " + user_email); 
 			})
 		if (add_admin) {
-			$('#post-account-table').html("<p>* For these accounts, add the system user " + data.admin_email +
-				" as an Administrator to the account.</p>");
+			$('#post-account-table').html("<p>* To receive notifications for these accounts, please add the system user " + data.admin_email +
+				" as an administrator.</p>");
 		}
 		if (!can_subscribe) {
 			$('#post-account-table').html("<p>Problem: The system user, " + data.admin_email +
@@ -275,7 +250,9 @@ $(document).ready(function () {
 			$('#btn-do-subscribe').addAttr('disabled');			
 		}
 	}
-	
+//
+// 	6. 	The user wants to subscribe.
+//      First, create a subscription for the service worked internal to the browser	
 	var do_subscribe_click = function(e) {
 		// The user clicked the subscribe button
 		e.preventDefault(); // Don't submit to the server
@@ -285,7 +262,37 @@ $(document).ready(function () {
 		subscribe();
 		return false;
 	}
-
+//
+// 	7.  Subscribe within the browser
+	function subscribe() {
+		navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
+			serviceWorkerRegistration.pushManager.subscribe({userVisibleOnly: true})
+			.then(function(subscription) {
+				// The subscription was successfully created.
+				// We are called with the subscription
+				pnds.isPushEnabled = true;
+				send_subscription_to_server(subscription);
+				return;
+			})
+			.catch(function(e) {
+				pnds.isPushEnabled = false;
+				if (Notification.permission === 'denied') {
+					// The user denied the notification permission which
+					// means we failed to subscribe and the user will need
+					// to manually change the notification permission to
+					// subscribe to push messages
+					subscription_failed("Permission to receive push notifications was denied.");
+				} else {
+					// A problem occurred with the subscription, this can
+					// often be down to an issue or lack of the gcm_sender_id
+					// and / or gcm_user_visible_only
+					subscription_failed("Unable to subscribe to push notification.");
+				}
+			});
+		});
+	}	
+//
+// 	8.  Browser subscription worked. Send the subscription to the server.
 	function send_subscription_to_server(subscription) {
 		// We try to get the server to subscribe us to DocuSign. 
 		// If it doesn't work then we need to remove the local subscription
@@ -315,17 +322,17 @@ $(document).ready(function () {
 			working(false);
 		});		
 	}
-	
+//
+// 	9.  Fully subscribed. Post info to user	
 	function subscribed(data) {
 		post_status("Subscribed!" + JSON.stringify(data));
 	}
-	
+//
+// 	9.  Browser subscription failed....		
 	function subscription_failed(msg) {
 		post_message(msg);
 		working(false);
 	}
-	
-	
 ///////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////
 //
@@ -367,10 +374,6 @@ $(document).ready(function () {
 			$('#working').modal('hide');
 		}
 	}
-	
-	
-
-// pushbutton
 	
 
 ///////////////////////////////////////////////////////////////////////
