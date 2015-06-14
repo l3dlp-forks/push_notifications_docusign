@@ -45,7 +45,7 @@ var pndso = new function() {
 		this.post_status();	
 
 		this.accounts = null;
-		navigator.serviceWorker.ready.then(functionserviceWorker_ready(serviceWorkerRegistration) {
+		navigator.serviceWorker.ready.then(function serviceWorker_ready(serviceWorkerRegistration) {
 			// To unsubscribe from push messaging, you need to get the
 			// subscription object, which you can call unsubscribe() on.
 			serviceWorkerRegistration.pushManager.getSubscription().then(
