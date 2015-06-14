@@ -382,7 +382,7 @@ console.log("13, %o", err);
 ///////////////////////////////////////////////////////////////////////
 //
 // 	Show current subscription
-	this.function show_subscription() {
+	this.show_subscription = function() {
 	
 	}
 	
