@@ -96,6 +96,7 @@ var pndso = new function() {
 //
 // Once the service worker is registered set the initial state
 	this.initialiseState = function() {
+	  this = pndso;
 	  // Are Notifications supported in the service worker?
 	  if (!('showNotification' in ServiceWorkerRegistration.prototype)) {
 		this.post_status('Notifications are not enabled.');
