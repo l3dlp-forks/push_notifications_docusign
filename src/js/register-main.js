@@ -448,7 +448,5 @@ console.log("13, %o", err);
 
 // mainline
 $(document).ready(function () {
-	pndo.initalize();
-}
-	
-	
+	pndso.initialize();
+});
