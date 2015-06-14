@@ -292,7 +292,7 @@ console.log("13, %o", err);
 //
 // 	6. 	The user wants to subscribe.
 //      First, create a subscription for the service worked internal to the browser	
-	var this.do_subscribe_click = function(e) {
+	this.do_subscribe_click = function(e) {
 		// The user clicked the subscribe button
 		e.preventDefault(); // Don't submit to the server
 		this.working(true);
