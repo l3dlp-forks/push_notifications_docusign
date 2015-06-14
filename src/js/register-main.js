@@ -123,6 +123,7 @@ $(document).ready(function () {
 	  }
 
 	  working(true); // starting async operations
+	  sleep(0); // Let modal window paint 
 console.log(1);
 	  // We need the service worker registration to check for a subscription
 	  navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
