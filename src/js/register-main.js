@@ -227,6 +227,7 @@ $(document).ready(function () {
 			}
 		})
 		.always(function() {
+			$('#pw').val(""); // clear pw value
 			working(false);
 		});		
 		return false;
