@@ -397,11 +397,11 @@ console.log("13, %o", err);
 		$('.collapse').collapse('hide');
 	}
 	this.add_events = function(){
-        $('#btn-subscribe').on('click', subscribe_click);
-		$('#btn-unsubscribe').on('click', unsubscribe_click);
-        $('#btn-authenticate').on('click', authenticate_click);
-		$('#btn-do-subscribe').on('click', do_subscribe_click);
-		$('#private').on('change', private_click);
+        $('#btn-subscribe').on('click', this.subscribe_click);
+		$('#btn-unsubscribe').on('click', this.unsubscribe_click);
+        $('#btn-authenticate').on('click', this.authenticate_click);
+		$('#btn-do-subscribe').on('click', this.do_subscribe_click);
+		$('#private').on('change', this.private_click);
       }
 
 	this.post_status = function(msg) {
