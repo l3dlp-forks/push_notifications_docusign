@@ -123,17 +123,22 @@ $(document).ready(function () {
 	  }
 
 	  working(true); // starting async operations
+console.log(1);
 	  // We need the service worker registration to check for a subscription
 	  navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
 		// Do we already have a push message subscription?
 		serviceWorkerRegistration.pushManager.getSubscription()
 		  .then(function(subscription) {
+console.log(n);
 		  
 			if (!subscription) {
 				// We aren’t subscribed to push, so set UI
 				// to allow the user to request push subscription
+console.log(2);
 				post_status('Notifications are not enabled.');
+console.log(3);
 				add_subscription_enable();
+console.log(4);
 				working(false);
 				return; //// early return
 			}
@@ -142,20 +147,29 @@ $(document).ready(function () {
 			// Check that our cookie is present
 			var cookie_val = Cookies.get(cookie_name);
 			if (!cookie_val || cookie_val.length < 1) {			
+console.log(5);
 				post_status('Notifications are not enabled.');
 				post_message('<p>Problem: Notification issue. Please re-subscribe.</p><small>Issue: Subscribed but missing cookie</small>');
+console.log(6);
 				internal_unsubscribe(subscription);
+console.log(7);
 				return;
 			}
+console.log(8);
 			pnds.isPushEnabled = true;
 			// Keep server in sync with the latest subscriptionId
+console.log(9);
 			send_subscription_to_server(subscription);
 			// Set UI to show that we are subscribed for push messages
+console.log(10);
 			post_status('Notifications are enabled!');
+console.log(11);
 			show_subscription(subscription);
+console.log(12);
 			working(false);
 		  })
 		  .catch(function(err) {
+console.log(13);
     		post_status('Notifications are not enabled.');
 			post_message('<p>Problem with current notification subscription</p><small>Issue: Error from Push Manager.</small>');
 			add_subscription_enable();
