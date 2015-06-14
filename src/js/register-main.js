@@ -95,8 +95,10 @@ var pndso = new function() {
 ///////////////////////////////////////////////////////////////////////
 //
 // Once the service worker is registered set the initial state
+	this.initialiseState_start = function() {
+		pndso.initialiseState.call(pndso);
+	}
 	this.initialiseState = function() {
-	  this = pndso;
 	  // Are Notifications supported in the service worker?
 	  if (!('showNotification' in ServiceWorkerRegistration.prototype)) {
 		this.post_status('Notifications are not enabled.');
@@ -126,7 +128,7 @@ var pndso = new function() {
 	  
 	
 	this.initialiseState_start2 = function(){
-		pndso.initialiseState2.call(pnds);
+		pndso.initialiseState2.call(pndso);
 	}
 		
 	this.initialiseState2 = function(){
@@ -438,7 +440,7 @@ console.log("13, %o", err);
 		// enhance and add push messaging support, otherwise continue without it.
 		if ('serviceWorker' in navigator) {
 			navigator.serviceWorker.register(pnds.service_worker_url)
-			.then(this.initialiseState);
+			.then(this.initialiseState_start);
 		} else {
 			// The specific problem is that service workers aren't supported. 
 			this.post_message('<p>Problem: this browser does not support notifications. <br />Please see the browser support information below. </p><small>Issue: Service workers aren\'t supported</small>');
