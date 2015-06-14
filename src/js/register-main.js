@@ -169,7 +169,7 @@ console.log(12);
 			working(false);
 		  })
 		  .catch(function(err) {
-console.log(13);
+console.log("13, %o", err);
     		post_status('Notifications are not enabled.');
 			post_message('<p>Problem with current notification subscription</p><small>Issue: Error from Push Manager.</small>');
 			add_subscription_enable();
