@@ -123,14 +123,9 @@ var pndso = new function() {
 	  }
 
 	  this.working(true); // starting async operations
-	  setTimeout(pndso.initialiseState_start2, 0);  // Let modal window paint	  
+	  setTimeout(this.initialiseState2, 0);  // Let modal window paint	  
 	}
-	  
-	
-	this.initialiseState_start2 = function(){
-		pndso.initialiseState2.call(pndso);
-	}
-		
+	  		
 	this.initialiseState2 = function(){
 console.log(1);
 	// We need the service worker registration to check for a subscription
@@ -138,16 +133,16 @@ console.log(1);
 		// Do we already have a push message subscription?
 		serviceWorkerRegistration.pushManager.getSubscription()
 	.then(function(subscription) {
-console.log(n);  
+console.log(1.1);  
 		if (!subscription) {
 			// We aren’t subscribed to push, so set UI
 			// to allow the user to request push subscription
 console.log(2);
-			this.post_status('Notifications are not enabled.');
+			pndso.post_status('Notifications are not enabled.');
 console.log(3);
-			this.add_subscription_enable();
+			pndso.add_subscription_enable();
 console.log(4);
-			this.working(false);
+			pndso.working(false);
 			return; //// early return
 		}
 
@@ -156,10 +151,10 @@ console.log(4);
 		var cookie_val = Cookies.get(cookie_name);
 		if (!cookie_val || cookie_val.length < 1) {			
 console.log(5);
-			this.post_status('Notifications are not enabled.');
-			this.post_message('<p>Problem: Notification issue. Please re-subscribe.</p><small>Issue: Subscribed but missing cookie</small>');
+			pndso.post_status('Notifications are not enabled.');
+			pndso.post_message('<p>Problem: Notification issue. Please re-subscribe.</p><small>Issue: Subscribed but missing cookie</small>');
 console.log(6);
-			this.internal_unsubscribe(subscription);
+			pndso.internal_unsubscribe(subscription);
 console.log(7);
 			return;
 		}
@@ -167,21 +162,21 @@ console.log(8);
 		pnds.isPushEnabled = true;
 		// Keep server in sync with the latest subscriptionId
 console.log(9);
-		this.send_subscription_to_server(subscription);
+		pndso.send_subscription_to_server(subscription);
 		// Set UI to show that we are subscribed for push messages
 console.log(10);
-		this.post_status('Notifications are enabled!');
+		pndso.post_status('Notifications are enabled!');
 console.log(11);
-		this.show_subscription(subscription);
+		pndso.show_subscription(subscription);
 console.log(12);
-		this.working(false);
+		pndso.working(false);
 	  })
 	  .catch(function(err) {
 console.log("13, %o", err);
-		this.post_status('Notifications are not enabled.');
-		this.post_message('<p>Problem with current notification subscription</p><small>Issue: Error from Push Manager.</small>');
-		this.add_subscription_enable();
-		this.working(false);
+		pndso.post_status('Notifications are not enabled.');
+		pndso.post_message('<p>Problem with current notification subscription</p><small>Issue: Error from Push Manager.</small>');
+		pndso.add_subscription_enable();
+		pndso.working(false);
 	  });
   });
   }
