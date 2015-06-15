@@ -132,6 +132,7 @@ console.log(1);
 	navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
 		// Do we already have a push message subscription?
 		// See https://developer.mozilla.org/en-US/docs/Web/API/PushManager/PushManager.getSubscription
+console.log(1.01);
 		serviceWorkerRegistration.pushManager.getSubscription().then(function(subscription) {
 console.log(1.1);  
 		if (!subscription) {
