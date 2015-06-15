@@ -218,35 +218,35 @@ console.log("13, %o", err);
 		$('#form-subscribe').on('hidden.bs.collapse', function (e) {
 			$('#form-authenticate').collapse('show');})	
 
-		this.hide_message();
+		pndso.hide_message();
 		$('#form-subscribe').collapse('hide');		
     }
 //
 // 	4. The user clicked Authenticate
 	var authenticate_click = function(e) {
 		e.preventDefault(); // Don't submit to the server
-		this.working(true);
-		this.hide_message();
-		this.post_status();
-		user_email = $('#email').val();
+		pndso.working(true);
+		pndso.hide_message();
+		pndso.post_status();
+		pndso.user_email = $('#email').val();
 		
 		$.ajax(pnds.api_url + "?op=authenticate",  // Ajax Methods: https://github.com/jquery/api.jquery.com/issues/49
 			{method: "POST",
-			 data: {email: user_email, pw: $('#pw').val()}})
+			 data: {email: pndso.user_email, pw: $('#pw').val()}})
 		.done(function(data, textStatus, jqXHR){
-			this.authenticated(data);
+			pndso.authenticated(data);
 		})
 		.fail(function(jqXHR, textStatus, errorThrown) {
 			if (jqXHR.status === 400 && jqXHR.responseJSON && jqXHR.responseJSON.hasOwnProperty('api')) {
 				// Error message from api
-				this.post_message("<h2>Problem: " + jqXHR.responseJSON.msg + "</h2>");
+				pndso.post_message("<h2>Problem: " + jqXHR.responseJSON.msg + "</h2>");
 			} else {
-				this.post_message("<h2>Problem: " + textStatus + "</h2>"); 
+				pndso.post_message("<h2>Problem: " + textStatus + "</h2>"); 
 			}
 		})
 		.always(function() {
 			$('#pw').val(""); // clear pw value
-			this.working(false);
+			pndso.working(false);
 		});		
 		return false;
     }
@@ -255,7 +255,7 @@ console.log("13, %o", err);
 // Show the do-subscribe form with the potential subscription information
 	this.authenticated = function(data) {
 		// Store the accounts information for future use
-		this.accounts = data.accounts;
+		pndso.accounts = data.accounts;
 		// Populate the form
 		var add_admin = false, can_subscribe = false;
 		$('#account-table tbody').html(""); // clear any prior information
@@ -268,7 +268,7 @@ console.log("13, %o", err);
 				} else {
 					add_admin = true;
 				}
-			$('#account-table caption').text("Account Information for " + user_email); 
+			$('#account-table caption').text("Account Information for " + pndso.user_email); 
 			})
 		if (add_admin) {
 			$('#post-account-table').html("<p>* To receive notifications for these accounts, please add the system user " + data.admin_email +
@@ -293,10 +293,10 @@ console.log("13, %o", err);
 	this.do_subscribe_click = function(e) {
 		// The user clicked the subscribe button
 		e.preventDefault(); // Don't submit to the server
-		this.working(true);
-		this.hide_message();
-		this.post_status();
-		this.subscribe();
+		pndso.working(true);
+		pndso.hide_message();
+		pndso.post_status();
+		pndso.subscribe();
 		return false;
 	}
 //
@@ -308,7 +308,7 @@ console.log("13, %o", err);
 				// The subscription was successfully created.
 				// We are called with the subscription
 				pnds.isPushEnabled = true;
-				this.send_subscription_to_server(subscription);
+				pndso.send_subscription_to_server(subscription);
 				return;
 			})
 			.catch(function(e) {
@@ -318,12 +318,12 @@ console.log("13, %o", err);
 					// means we failed to subscribe and the user will need
 					// to manually change the notification permission to
 					// subscribe to push messages
-					this.subscription_failed("Permission to receive push notifications was denied.");
+					pndso.subscription_failed("Permission to receive push notifications was denied.");
 				} else {
 					// A problem occurred with the subscription, this can
 					// often be down to an issue or lack of the gcm_sender_id
 					// and / or gcm_user_visible_only
-					this.subscription_failed("Unable to subscribe to push notification.");
+					pndso.subscription_failed("Unable to subscribe to push notification.");
 				}
 			});
 		});
@@ -334,7 +334,7 @@ console.log("13, %o", err);
 		// We try to get the server to subscribe us to DocuSign. 
 		// If it doesn't work then we need to remove the local subscription
 		
-		data = {subscription: subscription.endpoint, accounts: accounts};
+		data = {subscription: subscription.endpoint, accounts: pndso.accounts};
 		
 		$.ajax(pnds.api_url + "?op=subscribe",  // Ajax Methods: https://github.com/jquery/api.jquery.com/issues/49
 			{method: "POST",
@@ -343,26 +343,26 @@ console.log("13, %o", err);
 			 data: JSON.stringify(data),
 			 context: subscription})
 		.done(function(data, textStatus, jqXHR){
-			this.subscribed(data);
+			pndso.subscribed(data);
 		})
 		.fail(function(jqXHR, textStatus, errorThrown) {
-			this.unsubscribe(); // Unsubscribe from the subscription object
+			pndso.unsubscribe(); // Unsubscribe from the subscription object
 			pnds.isPushEnabled = false;			
 			if (jqXHR.status === 400 && jqXHR.responseJSON && jqXHR.responseJSON.hasOwnProperty('api')) {
 				// Error message from api
-				this.post_message("<h2>Problem: " + jqXHR.responseJSON.msg + "</h2>");
+				pndso.post_message("<h2>Problem: " + jqXHR.responseJSON.msg + "</h2>");
 			} else {
-				this.post_message("<h2>Problem: " + textStatus + "</h2>"); 
+				pndso.post_message("<h2>Problem: " + textStatus + "</h2>"); 
 			}
 		})
 		.always(function() {
-			this.working(false);
+			pndso.working(false);
 		});		
 	}
 //
 // 	9.  Fully subscribed. Post info to user	
 	subscribed = function(data) {
-		this.post_status("Subscribed!" + JSON.stringify(data));
+		pndso.post_status("Subscribed!" + JSON.stringify(data));
 		
 		// Show unsubscribe form
 		$('#form-subscribe-button').on('hidden.bs.collapse', function (e) {
@@ -373,8 +373,8 @@ console.log("13, %o", err);
 //
 // 	9.  Browser subscription failed....		
 	this.subscription_failed = function(msg) {
-		this.post_message(msg);
-		this.working(false);
+		pndso.post_message(msg);
+		pndso.working(false);
 	}
 ///////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////
