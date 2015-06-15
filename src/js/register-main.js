@@ -386,25 +386,50 @@ var pndso = new function() {
 
 	this.internal_unsubscribe = function() {
 		pndso.subscription.unsubscribe().then(function subscription_unsubscribe(successful) {
-			pndso.unsubscribed.call(pndso,subscription);
+			pndso.send_unsubscribe_to_server.call(pndso);
 			pndso.post_message('<p>Unsubscribed.</p>');
-			pndso.working(false);
 		}).catch(function catch_unsubscribe(e) {
-			// We failed to unsubscribe, this can lead to
-			// an unusual state, so may be best to remove 
-			// the subscription id from your data store and 
-			// inform the user that you disabled push
-			pndso.unsubscribed.call(pndso, subscription);
+			// We failed to unsubscribe, this can lead to an unusual state, so may be best to remove 
+			// the subscription id from your data store and inform the user that you disabled push
+			pndso.send_unsubscribe_to_server.call(pndso);
 			pndso.post_message('<p>Unsubscribed.</p><small>Issue: Problem with unsubscribing</small>');
-			pndso.working(false);
 		});
 	}
 	
-	this.unsubscribed = function(subscription) {
-		pnds.isPushEnabled = false;
-		this.send_unsubscribe_to_server(subscription);
-		this.add_subscription_enable();	
+	this.send_unsubscribe_to_server = function() {
+		// Tell the server we've unsubscribed 
+		data = {subscription: this.subscription.endpoint};
+		
+		$.ajax(pnds.api_url + "?op=unsubscribe",  // Ajax Methods: https://github.com/jquery/api.jquery.com/issues/49
+			{method: "POST",
+			 contentType: "application/json; charset=UTF-8",
+			 processData: false,
+			 data: JSON.stringify(data),
+			 context: this})
+		.done(function(data, textStatus, jqXHR){
+			this.unsubscribed();
+		})
+		.fail(function(jqXHR, textStatus, errorThrown) {
+			this.unsubscribed();
+			this.isPushEnabled = false;			
+			if (jqXHR.status === 400 && jqXHR.responseJSON && jqXHR.responseJSON.hasOwnProperty('api')) {
+				// Error message from api
+				this.post_message("<h2>Problem: " + jqXHR.responseJSON.msg + "</h2>");
+			} else {
+				this.post_message("<h2>Problem: " + textStatus + "</h2>"); 
+			}
+		})
+		.always(function() {
+			this.working(false);
+		});		
 	}
+
+	this.unsubscribed = function() {
+		pnds.isPushEnabled = false;
+		this.subscription = null;
+		this.add_subscription_enable();
+	}
+
 	
 ///////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////
