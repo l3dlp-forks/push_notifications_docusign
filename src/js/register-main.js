@@ -99,90 +99,85 @@ var pndso = new function() {
 		pndso.initialiseState.call(pndso);
 	}
 	this.initialiseState = function() {
-	  // Are Notifications supported in the service worker?
-	  if (!('showNotification' in ServiceWorkerRegistration.prototype)) {
-		this.post_status('Notifications are not enabled.');
-		this.post_message('<p>Problem: this browser does not support notifications. <br />Please see the browser support information below. </p><small>Issue: showNotification isn\'t supported by ServiceWorkerRegistration</small>');
-		return;
-	  }
-
-	  // Check the current Notification permission.
-	  // If its denied, it's a permanent block until the
-	  // user changes the permission
-	  if (Notification.permission === 'denied') {
-		this.post_status('Notifications are not enabled.');
-		this.post_message('<p>Problem: A user has blocked notifications.</p><small>Issue: Notification.permission is \'denied\'</small>');
-		return;
-	  }
-
-	  // Check if push messaging is supported
-	  if (!('PushManager' in window)) {
-		this.post_status('Notifications are not enabled.');
-		this.post_message('<p>Problem: this browser does not support notifications. <br />Please see the browser support information below. </p><small>Issue: Push messaging isn\'t supported.</small>');
-		return;
-	  }
-
-	  // setTimeout(this.initialiseState2, 0);  // Let modal window paint	  
-	  this.initialiseState2();
-	}
-	  		
-	this.initialiseState2 = function(){
-console.log(1);
-	// We need the service worker registration to check for a subscription
-	navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
-		// Do we already have a push message subscription?
-		// See https://developer.mozilla.org/en-US/docs/Web/API/PushManager/PushManager.getSubscription
-console.log(1.01);
-		serviceWorkerRegistration.pushManager.getSubscription().then(function(subscription) {
-console.log(1.1);  
-		if (!subscription) {
-			// We aren’t subscribed to push, so set UI
-			// to allow the user to request push subscription
-console.log(2);
-			pndso.post_status('Notifications are not enabled.');
-console.log(3);
-			pndso.add_subscription_enable();
-console.log(4);
-			pndso.working(false);
-			return; //// early return
-		}
-
-		// We're currently subscribed!!
-		// Check that our cookie is present
-console.log(4.1);
-		var cookie_val = Cookies.get(cookie_name);
-console.log(4.2);
-		if (!cookie_val || cookie_val.length < 1) {			
-console.log(5);
-			pndso.post_status('Notifications are not enabled.');
-			pndso.post_message('<p>Problem: Notification issue. Please re-subscribe.</p><small>Issue: Subscribed but missing cookie</small>');
-console.log(6);
-			pndso.internal_unsubscribe(subscription);
-console.log(7);
+		// Are Notifications supported in the service worker?
+		if (!('showNotification' in ServiceWorkerRegistration.prototype)) {
+			this.post_status('Notifications are not enabled.');
+			this.post_message('<p>Problem: this browser does not support notifications. <br />Please see the browser support information below. </p><small>Issue: showNotification isn\'t supported by ServiceWorkerRegistration</small>');
 			return;
 		}
-console.log(8);
-		pnds.isPushEnabled = true;
-		// Keep server in sync with the latest subscriptionId
-console.log(9);
-		pndso.send_subscription_to_server(subscription);
-		// Set UI to show that we are subscribed for push messages
-console.log(10);
-		pndso.post_status('Notifications are enabled!');
-console.log(11);
-		pndso.show_subscription(subscription);
-console.log(12);
-		pndso.working(false);
-	  })
-	  .catch(function(err) {
-console.log("13, %o", err);
-		pndso.post_status('Notifications are not enabled.');
-		pndso.post_message('<p>Problem with current notification subscription</p><small>Issue: Error from Push Manager.</small>');
-		pndso.add_subscription_enable();
-		pndso.working(false);
-	  });
-  });
-  }
+
+		// Check the current Notification permission.
+		// If its denied, it's a permanent block until the
+		// user changes the permission
+		if (Notification.permission === 'denied') {
+			this.post_status('Notifications are not enabled.');
+			this.post_message('<p>Problem: A user has blocked notifications.</p><small>Issue: Notification.permission is \'denied\'</small>');
+			return;
+		}
+
+		// Check if push messaging is supported
+		if (!('PushManager' in window)) {
+			this.post_status('Notifications are not enabled.');
+			this.post_message('<p>Problem: this browser does not support notifications. <br />Please see the browser support information below. </p><small>Issue: Push messaging isn\'t supported.</small>');
+			return;
+		}
+
+console.log(1);
+		// We need the service worker registration to check for a subscription
+		navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
+			// Do we already have a push message subscription?
+			// See https://developer.mozilla.org/en-US/docs/Web/API/PushManager/PushManager.getSubscription
+	console.log(1.01);
+			serviceWorkerRegistration.pushManager.getSubscription().then(function(subscription) {
+	console.log(1.1);  
+				if (!subscription) {
+					// We aren’t subscribed to push, so set UI
+					// to allow the user to request push subscription
+		console.log(2);
+					pndso.post_status('Notifications are not enabled.');
+		console.log(3);
+					pndso.add_subscription_enable();
+		console.log(4);
+					pndso.working(false);
+					return; //// early return
+				}
+
+				// We're currently subscribed!!
+				// Check that our cookie is present
+		console.log(4.1);
+				var cookie_val = Cookies.get(cookie_name);
+		console.log(4.2);
+				if (!cookie_val || cookie_val.length < 1) {			
+		console.log(5);
+					pndso.post_status('Notifications are not enabled.');
+					pndso.post_message('<p>Problem: Notification issue. Please re-subscribe.</p><small>Issue: Subscribed but missing cookie</small>');
+		console.log(6);
+					pndso.internal_unsubscribe(subscription);
+		console.log(7);
+					return;
+				}
+		console.log(8);
+				pnds.isPushEnabled = true;
+				// Keep server in sync with the latest subscriptionId
+		console.log(9);
+				pndso.send_subscription_to_server(subscription);
+				// Set UI to show that we are subscribed for push messages
+		console.log(10);
+				pndso.post_status('Notifications are enabled!');
+		console.log(11);
+				pndso.show_subscription(subscription);
+		console.log(12);
+				pndso.working(false);
+			})
+			.catch(function(err) {
+	console.log("13, %o", err);
+				pndso.post_status('Notifications are not enabled.');
+				pndso.post_message('<p>Problem with current notification subscription</p><small>Issue: Error from Push Manager.</small>');
+				pndso.add_subscription_enable();
+				pndso.working(false);
+			});
+		});
+	}
 
 
 ///////////////////////////////////////////////////////////////////////
@@ -439,7 +434,7 @@ console.log("13, %o", err);
 		if ('serviceWorker' in navigator) {
 			this.working(true);
 			navigator.serviceWorker.register(pnds.service_worker_url)
-			.then(setTimeout(this.initialiseState_start, 500)); // give time for the service worker to be fully downloaded and started
+			.then(setTimeout(this.initialiseState_start, 1000)); // give time for the service worker to be fully downloaded and started
 		} else {
 			// The specific problem is that service workers aren't supported. 
 			this.post_message('<p>Problem: this browser does not support notifications. <br />Please see the browser support information below. </p><small>Issue: Service workers aren\'t supported</small>');
