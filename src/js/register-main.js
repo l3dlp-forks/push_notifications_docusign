@@ -122,8 +122,8 @@ var pndso = new function() {
 		return;
 	  }
 
-	  this.working(true); // starting async operations
-	  setTimeout(this.initialiseState2, 0);  // Let modal window paint	  
+	  // setTimeout(this.initialiseState2, 0);  // Let modal window paint	  
+	  this.initialiseState2();
 	}
 	  		
 	this.initialiseState2 = function(){
@@ -434,8 +434,9 @@ console.log("13, %o", err);
 		// Check that service workers are supported, if so, progressively
 		// enhance and add push messaging support, otherwise continue without it.
 		if ('serviceWorker' in navigator) {
+			this.working(true);
 			navigator.serviceWorker.register(pnds.service_worker_url)
-			.then(this.initialiseState_start);
+			.then(setTimeout(this.initialiseState_start, 500)); // give time for the service worker to be fully downloaded and started
 		} else {
 			// The specific problem is that service workers aren't supported. 
 			this.post_message('<p>Problem: this browser does not support notifications. <br />Please see the browser support information below. </p><small>Issue: Service workers aren\'t supported</small>');
