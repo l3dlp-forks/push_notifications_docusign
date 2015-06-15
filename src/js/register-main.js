@@ -181,7 +181,7 @@ var pndso = new function() {
     }
 //
 // 	4. The user clicked Authenticate
-	var authenticate_click = function(e) {
+	this.authenticate_click = function(e) {
 		e.preventDefault(); // Don't submit to the server
 		pndso.working(true);
 		pndso.hide_message();
