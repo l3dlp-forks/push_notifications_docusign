@@ -131,8 +131,8 @@ console.log(1);
 	// We need the service worker registration to check for a subscription
 	navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
 		// Do we already have a push message subscription?
-		serviceWorkerRegistration.pushManager.getSubscription()
-	.then(function(subscription) {
+		// See https://developer.mozilla.org/en-US/docs/Web/API/PushManager/PushManager.getSubscription
+		serviceWorkerRegistration.pushManager.getSubscription().then(function(subscription) {
 console.log(1.1);  
 		if (!subscription) {
 			// We aren’t subscribed to push, so set UI
@@ -148,7 +148,9 @@ console.log(4);
 
 		// We're currently subscribed!!
 		// Check that our cookie is present
+console.log(4.1);
 		var cookie_val = Cookies.get(cookie_name);
+console.log(4.2);
 		if (!cookie_val || cookie_val.length < 1) {			
 console.log(5);
 			pndso.post_status('Notifications are not enabled.');
