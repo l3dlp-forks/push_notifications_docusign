@@ -12,9 +12,10 @@ if (!defined('APP')) {
 ### Copy this file to config.php and put in the public/ sub-directory
 ### You can also store the P12 key file there, a .htaccess file prevents any .p12 files
 ### from being served (If .htaccess files are supported by your web server)
+### You can name the file "key.p12" or something else
 ###
 define('GDS_APP_NAME', ''); 
-define('GDS_KEY_FILE_PATH', '');
+define('GDS_KEY_FILE_PATH',  realpath(dirname(__FILE__)) . '/key.p12'); 
 define('GDS_SERVICE_ACCOUNT_NAME', '');
 define('GDS_DATASET_ID', '');
  
