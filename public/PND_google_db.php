@@ -146,7 +146,7 @@ class PND_google_db {
 	}
 }
 
-class Notify extends GDS\Entity {}
+class Notifications extends GDS\Entity {}
 class NotifyDB extends GDS\Store {
     /**
      * Build and return a Schema object describing the data model
