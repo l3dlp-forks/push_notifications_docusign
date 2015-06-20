@@ -1,0 +1,5 @@
+# Deny access to any .p12 file
+<FilesMatch "\.(?:p12)$">
+	Order allow,deny
+	Deny from all
+</FilesMatch>

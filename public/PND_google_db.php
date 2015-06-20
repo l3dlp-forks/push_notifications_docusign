@@ -98,6 +98,32 @@ class PND_google_db {
 		}		
 	}
 	
+	public function subscribe ($notify_url) {
+	}
+	
+	public function test() {
+		$notification = $this->notify_db->createEntity([
+			'notify_url' => 'url',
+			'cookie_notify_id' => 'cookie id',
+			'ds_account_id' => 'account id',
+			'ds_account_name' => 'account name',
+			'ds_email' => 'email@foo.com',
+			'ds_user_name' => 'Joe User',
+			'ds_user_id' => 'user id'
+		]);
+		$bol_result1 = $this->notify_db->upsert($notification);
+		echo "Store result: ";
+		var_dump($bol_result1);
+	
+		// Fetch all (client 1)
+		$notifications = $this->notify_db->fetchAll("SELECT * FROM Notifications");
+		echo "Query found ", count($notifications), " records", PHP_EOL;
+		foreach($notifications as $notification) {
+			echo "   Notify url: {$notification->notify_url}, email: {$notification->ds_email}", PHP_EOL;
+		}
+	}
+	
+	
 	public function notifications () {
 		# Get the notifications for this id
 		$_notifications = 
