@@ -4,6 +4,7 @@
 
 # move private files into dir
 cp ../push_notifications_docusign_private/config.php public/config.php
+cp ../push_notifications_docusign_private/key.p12 public/key.p12
 cp ../push_notifications_docusign_private/manifest.json assets/manifest.json
 
 cat src/js/js.cookie.js src/js/register-main.js > assets/register.js
