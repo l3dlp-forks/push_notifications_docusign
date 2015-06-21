@@ -48,7 +48,7 @@ class PND_google_db {
 		$this->gds_gateway = new GDS\Gateway($this->gds_client, GDS_DATASET_ID);
 
 		$this->notify_db = new NotifyDB($this->gds_gateway);
-		setup_id_cookie();
+		$this->setup_id_cookie();
 	}
 
 	private function setup_id_cookie() {
