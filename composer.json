@@ -6,7 +6,7 @@
   "homepage": "https://github.com/larrykluger/push_notifications_docusign",
   "require": {
     "tomwalder/php-gds": "v1.2.0",
-	"aws/aws-sdk-php" : "v3.0.5"
+	"aws/aws-sdk-php" : "3.0.5"
   },
   "minimum-stability": "dev",
   "autoload": {"classmap": []}
