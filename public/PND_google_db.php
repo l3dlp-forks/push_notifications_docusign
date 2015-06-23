@@ -12,9 +12,20 @@
 # DB schema
 #   cookie_notify_id -- a unique id for an instance of a browser. Stored on the
 #       browser as cookie "cookie_notify_id"
-#   notify_url -- how to notify the browser instance with a specific cookie_notify_id
-#   ds_account -- A DocuSign account number whose member wants to receive notifications
+#   	cookie_notify_id is indexed
+#   ds_account_id -- A DocuSign account number whose member wants to receive notifications
+#		ds_account_id is indexed  
+#
+#   Primary Key: since only one person can register at a given browser, cookie_notify_id and ds_account_id
+#	     create a unique key.
 #   ds_email -- A DocuSign email for someone in the ds_account who wants notifications
+#		ds_email is indexed  
+#	ds_account_name -- the account's name
+#   notify_url -- how to notify the browser instance
+#   notify_type -- Since the browser manufacturers seem to be diverging, this is browser type.
+#                  Currently only "Chrome" is supported.
+#	ds_user_name
+#	ds_user_id
 #
 #  Discussion: A specific DS email can work with more than one account. We want notifications
 #  for all accounts for a person, so we have an additional row for each account.

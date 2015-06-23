@@ -14,10 +14,14 @@ if (!defined('APP')) {
 ### from being served (If .htaccess files are supported by your web server)
 ### You can name the file "key.p12" or something else
 ###
+### Set both GDS_APP_NAME and GDS_DATASET_ID to your Google Developer "Project ID."
+###
+### Your Project ID is available from the "Overview" screen in the Developer Console.
+### See https://console.developers.google.com
 define('GDS_APP_NAME', ''); 
 define('GDS_KEY_FILE_PATH',  realpath(dirname(__FILE__)) . '/key.p12'); 
 define('GDS_SERVICE_ACCOUNT_NAME', '');
-define('GDS_DATASET_ID', '');
+define('GDS_DATASET_ID', GDS_APP_NAME);
  
 $pnd_config = array(
     "google_api_key" => '123',
