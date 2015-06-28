@@ -5,6 +5,12 @@ class PND_op_subscribe implements PND_Request
 {
 	# op = subscribe
 	# args: 
+	#	email 
+	#	pw 
+	#	subscription 
+	#	browser  
+	#	accounts  
+	#
 	# RETURNS
 	#   200 - good results:
 	#   { accounts: [{account_name:

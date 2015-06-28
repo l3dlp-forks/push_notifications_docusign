@@ -174,16 +174,25 @@ var pndso = new function() {
 // 	3. Show the Authentication form to get the user's email and pw
 	this.subscribe_click = function(e) {
 		$('#form-subscribe').on('hidden.bs.collapse', function (e) {
-			$('#pw').val(''); // clear the pw
+			$('#pw').val('').keydown(this.pw_keydown ); // clear the pw and set click handler
+			
 			$('#form-authenticate').collapse('show');})	
 
 		pndso.hide_message();
 		$('#form-subscribe').collapse('hide');		
     }
 //
+// 	3a. <cr> for the pw field triggers form
+	this.pw_keydown = function(e) {
+		if (e.which === 13) {
+			this.authenticate_click(false);
+		}
+	}
+//
 // 	4. The user clicked Authenticate
 	this.authenticate_click = function(e) {
-		e.preventDefault(); // Don't submit to the server
+		$('#pw').off("keydown"); // reset
+		e && e.preventDefault(); // Don't submit to the server
 		pndso.working(true);
 		pndso.hide_message();
 		pndso.post_status();
@@ -294,7 +303,21 @@ var pndso = new function() {
 	this.send_subscription_to_server = function() {
 		// We try to get the server to subscribe us to DocuSign. 
 		// If it doesn't work then we need to remove the local subscription
-		data = {subscription: this.subscription.endpoint, accounts: pndso.accounts};
+		var browser = browser_detect.split(" ",1)[0], // Chrome browser notify is different from standard
+			requested_accounts = [];
+		
+		pndso.accounts.forEach(function(account, i, a){
+			if (account.available) {
+				requested_accounts.push(account);
+			}
+		}
+		
+		data = {
+			email: pndso.user_email, 
+			pw: $('#pw').val(), 
+			subscription: this.subscription.endpoint, 
+			browser: browser, 
+			accounts: requested_accounts};
 		
 		$.ajax(pnds.api_url + "?op=subscribe",  // Ajax Methods: https://github.com/jquery/api.jquery.com/issues/49
 			{method: "POST",
