@@ -174,7 +174,7 @@ var pndso = new function() {
 // 	3. Show the Authentication form to get the user's email and pw
 	this.subscribe_click = function(e) {
 		$('#form-subscribe').on('hidden.bs.collapse', function (e) {
-			$('#pw').val('').keydown(this.pw_keydown ); // clear the pw and set click handler
+			$('#pw').val('').keydown(pndso.pw_keydown ); // clear the pw and set click handler
 			
 			$('#form-authenticate').collapse('show');})	
 
