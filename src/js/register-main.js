@@ -185,7 +185,7 @@ var pndso = new function() {
 // 	3a. <cr> for the pw field triggers form
 	this.pw_keydown = function(e) {
 		if (e.which === 13) {
-			this.authenticate_click(false);
+			pndso.authenticate_click(false);
 		}
 	}
 //
