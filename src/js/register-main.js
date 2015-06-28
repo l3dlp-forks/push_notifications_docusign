@@ -310,7 +310,7 @@ var pndso = new function() {
 			if (account.available) {
 				requested_accounts.push(account);
 			}
-		}
+		})
 		
 		data = {
 			email: pndso.user_email, 
