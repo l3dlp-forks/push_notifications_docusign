@@ -174,6 +174,7 @@ var pndso = new function() {
 // 	3. Show the Authentication form to get the user's email and pw
 	this.subscribe_click = function(e) {
 		$('#form-subscribe').on('hidden.bs.collapse', function (e) {
+			$('#pw').val(''); // clear the pw
 			$('#form-authenticate').collapse('show');})	
 
 		pndso.hide_message();
@@ -247,7 +248,7 @@ var pndso = new function() {
 	}
 //
 // 	6. 	The user wants to subscribe.
-//      First, create a subscription for the service worked internal to the browser	
+//      First, create a subscription for the service worker internal to the browser	
 	this.do_subscribe_click = function(e) {
 		// The user clicked the subscribe button
 		e.preventDefault(); // Don't submit to the server
