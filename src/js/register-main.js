@@ -174,7 +174,7 @@ var pndso = new function() {
 // 	3. Show the Authentication form to get the user's email and pw
 	this.subscribe_click = function(e) {
 		$('#form-subscribe').on('hidden.bs.collapse', function (e) {
-			$('#pw').val('').keydown(pndso.pw_keydown ); // clear the pw and set keydown handler
+			$('#pw').val(''); // clear the pw
 			
 			$('#form-authenticate').collapse('show');})	
 
@@ -212,7 +212,6 @@ var pndso = new function() {
 			}
 		})
 		.always(function() {
-			$('#pw').val(""); // clear pw value
 			pndso.working(false);
 		});		
 		return false;
@@ -471,6 +470,7 @@ var pndso = new function() {
         $('#btn-authenticate').on('click', this.authenticate_click);
 		$('#btn-do-subscribe').on('click', this.do_subscribe_click);
 		$('#private').on('change', this.private_click);
+		$('#pw').keydown(this.pw_keydown );
       }
 
 	this.post_status = function(msg) {
