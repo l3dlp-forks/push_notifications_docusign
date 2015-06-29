@@ -54,4 +54,17 @@ class PND_API {
 		$this->_pw = $_POST['pw'];
 		return true;
 	}
+
+	public function incoming_json() {
+		$json = json_decode(file_get_contents("php://input"), true);
+		if (json_last_error() !== JSON_ERROR_NONE) {
+			return null;
+		}
+		
+		if (array_key_exists('email', $json)) {$_email = $json['email'];}
+		if (array_key_exists('pw', $json)) {$_pw = $json['pw'];}
+		return $json
+	}
+
+	
 }
