@@ -63,7 +63,7 @@ class PND_API {
 		
 		if (array_key_exists('email', $json)) {$_email = $json['email'];}
 		if (array_key_exists('pw', $json)) {$_pw = $json['pw'];}
-		return $json
+		return $json;
 	}
 
 	
