@@ -23,13 +23,9 @@ class PND_op_subscribe implements PND_Request
     global $pnd_utils, $pnd_api, $pnd_config;
 	if ( $op != 'subscribe' ) {return false;}
 	
-	$pnd_utils->good_results('Subscribed!!');	
-	return true;
-#########################################################################
-#########################################################################
-
-	# check incoming
-	if (! $pnd_api->check_email_pw()) {return true;}
+	# parse incoming
+	$params = $pnd_api->incoming_json();
+	print_r ($params);
 
 	# authenticate with DocuSign
 	$ds_client = $pnd_utils->new_docusign_client($pnd_api->email(), $pnd_api->pw());
@@ -44,6 +40,8 @@ class PND_op_subscribe implements PND_Request
 		return true;
 	}
 
+	return true;
+	
 	$service = new DocuSign_LoginService($ds_client);
 	$login_info = $service->login->getLoginInformation();
 	$pnd_utils->good_results($login_info, "loginAccounts", 'authenticate api: bad login_info from DS.');	

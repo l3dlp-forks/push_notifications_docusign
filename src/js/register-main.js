@@ -174,7 +174,7 @@ var pndso = new function() {
 // 	3. Show the Authentication form to get the user's email and pw
 	this.subscribe_click = function(e) {
 		$('#form-subscribe').on('hidden.bs.collapse', function (e) {
-			$('#pw').val('').keydown(pndso.pw_keydown ); // clear the pw and set click handler
+			$('#pw').val('').keydown(pndso.pw_keydown ); // clear the pw and set keydown handler
 			
 			$('#form-authenticate').collapse('show');})	
 
@@ -182,7 +182,7 @@ var pndso = new function() {
 		$('#form-subscribe').collapse('hide');		
     }
 //
-// 	3a. <cr> for the pw field triggers form
+// 	3a. <cr> in the pw field triggers form
 	this.pw_keydown = function(e) {
 		if (e.which === 13) {
 			pndso.authenticate_click(false);
@@ -191,7 +191,6 @@ var pndso = new function() {
 //
 // 	4. The user clicked Authenticate
 	this.authenticate_click = function(e) {
-		$('#pw').off("keydown"); // reset
 		e && e.preventDefault(); // Don't submit to the server
 		pndso.working(true);
 		pndso.hide_message();
