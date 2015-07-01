@@ -301,21 +301,13 @@ var pndso = new function() {
 	this.send_subscription_to_server = function() {
 		// We try to get the server to subscribe us to DocuSign. 
 		// If it doesn't work then we need to remove the local subscription
-		var browser = browser_detect.split(" ",1)[0], // Chrome browser notify is different from standard
-			requested_accounts = [];
-		
-		pndso.accounts.forEach(function(account, i, a){
-			if (account.available) {
-				requested_accounts.push(account);
-			}
-		})
+		var browser = browser_detect.split(" ",1)[0]; // Chrome browser notify is different from standard
 		
 		data = {
 			email: pndso.user_email, 
 			pw: $('#pw').val(), 
 			subscription: this.subscription.endpoint, 
-			browser: browser, 
-			accounts: requested_accounts};
+			browser: browser};
 		
 		$.ajax(pnds.api_url + "?op=subscribe",  // Ajax Methods: https://github.com/jquery/api.jquery.com/issues/49
 			{method: "POST",
@@ -344,7 +336,7 @@ var pndso = new function() {
 //
 // 	9.  Fully subscribed. Post info to user	
 	this.subscribed = function(data) {
-		this.post_status("Subscribed!" + JSON.stringify(data));
+		this.post_status("Subscribed!" + JSON.stringify(data)); //////////////////////////////////////////
 		// Show unsubscribe form. The subscribe button form may or may not be visible
 		$('#form-subscribe-button').on('hidden.bs.collapse', function (e) {
 			$('#form-unsubscribe').collapse('show');})	

@@ -9,7 +9,6 @@ class PND_op_subscribe implements PND_Request
 	#	pw 
 	#	subscription 
 	#	browser  
-	#	accounts  
 	#
 	# RETURNS
 	#   200 - good results:
@@ -27,7 +26,7 @@ class PND_op_subscribe implements PND_Request
 	$params = $pnd_api->incoming_json();
 	print_r ($params);
 
-	# authenticate with DocuSign
+	# authenticate user with DocuSign
 	$ds_client = $pnd_utils->new_docusign_client($pnd_api->email(), $pnd_api->pw());
 	
 	if( $ds_client->hasError()) {
@@ -40,8 +39,8 @@ class PND_op_subscribe implements PND_Request
 		return true;
 	}
 
-	return true;
-	
+    # To prevent successful attacks, we don't trust the data from the user.
+	# So next, ask DS what accounts the user is associated with.
 	$service = new DocuSign_LoginService($ds_client);
 	$login_info = $service->login->getLoginInformation();
 	$pnd_utils->good_results($login_info, "loginAccounts", 'authenticate api: bad login_info from DS.');	
@@ -63,26 +62,29 @@ class PND_op_subscribe implements PND_Request
 
 	$admin_accounts = $pnd_utils->admin_accounts();
 	$accounts = array();
-	$results = array('admin_email' => $pnd_config["docusign_admin_email"]); # and 'accounts'
 	# Each account item is an associative array with these fields:
 	#	user_name
 	# 	user_email
 	#	user_id
 	#	account_name
 	#	account_id
-	#	available  # true/false -- can notifications be received from the account?
-	#		(Is our admin user an admin for this account?)
+	#
+	# We can only get connect info for the user's accounts where our admin
+	# user is an account admin.
 	foreach ($login_info->loginAccounts as $account_info) {
-		$accounts[] = array(
-			'user_name' => $account_info->userName,
-			'user_email' => $account_info->email,
-			'user_id' => $account_info->userId,
-			'account_name' => $account_info->name,
-			'account_id' => $account_info->accountId,
-			'available' => in_array ($account_info->accountId, $admin_accounts, true));
+		if (in_array ($account_info->accountId, $admin_accounts, true)) {
+			$accounts[] = array(
+				'user_name' => $account_info->userName,
+				'user_email' => $account_info->email,
+				'user_id' => $account_info->userId,
+				'account_name' => $account_info->name,
+				'account_id' => $account_info->accountId);
+		}
 	}
-	$results['accounts'] = $accounts;
-	$pnd_utils->return_data($results);
+	# accounts has the accounts that we should connect to for this user
+	# 
+	
+	
 
     return true;
   }
