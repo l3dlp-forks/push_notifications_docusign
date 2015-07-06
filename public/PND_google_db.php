@@ -4,7 +4,7 @@
 # 
 # The notify url records the information needed to send a notification.
 # Since different browsers are using different information, we're encoding the
-# info in the notify_url
+# info in the subscription_url
 # 
 # Google notification format:  google_notify://notification_service_point:id
 #
@@ -17,13 +17,14 @@
 #		ds_account_id is indexed  
 #
 #   Primary Key: since only one person can register at a given browser, cookie_notify_id and ds_account_id
-#	     create a unique key.
+#	     create a unique combined key.
 #   ds_email -- A DocuSign email for someone in the ds_account who wants notifications
 #		ds_email is indexed  
 #	ds_account_name -- the account's name
-#   notify_url -- how to notify the browser instance
-#   notify_type -- Since the browser manufacturers seem to be diverging, this is browser type.
-#                  Currently only "Chrome" is supported.
+#   subscription_url -- how to notify the browser instance
+#   subscription_browser -- the type of browser
+#   	-- Since the browser manufacturers seem to be diverging, this is browser type.
+#          Currently only "Chrome" is supported.
 #	ds_user_name
 #	ds_user_id
 #
@@ -59,31 +60,9 @@ class PND_google_db {
 		$this->gds_gateway = new GDS\Gateway($this->gds_client, GDS_DATASET_ID);
 
 		$this->notify_db = new NotifyDB($this->gds_gateway);
-		$this->setup_id_cookie();
-	}
-
-	private function setup_id_cookie() {
-		global $pnd_config;
-		if (array_key_exists ( COOKIE_NOTIFY_ID , $_COOKIE ) && strlen($_COOKIE[COOKIE_NOTIFY_ID]) > 5) {
-			$this->cookie_notify_id = $_COOKIE[COOKIE_NOTIFY_ID];
-			$this->cookie_notify_id_created = false;
-			return;
-		}
-		# No cookie: create and set the id cookie
-		$this->cookie_notify_id = md5(uniqid($pnd_config['cookie_salt'], true)); # see http://stackoverflow.com/a/1293860/64904
-		setcookie(COOKIE_NOTIFY_ID, $this->cookie_notify_id, time()+60*60*24*365); # 1 year
-		$this->cookie_notify_id_created = true;
-	} 
-	private function cookie_on() {
-		# Are the cookies telling us that notification is on?
-		return (!$this->cookie_notify_id_created && array_key_exists ( COOKIE_NOTIFY, $_COOKIE ) && $_COOKIE[COOKIE_NOTIFY] === 'yes');
-	}
-	private function set_cookie_notify($on) {
-		# sets the cookie to be 'yes' or 'no'
-		setcookie(COOKIE_NOTIFY, $on ? 'yes' : 'no', time()+60*60*24*365); # 1 year
 	}
 	
-	public function refresh ($notify_url) {
+	public function refresh ($subscription_url) {
 		# Whenever the page is loaded, if the service worker is already installed,
 		# we need to update our db since the notification url may have changed. 
 		#
@@ -93,15 +72,15 @@ class PND_google_db {
 
 		if (cookie_on()) {
 			# If cookie_notify is on and the cookie_notify_id is present,
-			# then update the db entries with the new notify_url
+			# then update the db entries with the new subscription_url
 			foreach($notifications as $notification) {
-				$notification->notify_url = $this->notify_url;
+				$notification->subscription_url = $this->subscription_url;
 				$this->notify_db->upsert($notification); # see https://github.com/tomwalder/php-gds/blob/master/src/GDS/Store.php
 			}
 			set_cookie_notify(true);
 		} else {
 			# If cookie_notify is off or missing, then remove any db entries that
-			# use this notify_url
+			# use this subscription_url
 			foreach($notifications as $notification) {
 				$this->notify_db->delete($notification); # see https://github.com/tomwalder/php-gds/blob/master/src/GDS/Store.php
 			}
@@ -109,12 +88,52 @@ class PND_google_db {
 		}		
 	}
 	
-	public function subscribe ($notify_url) {
+	# Function Subscribe
+	#
+	# params is an associative array with elements:
+	# subscription_url
+	# subscription_browser
+	# cookie_notify_id
+	# ds_account_id
+	# ds_account_name
+	# ds_email
+	# ds_user_name
+	# ds_user_id
+	public function subscribe ($params) {
+		# If a notification exists, update it.
+		$notifications = $this->get_all_notifications_account_cookie ($params['ds_account_id'], $params['cookie_notify_id']);
+
+		if (count($notifications) > 1) {
+			throw new Exception("More than one notification for " . $params['ds_account_id'] . " and this cookie id.");
+		}
+		if (count($notifications) == 1) {
+			$notification = $notification[0];
+		} else {
+			$notification = $this->notify_db->createEntity();
+		}
+		
+		# create/update the record
+        $notification->subscription_url = $params['subscription_url'];
+		$notification->subscription_browser = $params['subscription_browser'];
+        $notification->cookie_notify_id = $params['cookie_notify_id'];
+        $notification->ds_account_id = $params['ds_account_id'];
+        $notification->ds_account_name = $params['ds_account_name'];
+		$notification->ds_email = $params['ds_email'];
+		$notification->ds_user_name = $params['ds_user_name'];
+		$notification->ds_user_id = $params['ds_user_id'];
+		$bol_result1 = $this->notify_db->upsert($notification);
 	}
 	
+	public function getAllNotificationsAccountCookie ($ds_account_id, $cookie_notify_id) {
+	  return $this->notify_db->fetchAll(
+		"SELECT * FROM Notifications WHERE cookie_notify_id = @cookie_notify_id AND ds_account_id = @ds_account_id",
+		['cookie_notify_id' => $cookie_notify_id,
+		'ds_account_id' => $ds_account_id]);
+	}
+
 	public function test() {
 		$notification = $this->notify_db->createEntity([
-			'notify_url' => 'url',
+			'subscription_url' => 'url',
 			'cookie_notify_id' => 'cookie id',
 			'ds_account_id' => 'account id',
 			'ds_account_name' => 'account name',
@@ -130,7 +149,7 @@ class PND_google_db {
 		$notifications = $this->notify_db->fetchAll("SELECT * FROM Notifications");
 		echo "Query found ", count($notifications), " records", PHP_EOL;
 		foreach($notifications as $notification) {
-			echo "   Notify url: {$notification->notify_url}, email: {$notification->ds_email}", PHP_EOL;
+			echo "   Notify url: {$notification->subscription_url}, email: {$notification->ds_email}", PHP_EOL;
 		}
 	}
 	
@@ -144,7 +163,8 @@ class PND_google_db {
 		$results = array();
 		foreach($_notifications as $notification) {
 			$results[] = array(
-				'notify_url' => $notification->notify_url,
+				'subscription_url' => $notification->subscription_url,
+				'subscription_browser' => $notification->subscription_browser,
 				'cookie_notify_id' => $notification->cookie_notify_id,
 				'ds_account_id' => $notification->ds_account_id,
 				'ds_account_name' => $notification->ds_account_name,
@@ -169,7 +189,8 @@ class NotifyDB extends GDS\Store {
         $this->setEntityClass('\\Notifications');
         return (new GDS\Schema('Notifications'))
             ->addString('cookie_notify_id')
-            ->addString('notify_url')
+            ->addString('subscription_url')
+			->addString('subscription_browser')
             ->addString('ds_account_id')
             ->addString('ds_account_name')
 			->addString('ds_email')

@@ -1,8 +1,14 @@
 <?php
 if (!defined('APP')) {exit("Buzz off");}
  
+define("CONNECTION_NAME_PREFIX", 'Browser Push Notification - ');
+define("WEBHOOK_SUFFIX", '?op=webhook');
+
+ 
 class PND_utils {
   private $_pnd_google_db = null;
+  private $_ds_admin_client = null;
+  private $_ds_connect_service = null;
   
   public function return_data( $data, $code = 200 ) {
 	http_response_code($code);  # in php 5.4 and later
@@ -14,8 +20,12 @@ class PND_utils {
 	if (! $_pnd_google_db) {
 		$_pnd_google_db = new PND_google_db();
 	}
-	
     return $_pnd_google_db;
+  }
+  
+  private function connection_name() {
+	global $pnd_config;
+	return CONNECTION_NAME_PREFIX . $pnd_config['instance_id'];
   }
   
   public function new_docusign_client($email = true, $pw = true, $account = false) {
@@ -82,7 +92,76 @@ class PND_utils {
 	return true;
   }  
   
-
+  private function get_ds_admin_client(){
+	if ($this->_ds_admin_client === null) {
+		$this->_ds_admin_client = $this->new_docusign_client();
+	}
+	return $this->_ds_admin_client;
+  }
+  
+  private function get_ds_connect_service(){
+	if ($this->_ds_connect_service === null) {
+		$this->_ds_connect_service = (new DocuSign_ConnectService($this->get_ds_admin_client())->connect;
+	}
+	return $this->_ds_connect_service;
+  }
+  
+  # returns the url for the incoming web_hook calls
+  private function web_hook_url(){
+	return "http".(!empty($_SERVER['HTTPS'])?"s":"") . "://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'] . WEBHOOK_SUFFIX;
+  }
+  
+  # Update or Insert a connection for the account and user_id
+  public function upsert_connection($accountId, $userId) {
+	$connect_service = get_ds_connect_service(); 
+	$connection = $this->find_connection($accountId);
+	if ($connection) {
+		$userIds = $connection->userIds;
+		# Our new userId shouldn't be in the connection. But we'll be 
+		# conservative and make sure that it is not there.
+		if (!in_array ($userId, $userIds, true)) {
+			$user_ids[] = $userId; # add the new user id
+			$connect_service->updateConnectConfiguration(	
+				$accountId, # string	Account Id
+				$connection->connectId, # string	Connection Id
+				$params = array(user_ids => $user_ids));
+		}
+	} else {
+		$params = array(
+			'urlToPublishTo' => $this->web_hook_url(), # Required. string	Client's incoming webhook url
+			'allUsers' => false,	# boolean	Track events initiated by all users.
+			'allowEnvelopePublish' => true, # boolean	Enables users to publish processed events.
+			'enableLog' => true, # boolean	Enables logging on prcoessed events. Log only maintains the last 100 events.
+			'envelopeEvents' => array('Sent', 'Delivered', 'Signed', 'Completed', 'Declined', 'Voided'), # Envelope related events to track.
+			'includeDocuments' => false, # boolean	Include envelope documents
+			'includeSenderAccountasCustomField' => true, # boolean	Include sender account as Custom Field.
+			'includeTimeZoneInformation' => true, # boolean	Include time zone information.
+			'name' => $this->connection_name(), # string	name of the connection
+			'recipientEvents' => array('Sent', 'Delivered', 'Completed', 'Declined', 'AuthenticationFailed', 'AutoResponded'), # Recipient events to track
+			'requiresAcknowledgement' => false, # boolean	true or false
+			'signMessagewithX509Certificate' => false,	# boolean	Signs message with an X509 certificate.
+			'useSoapInterface' => false, # boolean	Set to true if the urlToPublishTo is a SOAP endpoint
+			'userIds' => array($user_id) # array list of user Id's. Required if allUsers is false
+		);
+		$connect_service->createConnectConfiguration(	
+			$accountId, # string	Account Id
+			$params);
+	}
+  }
+ 
+  private function find_connection($accountId) {
+	$connect_service = get_ds_connect_service(); 
+	$connections = $connect_service->getConnectConfiguration($accountId);
+	$result = false;
+	$name = $this->connection_name();
+	foreach ($connections->configurations as $configuration) {
+		if ($configuration['name'] === $name) {
+			return $configuration;
+		}
+		return false; # didn't find anything
+	}
+  }
+ 
 	
 }
 

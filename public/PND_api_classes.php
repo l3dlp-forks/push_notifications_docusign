@@ -19,10 +19,15 @@ class PND_HandlerChain {
   public function handle( $op ) {
     global $pnd_utils;
 	
-	foreach( $this->_handlers as $handler ) {
-      if ( $handler->request( $op ) )
-        return;
-    }
+	try {
+		foreach( $this->_handlers as $handler ) {
+		  if ( $handler->request( $op ) )
+			return;
+		}
+	} catch (Exception $e) { # catch anything
+		$pnd_utils->return_data( 
+			array( 'bad_data' => array(), 'msg' => $e->getMessage() ), 503); # 503 - Service Unavailable
+	}
 	
 	# bad op
 	$pnd_utils->return_data( 

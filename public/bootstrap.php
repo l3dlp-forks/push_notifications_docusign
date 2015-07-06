@@ -27,5 +27,6 @@ require (LIB_PATH . "PND_api_classes.php");
 require (LIB_PATH . "PND_op_authenticate.php");
 require (LIB_PATH . "PND_op_subscribe.php");
 require (LIB_PATH . "PND_google_db.php");
+require (LIB_PATH . "PND_cookies.php");
 
 

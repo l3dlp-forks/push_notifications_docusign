@@ -26,6 +26,7 @@ define('GDS_DATASET_ID', GDS_APP_NAME);
 $pnd_config = array(
     "google_api_key" => '123',
 	"cookie_salt" = '123', # Use a long salt from https://api.wordpress.org/secret-key/1.1/salt/  or similar.
+	"instance_id" = '123', # 5 - 15 character long ID for this instance of the push notifications gateway. Eg use your name 
 
     "docusign_integrator_key" => '123',
     "docusign_admin_email" => 'foo@woof.com', # used to configure and request DocuSign Connect 

@@ -4,11 +4,11 @@ if (!defined('APP')) {exit("Buzz off");}
 class PND_op_subscribe implements PND_Request
 {
 	# op = subscribe
-	# args: 
+	# params: 
 	#	email 
 	#	pw 
 	#	subscription 
-	#	browser  
+	#	browser # type of browser. Currently just "Chrome"  
 	#
 	# RETURNS
 	#   200 - good results:
@@ -21,10 +21,12 @@ class PND_op_subscribe implements PND_Request
   {
     global $pnd_utils, $pnd_api, $pnd_config;
 	if ( $op != 'subscribe' ) {return false;}
+	$cookies = new PND_cookies();
 	
 	# parse incoming
 	$params = $pnd_api->incoming_json();
-	print_r ($params);
+
+	$cookies->set_cookie(true);
 
 	# authenticate user with DocuSign
 	$ds_client = $pnd_utils->new_docusign_client($pnd_api->email(), $pnd_api->pw());
@@ -43,7 +45,7 @@ class PND_op_subscribe implements PND_Request
 	# So next, ask DS what accounts the user is associated with.
 	$service = new DocuSign_LoginService($ds_client);
 	$login_info = $service->login->getLoginInformation();
-	$pnd_utils->good_results($login_info, "loginAccounts", 'authenticate api: bad login_info from DS.');	
+	$pnd_utils->good_results($login_info, "loginAccounts", 'subscribe api: bad login_info from DS.');	
 
 	# $login_info:  {
     #   "loginAccounts": [
@@ -61,7 +63,7 @@ class PND_op_subscribe implements PND_Request
     # }	
 
 	$admin_accounts = $pnd_utils->admin_accounts();
-	$accounts = array();
+	$subscribed_accounts = array();
 	# Each account item is an associative array with these fields:
 	#	user_name
 	# 	user_email
@@ -69,11 +71,28 @@ class PND_op_subscribe implements PND_Request
 	#	account_name
 	#	account_id
 	#
-	# We can only get connect info for the user's accounts where our admin
+	# We can only do a connect for the user's accounts where our admin
 	# user is an account admin.
 	foreach ($login_info->loginAccounts as $account_info) {
 		if (in_array ($account_info->accountId, $admin_accounts, true)) {
-			$accounts[] = array(
+			# Subscribe to the account
+			#
+			# Update or insert the connection to DocuSign DTM
+			$pnd_utils->upsert_connection($account_info->accountId, $account_info->userId);
+			# Store in Google Datastore
+			$params2 = array(
+				'subscription_url' => $params['subscription'],
+				'subscription_browser' => $params['browser'],
+				'cookie_notify_id' => $cookies->cookie_notify_id,
+				'ds_account_id' => $account_info['account_id'],
+				'ds_account_name' => $account_info['account_name'],
+				'ds_email' => $account_info['user_email'],
+				'ds_user_name' => $account_info['user_name'],
+				'ds_user_id' => $account_info['user_id']
+			);			
+			$pnd_utils->pnd_google_db()->subscribe($params2);
+			# Add to the results
+			$subscribed_accounts[] = array(
 				'user_name' => $account_info->userName,
 				'user_email' => $account_info->email,
 				'user_id' => $account_info->userId,
@@ -81,12 +100,7 @@ class PND_op_subscribe implements PND_Request
 				'account_id' => $account_info->accountId);
 		}
 	}
-	# accounts has the accounts that we should connect to for this user
-	# 
-	
-	
-
-    return true;
+	$pnd_utils->return_data(array('accounts' => $subscribed_accounts, $code = 200 )
   }
 }
 

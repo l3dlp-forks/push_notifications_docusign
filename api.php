@@ -12,6 +12,8 @@ include (realpath(dirname(__FILE__) . '/public/bootstrap.php'));
 	authenticate 
 		POST
 		params: email and pw
+	subscribe
+	webhook
 	
 	
 */
