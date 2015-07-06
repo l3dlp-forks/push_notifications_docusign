@@ -37,10 +37,6 @@
 #
 #  We are not allowing more than one person to send notifications to a given browser.
 #  -- the browser should be private to a person to receive notifications.
-
-	# Definitions for cookies
-	define ("COOKIE_NOTIFY", "PushNotifyDocuSign"); # yes or no
-	define ("COOKIE_NOTIFY_ID", "PushNotifyDocuSignID"); # unique id
 	
 class PND_google_db {
 

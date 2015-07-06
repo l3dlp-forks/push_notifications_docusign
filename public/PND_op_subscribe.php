@@ -100,7 +100,7 @@ class PND_op_subscribe implements PND_Request
 				'account_id' => $account_info->accountId);
 		}
 	}
-	$pnd_utils->return_data(array('accounts' => $subscribed_accounts, $code = 200 )
+	$pnd_utils->return_data(array('accounts' => $subscribed_accounts, $code = 200 ));
   }
 }
 
