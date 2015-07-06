@@ -101,7 +101,8 @@ class PND_utils {
   
   private function get_ds_connect_service(){
 	if ($this->_ds_connect_service === null) {
-		$this->_ds_connect_service = (new DocuSign_ConnectService($this->get_ds_admin_client())->connect;
+		$s = new DocuSign_ConnectService($this->get_ds_admin_client());
+		$this->_ds_connect_service = $s->connect;
 	}
 	return $this->_ds_connect_service;
   }
