@@ -55,7 +55,7 @@ class PND_op_authenticate implements PND_Request
 
 	$accounts = array();
 	$results = array();
-	# Each account item is an associative array with these fields:
+	# Each result account item is an associative array with these fields:
 	#	user_name
 	# 	user_email
 	#	user_id
@@ -70,7 +70,7 @@ class PND_op_authenticate implements PND_Request
 			'user_id' => $account_info->userId,
 			'account_name' => $account_info->name,
 			'account_id' => $account_info->accountId,
-			'available' => $pnd_utils->account_admin($account_info->accountId)
+			'available' => $pnd_utils->account_admin($account_info->accountId, $account_info->userId)
 			);
 	}
 	$results['accounts'] = $accounts;

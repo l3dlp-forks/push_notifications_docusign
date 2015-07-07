@@ -50,12 +50,12 @@ class PND_utils {
 	return $ds;
   }
   
-  public function account_admin($accountId) {
+  public function account_admin($accountId, $userId) {
  	# true/false is this user an admin
 	global $pnd_api;
 	$ds_client = $this->new_docusign_client($pnd_api->email(), $pnd_api->pw(), $accountId); # create a new client for the specific account
 	$service = new DocuSign_UserService($ds_client);
-	$user_settings = $service->user->getUserSettingList($account_user["user_id"]);
+	$user_settings = $service->user->getUserSettingList($userId);
 	$this->good_results($user_settings, "userSettings", 'admin_accounts: bad user_settings from DS.');	
 	return $this->is_admin($user_settings);
   }
