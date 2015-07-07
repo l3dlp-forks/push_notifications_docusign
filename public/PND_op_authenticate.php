@@ -70,7 +70,7 @@ class PND_op_authenticate implements PND_Request
 			'user_id' => $account_info->userId,
 			'account_name' => $account_info->name,
 			'account_id' => $account_info->accountId,
-			'available' => $pnd_utils->account_admin($name, $pw, $account_info->accountId)
+			'available' => $pnd_utils->account_admin($account_info->accountId)
 			);
 	}
 	$results['accounts'] = $accounts;
