@@ -237,14 +237,10 @@ var pndso = new function() {
 			$('#account-table caption').text("Account Information for " + pndso.user_email); 
 			})
 		if (add_admin) {
-			$('#post-account-table').html("<p>* To receive notifications for these accounts, please add the system user " + data.admin_email +
-				" as an administrator.</p>");
+			$('#post-account-table').html("<p>* To receive notifications for these accounts, please enter the email/pw for an Administrator for the account.</p>");
 		}
 		if (!can_subscribe) {
-			$('#post-account-table').html("<p>Problem: The system user, " + data.admin_email +
-				" does not have admin rights for any of your accounts. Solution: add the system user " +
-				"as an Administrator to your accounts.</p>");
-			$('#btn-do-subscribe').addAttr('disabled');			
+			$('#post-account-table').html("<p>Since you are not an Account Administrator, you need an administrator to help you.</p>");
 		}
 		
 		// Show the modal

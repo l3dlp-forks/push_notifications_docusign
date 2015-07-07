@@ -29,8 +29,6 @@ $pnd_config = array(
 	"instance_id" = '123', # 5 - 15 character long ID for this instance of the push notifications gateway. Eg use your name 
 
     "docusign_integrator_key" => '123',
-    "docusign_admin_email" => 'foo@woof.com', # used to configure and request DocuSign Connect 
-    "docusign_admin_pw" => '123',
 	"docusign_environment" => 'demo',
 	"docusign_version" => 'v2', # api version
 

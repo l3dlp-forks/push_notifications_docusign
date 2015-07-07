@@ -55,7 +55,7 @@ class PND_op_authenticate implements PND_Request
 
 	$admin_accounts = $pnd_utils->admin_accounts();
 	$accounts = array();
-	$results = array('admin_email' => $pnd_config["docusign_admin_email"]); # and 'accounts'
+	$results = array();
 	# Each account item is an associative array with these fields:
 	#	user_name
 	# 	user_email
@@ -63,7 +63,7 @@ class PND_op_authenticate implements PND_Request
 	#	account_name
 	#	account_id
 	#	available  # true/false -- can notifications be received from the account?
-	#		(Is our admin user an admin for this account?)
+	#		(Is the user an admin for this account?)
 	foreach ($login_info->loginAccounts as $account_info) {
 		$accounts[] = array(
 			'user_name' => $account_info->userName,
@@ -71,7 +71,8 @@ class PND_op_authenticate implements PND_Request
 			'user_id' => $account_info->userId,
 			'account_name' => $account_info->name,
 			'account_id' => $account_info->accountId,
-			'available' => in_array ($account_info->accountId, $admin_accounts, true));
+			'available' => $pnd_utils->account_admin($name, $pw, $account_info->accountId)
+			);
 	}
 	$results['accounts'] = $accounts;
 	$pnd_utils->return_data($results);

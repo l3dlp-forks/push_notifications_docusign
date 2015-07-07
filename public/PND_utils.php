@@ -50,27 +50,14 @@ class PND_utils {
 	return $ds;
   }
   
-  public function admin_accounts() {
-	# return array of the accounts that the admin user has access to
-	$ds_client = $this->new_docusign_client();
-    $service = new DocuSign_LoginService($ds_client);
-	$login_info = $service->login->getLoginInformation();
-	$this->good_results($login_info, "loginAccounts", 'admin_accounts: bad login_info from DS.');	
-	$accounts_raw = array(); # array of {user_id=> x, account_id=> y}
-	foreach($login_info->loginAccounts as $account_info) {
-		$accounts_raw[] = array("account_id" => $account_info->accountId, "user_id" => $account_info->userId);
-	}
-	
-	# next find accounts where the admin user has admin rights
-	$accounts = array();
-	foreach($accounts_raw as $account_user) {
-		$ds_client = $this->new_docusign_client(true, true, $account_user["account_id"]); # create a new client for the specific account
-		$service = new DocuSign_UserService($ds_client);
-		$user_settings = $service->user->getUserSettingList($account_user["user_id"]);
-		$this->good_results($user_settings, "userSettings", 'admin_accounts: bad user_settings from DS.');	
-		if ($this->is_admin($user_settings)) { $accounts[] = $account_user["account_id"]; }
-	}
-	return $accounts;
+  public function account_admin($accountId) {
+ 	# true/false is this user an admin
+	global $pnd_api;
+	$ds_client = $this->new_docusign_client($pnd_api->email(), $pnd_api->pw(), $accountId); # create a new client for the specific account
+	$service = new DocuSign_UserService($ds_client);
+	$user_settings = $service->user->getUserSettingList($account_user["user_id"]);
+	$this->good_results($user_settings, "userSettings", 'admin_accounts: bad user_settings from DS.');	
+	return $this->is_admin($user_settings);
   }
   
   public function is_admin($user_settings) {
@@ -83,7 +70,7 @@ class PND_utils {
 	throw new UnexpectedValueException('is_admin: no admin value from DS.'); # trouble in river city!
 	return false;
   }
-  
+   
   public function good_results($obj, $property, $msg) {
 	if (! ( is_object($obj) && property_exists  ( $obj, $property ))) {
 		throw new UnexpectedValueException($msg); # trouble in river city!
