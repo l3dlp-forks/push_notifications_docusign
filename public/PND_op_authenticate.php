@@ -53,7 +53,6 @@ class PND_op_authenticate implements PND_Request
     #    ]
     # }	
 
-	$admin_accounts = $pnd_utils->admin_accounts();
 	$accounts = array();
 	$results = array();
 	# Each account item is an associative array with these fields:
