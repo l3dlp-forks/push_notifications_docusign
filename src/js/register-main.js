@@ -223,30 +223,35 @@ var pndso = new function() {
 		// Store the accounts information for future use
 		pndso.accounts = data.accounts;
 		// Populate the form
-		var add_admin = false, can_subscribe = false, row = [];
+		var add_admin = 0, can_subscribe = false, row = [];
 		$('#account-table tbody').html(""); // clear any prior information
 		data.accounts.forEach(function(account, i, a){
-			row.push("<tr><td>" + account.account_name + "</td><td>");
+			row = [];
 			if (account.available) {
+				row.push("<tr><td>" + account.account_name + "</td><td>");
 				row.push("<i>" + pndso.user_email + "</i></td><td><i>already entered</i></td></tr>");
 			} else {
 				var accountId = account.accountId;
+				row.push("<tr><td>* " + account.account_name + "</td><td>");
 				row.push( 
 				"<input id='e" + accountId + "' type='text'     name='e" + accountId + "' class='tablee' />",
 				"</td><td>",
 				"<input id='p" + accountId + "' type='password' name='p" + accountId + "' class='tablep' />",
 				"</td></tr>");
 			}
-			$('#account-table tbody').append(row.join("")); row = [];
+			$('#account-table tbody').append(row.join(""));
 			if (account.available) {
 					can_subscribe = true;
 				} else {
-					add_admin = true;
+					add_admin++;
 				}
 			}) // end of foreach
 			
 		$('#account-table caption').text("Account Information for " + pndso.user_email); 
-		if (add_admin) {
+		if (add_admin == 1) {
+			$('#post-account-table').html("<p>* Optional: to receive notifications for this account, please enter an administrator's email and password for the account.</p>");
+		}
+		if (add_admin > 1) {
 			$('#post-account-table').html("<p>* Optional: to receive notifications for these accounts, please enter an administrator's email and password for the account.</p>");
 		}
 		if (!can_subscribe) {
@@ -308,10 +313,20 @@ var pndso = new function() {
 		// We try to get the server to subscribe us to DocuSign. 
 		// If it doesn't work then we need to remove the local subscription
 		var browser = browser_detect.split(" ",1)[0]; // Chrome browser notify is different from standard
-		
+		var namepw = [];
+		// fill in account id, name and pw info.
+		pndso.accounts.forEach(function(account, i, a){
+			if (!account.available) {
+				var accountId = account.accountId;
+				namepw.push({accountId: accountId, 
+					email: $('#e' + accountId).val(),
+					pw: $('#p' + accountId).val()});
+			}
+
 		data = {
 			email: pndso.user_email, 
-			pw: $('#pw').val(), 
+			pw: $('#pw').val(),
+			namepw: namepw,
 			subscription: this.subscription.endpoint, 
 			browser: browser};
 		
