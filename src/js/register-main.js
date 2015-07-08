@@ -322,6 +322,7 @@ var pndso = new function() {
 					email: $('#e' + accountId).val(),
 					pw: $('#p' + accountId).val()});
 			}
+		}) // end of foreach
 
 		data = {
 			email: pndso.user_email, 
