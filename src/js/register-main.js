@@ -228,13 +228,13 @@ var pndso = new function() {
 		data.accounts.forEach(function(account, i, a){
 			row.push("<tr><td>" + account.account_name + "</td><td>");
 			if (account.available) {
-				row.push("<i>" . pndso.user_email . "</i></td><td>already entered</td></tr>");
+				row.push("<i>" + pndso.user_email + "</i></td><td>already entered</td></tr>");
 			} else {
 				var accountId = account.accountId;
 				row.push( 
-				"<input id='e" . accountId . "' type='text'     name='e" . accountId .                       "' class='tablee' />",
+				"<input id='e" + accountId + "' type='text'     name='e" + accountId +                       "' class='tablee' />",
 				"</td><td>",
-				"<input id='p" . accountId . "' type='password' name='p" . accountId . " placeholder='Password' class='tablep' />",
+				"<input id='p" + accountId + "' type='password' name='p" + accountId + " placeholder='Password' class='tablep' />",
 				"</td></tr>");
 			$('#account-table tbody').append(row.join(""));
 			if (account.available) {
