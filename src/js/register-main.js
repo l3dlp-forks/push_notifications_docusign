@@ -223,13 +223,21 @@ var pndso = new function() {
 		// Store the accounts information for future use
 		pndso.accounts = data.accounts;
 		// Populate the form
-		var add_admin = false, can_subscribe = false;
+		var add_admin = false, can_subscribe = false, row = [];
 		$('#account-table tbody').html(""); // clear any prior information
 		data.accounts.forEach(function(account, i, a){
-			$('#account-table tbody').append(
-				"<tr><td>" + account.account_name + "</td><td>" +
-					(account.available ? "yes" : "no*") + "</td></tr>");
-				if (account.available) {
+			row.push("<tr><td>" + account.account_name + "</td><td>");
+			if (account.available) {
+				row.push("<i>" . pndso.user_email . "</i></td><td>already entered</td></tr>");
+			} else {
+				var accountId = account.accountId;
+				row.push( 
+				"<input id='e" . accountId . "' type='text'     name='e" . accountId .                       "' class='tablee' />",
+				"</td><td>",
+				"<input id='p" . accountId . "' type='password' name='p" . accountId . " placeholder='Password' class='tablep' />",
+				"</td></tr>");
+			$('#account-table tbody').append(row.join(""));
+			if (account.available) {
 					can_subscribe = true;
 				} else {
 					add_admin = true;
@@ -237,10 +245,10 @@ var pndso = new function() {
 			$('#account-table caption').text("Account Information for " + pndso.user_email); 
 			})
 		if (add_admin) {
-			$('#post-account-table').html("<p>* To receive notifications for these accounts, please enter the email/pw for an Administrator for the account.</p>");
+			$('#post-account-table').html("<p>* Optional: to receive notifications for these accounts, please enter an administrator's email and password for the account.</p>");
 		}
 		if (!can_subscribe) {
-			$('#post-account-table').html("<p>Since you are not an Account Administrator, you need an administrator to help you.</p>");
+			$('#post-account-table').html("<p>Since you are not an account administrator, you need an administrator to help you.</p>");
 		}
 		
 		// Show the modal
