@@ -243,9 +243,9 @@ var pndso = new function() {
 				} else {
 					add_admin = true;
 				}
-			$('#account-table caption').text("Account Information for " + pndso.user_email); 
 			}) // end of foreach
 			
+		$('#account-table caption').text("Account Information for " + pndso.user_email); 
 		if (add_admin) {
 			$('#post-account-table').html("<p>* Optional: to receive notifications for these accounts, please enter an administrator's email and password for the account.</p>");
 		}
