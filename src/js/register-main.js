@@ -231,7 +231,7 @@ var pndso = new function() {
 				row.push("<tr><td>" + account.account_name + "</td><td>");
 				row.push("<i>" + pndso.user_email + "</i></td><td><i>already entered</i></td></tr>");
 			} else {
-				var accountId = account.accountId;
+				var accountId = account.account_id;
 				row.push("<tr><td>* " + account.account_name + "</td><td>");
 				row.push( 
 				"<input id='e" + accountId + "' type='text'     name='e" + accountId + "' class='tablee' />",
@@ -317,7 +317,7 @@ var pndso = new function() {
 		// fill in account id, name and pw info.
 		pndso.accounts.forEach(function(account, i, a){
 			if (!account.available) {
-				var accountId = account.accountId;
+				var accountId = account.account_id;
 				namepw.push({accountId: accountId, 
 					email: $('#e' + accountId).val(),
 					pw: $('#p' + accountId).val()});
