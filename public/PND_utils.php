@@ -35,6 +35,7 @@ class PND_utils {
 	if ($email === true && $pw === true) {
 		$email = $pnd_api->email();
 		$pw = $pnd_api->pw();
+	}
 	
 	$ds_config = array(
 		'integrator_key' => $pnd_config["docusign_integrator_key"], 
