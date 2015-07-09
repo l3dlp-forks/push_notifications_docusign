@@ -111,6 +111,7 @@ class PND_utils {
 			$email = $emailpw['email'];
 			$pw = $emailpw['pw'];
 		}
+	}
 	
 	if ($email === null && $pw === null) {
 		# use default creds
