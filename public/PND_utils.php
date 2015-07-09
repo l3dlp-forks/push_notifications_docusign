@@ -99,7 +99,7 @@ class PND_utils {
 	return "http".(!empty($_SERVER['HTTPS'])?"s":"") . "://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'] . WEBHOOK_SUFFIX;
   }
   
-  # Update or Insert a connection for the account and user_id
+  # Update or Insert a connection for the account and userId
   public function upsert_connection($accountId, $userId, $emailpws) {
 	# emailpws is a limited list of email and pw for specific accounts. If $accountId is in
 	# emailpws then use that email pw. Otherwise use the default credentials.
@@ -151,7 +151,7 @@ class PND_utils {
 			'requiresAcknowledgement' => false, # boolean	true or false
 			'signMessagewithX509Certificate' => false,	# boolean	Signs message with an X509 certificate.
 			'useSoapInterface' => false, # boolean	Set to true if the urlToPublishTo is a SOAP endpoint
-			'userIds' => array($user_id) # array list of user Id's. Required if allUsers is false
+			'userIds' => array($userId) # array list of user Id's. Required if allUsers is false
 		);
 		$connect_service->createConnectConfiguration(	
 			$accountId, # string	Account Id

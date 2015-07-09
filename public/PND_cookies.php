@@ -6,9 +6,9 @@
 	define ("COOKIE_NOTIFY_ID", "PushNotifyDocuSignID"); # unique id
 	
 class PND_cookies {
-	private $cookie_notify = NULL;
-	private $cookie_notify_id = NULL;
-	private $cookie_notify_id_created = NULL; # did we newly create the cookie?
+	public $cookie_notify = NULL;
+	public $cookie_notify_id = NULL;
+	publis $cookie_notify_id_created = NULL; # did we newly create the cookie?
 	
 	function __construct() {
 		$this->setup_id_cookie();
