@@ -106,7 +106,7 @@ class PND_utils {
 	
 	$email = null;
 	$pw = null;
-	foreach ($emailpw as $emailpws) {
+	foreach ($emailpws as $emailpw) {
 		if ($emailpw['accountId'] === $accountId &&
 			strlen($emailpw['email']) > 2 &&
 			strlen($emailpw['pw']) > 2) {
