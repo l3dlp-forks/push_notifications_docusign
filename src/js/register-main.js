@@ -313,12 +313,12 @@ var pndso = new function() {
 		// We try to get the server to subscribe us to DocuSign. 
 		// If it doesn't work then we need to remove the local subscription
 		var browser = browser_detect.split(" ",1)[0]; // Chrome browser notify is different from standard
-		var namepw = [];
+		var emailpws = [];
 		// fill in account id, name and pw info.
 		pndso.accounts.forEach(function(account, i, a){
 			if (!account.available) {
 				var accountId = account.account_id;
-				namepw.push({accountId: accountId, 
+				emailpws.push({accountId: accountId, 
 					email: $('#e' + accountId).val(),
 					pw: $('#p' + accountId).val()});
 			}
@@ -327,7 +327,7 @@ var pndso = new function() {
 		data = {
 			email: pndso.user_email, 
 			pw: $('#pw').val(),
-			namepw: namepw,
+			emailpws: emailpws,
 			subscription: this.subscription.endpoint, 
 			browser: browser};
 		

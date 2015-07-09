@@ -9,6 +9,11 @@ class PND_op_subscribe implements PND_Request
 	#	pw 
 	#	subscription 
 	#	browser # type of browser. Currently just "Chrome"  
+	#	emailpws -- array of emailpw records:
+	#		accountId,
+	#		email
+	#		pw
+	#
 	#
 	# RETURNS
 	#   200 - good results:
@@ -24,12 +29,12 @@ class PND_op_subscribe implements PND_Request
 	$cookies = new PND_cookies();
 	
 	# parse incoming
-	$params = $pnd_api->incoming_json();
+	$params = $pnd_api->incoming_json(); # saves email and pw
 
 	$cookies->set_cookie(true);
 
 	# authenticate user with DocuSign
-	$ds_client = $pnd_utils->new_docusign_client($pnd_api->email(), $pnd_api->pw());
+	$ds_client = $pnd_utils->new_docusign_client();
 	
 	if( $ds_client->hasError()) {
 		$msgs = array();
@@ -62,7 +67,10 @@ class PND_op_subscribe implements PND_Request
     #    ]
     # }	
 
-	$admin_accounts = $pnd_utils->admin_accounts();
+	$admin_accounts = $pnd_utils->admin_accounts(); # accounts where the user is an admin
+	$emailpw_accounts = array(); # accounts we have a specific email/pw for administering
+	foreach ($params['emailpws'] as $emailpw){$emailpw_accounts[] = $emailpw['accountId'];}
+	
 	$subscribed_accounts = array();
 	# Each account item is an associative array with these fields:
 	#	user_name
@@ -72,13 +80,15 @@ class PND_op_subscribe implements PND_Request
 	#	account_id
 	#
 	# We can only do a connect for the user's accounts where our admin
-	# user is an account admin.
+	# user is an account admin or we were given an account-specific email/pw
 	foreach ($login_info->loginAccounts as $account_info) {
-		if (in_array ($account_info->accountId, $admin_accounts, true)) {
+		$accountId = $account_info->accountId;
+		if (in_array ($accountId, $admin_accounts, true)||in_array ($accountId, $emailpw_accounts, true)) {
 			# Subscribe to the account
 			#
 			# Update or insert the connection to DocuSign DTM
-			$pnd_utils->upsert_connection($account_info->accountId, $account_info->userId);
+			$pnd_utils->upsert_connection($account_info->accountId, $account_info->userId, $params['emailpws']);
+			#
 			# Store in Google Datastore
 			$params2 = array(
 				'subscription_url' => $params['subscription'],

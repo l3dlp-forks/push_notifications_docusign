@@ -7,7 +7,7 @@ define("WEBHOOK_SUFFIX", '?op=webhook');
  
 class PND_utils {
   private $_pnd_google_db = null;
-  private $_ds_admin_client = null;
+  private $_ds_client = null;
   private $_ds_connect_service = null;
   
   public function return_data( $data, $code = 200 ) {
@@ -30,12 +30,12 @@ class PND_utils {
   
   public function new_docusign_client($email = true, $pw = true, $account = false) {
 	global $pnd_config;
-	if ($email === true && $pw === true) {
-		# use admin credentials
-		$email = $pnd_config["docusign_admin_email"];
-		$pw = $pnd_config["docusign_admin_pw"];
-	}
+	global $pnd_api;
 		
+	if ($email === true && $pw === true) {
+		$email = $pnd_api->email();
+		$pw = $pnd_api->pw();
+	
 	$ds_config = array(
 		'integrator_key' => $pnd_config["docusign_integrator_key"], 
 		'email' => $email,
@@ -50,10 +50,9 @@ class PND_utils {
 	return $ds;
   }
   
-  public function account_admin($accountId, $userId) {
+  public function account_admin($accountId, $userId, $email = true, $pw = true) {
  	# true/false is this user an admin
-	global $pnd_api;
-	$ds_client = $this->new_docusign_client($pnd_api->email(), $pnd_api->pw(), $accountId); # create a new client for the specific account
+	$ds_client = $this->new_docusign_client($email, $pw, $accountId); # create a new client for the specific account
 	$service = new DocuSign_UserService($ds_client);
 	$user_settings = $service->user->getUserSettingList($userId);
 	$this->good_results($user_settings, "userSettings", 'admin_accounts: bad user_settings from DS.');	
@@ -79,16 +78,16 @@ class PND_utils {
 	return true;
   }  
   
-  private function get_ds_admin_client(){
-	if ($this->_ds_admin_client === null) {
-		$this->_ds_admin_client = $this->new_docusign_client();
+  private function get_ds_client(){
+	if ($this->_ds_client === null) {
+		$this->_ds_client = $this->new_docusign_client();
 	}
-	return $this->_ds_admin_client;
+	return $this->_ds_client;
   }
   
   private function get_ds_connect_service(){
 	if ($this->_ds_connect_service === null) {
-		$s = new DocuSign_ConnectService($this->get_ds_admin_client());
+		$s = new DocuSign_ConnectService($this->get_ds_client());
 		$this->_ds_connect_service = $s->connect;
 	}
 	return $this->_ds_connect_service;
@@ -100,9 +99,28 @@ class PND_utils {
   }
   
   # Update or Insert a connection for the account and user_id
-  public function upsert_connection($accountId, $userId) {
-	$connect_service = get_ds_connect_service(); 
-	$connection = $this->find_connection($accountId);
+  public function upsert_connection($accountId, $userId, $emailpws) {
+	# emailpws is a limited list of email and pw for specific accounts. If $accountId is in
+	# emailpws then use that email pw. Otherwise use the default credentials.
+	
+	$email = null;
+	$pw = null;
+	foreach ($emailpw as $emailpws) {
+		if ($emailpw['accountId'] === $accountId) {
+			$email = $emailpw['email'];
+			$pw = $emailpw['pw'];
+		}
+	
+	if ($email === null && $pw === null) {
+		# use default creds
+		$connect_service = get_ds_connect_service();
+	} else {
+		# use supplied creds
+		$ds_client = new_docusign_client($email, $pw, $accountId);
+		$connect_service = new DocuSign_ConnectService($ds_client);	
+	}
+	
+	$connection = $this->find_connection($accountId, $connect_service);
 	if ($connection) {
 		$userIds = $connection->userIds;
 		# Our new userId shouldn't be in the connection. But we'll be 
@@ -137,8 +155,7 @@ class PND_utils {
 	}
   }
  
-  private function find_connection($accountId) {
-	$connect_service = get_ds_connect_service(); 
+  private function find_connection($accountId, $connect_service) {
 	$connections = $connect_service->getConnectConfiguration($accountId);
 	$result = false;
 	$name = $this->connection_name();

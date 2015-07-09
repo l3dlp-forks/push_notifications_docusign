@@ -19,7 +19,7 @@ class PND_op_authenticate implements PND_Request
 	if ( $op != 'authenticate' ) {return false;}
 	
 	# check incoming
-	if (! $pnd_api->check_email_pw()) {return true;}
+	if (! $pnd_api->check_post_email_pw()) {return true;}
 
 	# authenticate with DocuSign
 	$ds_client = $pnd_utils->new_docusign_client($pnd_api->email(), $pnd_api->pw());

@@ -118,6 +118,8 @@ class PND_google_db {
 		$notification->ds_user_name = $params['ds_user_name'];
 		$notification->ds_user_id = $params['ds_user_id'];
 		$bol_result1 = $this->notify_db->upsert($notification);
+
+		$bol_result1 = $this->notify_db->upsert($notification);
 	}
 	
 	public function getAllNotificationsAccountCookie ($ds_account_id, $cookie_notify_id) {

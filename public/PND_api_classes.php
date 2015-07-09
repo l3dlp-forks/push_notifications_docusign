@@ -43,7 +43,7 @@ class PND_API {
 	public function email() {return $this->_email;}
 	public function pw() {return $this->_pw;}
   
-	public function check_email_pw() {
+	public function check_post_email_pw() {
 		global $pnd_utils;
 		if (!isset($_POST['email']) || strlen($_POST['email']) < 1) {
 			$pnd_utils->return_data( 
