@@ -164,7 +164,7 @@ class PND_utils {
 	$result = false;
 	$name = $this->connection_name();
 	foreach ($connections->configurations as $configuration) {
-		if ($configuration['name'] === $name) {
+		if ($configuration->name === $name) {
 			return $configuration;
 		}
 		return false; # didn't find anything
