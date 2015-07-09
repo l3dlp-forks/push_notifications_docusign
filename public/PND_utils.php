@@ -117,10 +117,10 @@ class PND_utils {
 	
 	if ($email === null && $pw === null) {
 		# use default creds
-		$connect_service = get_ds_connect_service();
+		$connect_service = $this->get_ds_connect_service();
 	} else {
 		# use supplied creds
-		$ds_client = new_docusign_client($email, $pw, $accountId);
+		$ds_client = $this->new_docusign_client($email, $pw, $accountId);
 		$connect_service = new DocuSign_ConnectService($ds_client);	
 	}
 	
