@@ -8,7 +8,7 @@
 class PND_cookies {
 	public $cookie_notify = NULL;
 	public $cookie_notify_id = NULL;
-	publis $cookie_notify_id_created = NULL; # did we newly create the cookie?
+	public $cookie_notify_id_created = NULL; # did we newly create the cookie?
 	
 	function __construct() {
 		$this->setup_id_cookie();
