@@ -67,7 +67,6 @@ class PND_op_subscribe implements PND_Request
     #    ]
     # }	
 
-	$admin_accounts = $pnd_utils->admin_accounts(); # accounts where the user is an admin
 	$emailpw_accounts = array(); # accounts we have a specific email/pw for administering
 	foreach ($params['emailpws'] as $emailpw){$emailpw_accounts[] = $emailpw['accountId'];}
 	
@@ -83,7 +82,7 @@ class PND_op_subscribe implements PND_Request
 	# user is an account admin or we were given an account-specific email/pw
 	foreach ($login_info->loginAccounts as $account_info) {
 		$accountId = $account_info->accountId;
-		if (in_array ($accountId, $admin_accounts, true)||in_array ($accountId, $emailpw_accounts, true)) {
+		if (account_admin($accountId, $account_info->userId)||in_array ($accountId, $emailpw_accounts, true)) {
 			# Subscribe to the account
 			#
 			# Update or insert the connection to DocuSign DTM
