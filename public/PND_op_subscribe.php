@@ -82,7 +82,7 @@ class PND_op_subscribe implements PND_Request
 	# user is an account admin or we were given an account-specific email/pw
 	foreach ($login_info->loginAccounts as $account_info) {
 		$accountId = $account_info->accountId;
-		if (account_admin($accountId, $account_info->userId)||in_array ($accountId, $emailpw_accounts, true)) {
+		if ($pnd_utils->account_admin($accountId, $account_info->userId)||in_array ($accountId, $emailpw_accounts, true)) {
 			# Subscribe to the account
 			#
 			# Update or insert the connection to DocuSign DTM
