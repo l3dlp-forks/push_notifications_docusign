@@ -130,8 +130,7 @@ class PND_utils {
 		$userIds = $connection->userIds;
 		# Our new userId shouldn't be in the connection. But we'll be 
 		# conservative and make sure that it is not there.
-		echo "userIds ";
-		print_r ($userIds);
+		echo $userIds==="", $userIds===null, "userIds--";print_r ($userIds);echo "--userIds";
 		if (!in_array ($userId, $userIds, true)) {
 			$userIds[] = $userId; # add the new user id
 			$connect_service->updateConnectConfiguration(	
