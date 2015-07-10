@@ -127,16 +127,16 @@ class PND_utils {
 	
 	$connection = $this->find_connection($accountId, $connect_service);
 	if ($connection) {
-		$userIds = $connection->userIds;
+		if ($connection->userIds === null){echo "UserIds is null";}
+		$userIds = $connection->userIds === "" ? array() : explode(",", $connection->userIds);
 		# Our new userId shouldn't be in the connection. But we'll be 
 		# conservative and make sure that it is not there.
-		echo $userIds===""? " empty string":"", $userIds===null? " null string ":"", "userIds--";print_r ($userIds);echo "--userIds";
 		if (!in_array ($userId, $userIds, true)) {
 			$userIds[] = $userId; # add the new user id
 			$connect_service->updateConnectConfiguration(	
 				$accountId, # string	Account Id
 				$connection->connectId, # string	Connection Id
-				$params = array(userIds => $userIds));
+				$params = array(userIds => implode(",", $userIds)));
 		}
 	} else {
 		$params = array(
@@ -144,16 +144,16 @@ class PND_utils {
 			'allUsers' => false,	# boolean	Track events initiated by all users.
 			'allowEnvelopePublish' => true, # boolean	Enables users to publish processed events.
 			'enableLog' => true, # boolean	Enables logging on prcoessed events. Log only maintains the last 100 events.
-			'envelopeEvents' => array('Sent', 'Delivered', 'Signed', 'Completed', 'Declined', 'Voided'), # Envelope related events to track.
+			'envelopeEvents' => implode(",", array('Sent', 'Delivered', 'Signed', 'Completed', 'Declined', 'Voided')), # Envelope related events to track.
 			'includeDocuments' => false, # boolean	Include envelope documents
 			'includeSenderAccountasCustomField' => true, # boolean	Include sender account as Custom Field.
 			'includeTimeZoneInformation' => true, # boolean	Include time zone information.
 			'name' => $this->connection_name(), # string	name of the connection
-			'recipientEvents' => array('Sent', 'Delivered', 'Completed', 'Declined', 'AuthenticationFailed', 'AutoResponded'), # Recipient events to track
+			'recipientEvents' => implode(",", array('Sent', 'Delivered', 'Completed', 'Declined', 'AuthenticationFailed', 'AutoResponded')), # Recipient events to track
 			'requiresAcknowledgement' => false, # boolean	true or false
 			'signMessagewithX509Certificate' => false,	# boolean	Signs message with an X509 certificate.
 			'useSoapInterface' => false, # boolean	Set to true if the urlToPublishTo is a SOAP endpoint
-			'userIds' => array($userId) # array list of user Id's. Required if allUsers is false
+			'userIds' => $userId # csv list of user Id's. Required if allUsers is false
 		);
 		$connect_service->createConnectConfiguration(	
 			$accountId, # string	Account Id
