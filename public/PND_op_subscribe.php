@@ -80,33 +80,33 @@ class PND_op_subscribe implements PND_Request
 	#
 	# We can only do a connect for the user's accounts where our admin
 	# user is an account admin or we were given an account-specific email/pw
-	foreach ($login_info->loginAccounts as $account_info) {
-		$accountId = $account_info->accountId;
-		if ($pnd_utils->account_admin($accountId, $account_info->userId)||in_array ($accountId, $emailpw_accounts, true)) {
+	foreach ($login_info->loginAccounts as $loginAccount) {
+		$accountId = $loginAccount->accountId;
+		if ($pnd_utils->account_admin($accountId, $loginAccount->userId)||in_array ($accountId, $emailpw_accounts, true)) {
 			# Subscribe to the account
 			#
 			# Update or insert the connection to DocuSign DTM
-			$pnd_utils->upsert_connection($account_info->accountId, $account_info->userId, $params['emailpws']);
+			$pnd_utils->upsert_connection($loginAccount->accountId, $loginAccount->userId, $params['emailpws']);
 			#
 			# Store in Google Datastore
 			$params2 = array(
 				'subscription_url' => $params['subscription'],
 				'subscription_browser' => $params['browser'],
 				'cookie_notify_id' => $cookies->cookie_notify_id,
-				'ds_account_id' => $account_info['account_id'],
-				'ds_account_name' => $account_info['account_name'],
-				'ds_email' => $account_info['user_email'],
-				'ds_user_name' => $account_info['user_name'],
-				'ds_user_id' => $account_info['user_id']
+				'ds_account_id' => $loginAccount->accountId,
+				'ds_account_name' => $loginAccount->name,
+				'ds_email' => $loginAccount->email,
+				'ds_user_name' => $loginAccount->userName,
+				'ds_user_id' => $loginAccount->userId
 			);			
 			$pnd_utils->pnd_google_db()->subscribe($params2);
 			# Add to the results
 			$subscribed_accounts[] = array(
-				'user_name' => $account_info->userName,
-				'user_email' => $account_info->email,
-				'user_id' => $account_info->userId,
-				'account_name' => $account_info->name,
-				'account_id' => $account_info->accountId);
+				'user_name' => $loginAccount->userName,
+				'user_email' => $loginAccount->email,
+				'user_id' => $loginAccount->userId,
+				'account_name' => $loginAccount->name,
+				'account_id' => $loginAccount->accountId);
 		}
 	}
 	$pnd_utils->return_data(array('accounts' => $subscribed_accounts, $code = 200 ));

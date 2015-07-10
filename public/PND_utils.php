@@ -96,7 +96,8 @@ class PND_utils {
   
   # returns the url for the incoming web_hook calls
   private function web_hook_url(){
-	return "http".(!empty($_SERVER['HTTPS'])?"s":"") . "://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'] . WEBHOOK_SUFFIX;
+	$uri = explode ('?', $_SERVER['REQUEST_URI'])[0];
+	return "http".(!empty($_SERVER['HTTPS'])?"s":"") . "://".$_SERVER['SERVER_NAME']. $uri . WEBHOOK_SUFFIX;
   }
   
   # Update or Insert a connection for the account and userId
@@ -129,12 +130,14 @@ class PND_utils {
 		$userIds = $connection->userIds;
 		# Our new userId shouldn't be in the connection. But we'll be 
 		# conservative and make sure that it is not there.
+		echo "userIds ";
+		print_r ($userIds);
 		if (!in_array ($userId, $userIds, true)) {
-			$user_ids[] = $userId; # add the new user id
+			$userIds[] = $userId; # add the new user id
 			$connect_service->updateConnectConfiguration(	
 				$accountId, # string	Account Id
 				$connection->connectId, # string	Connection Id
-				$params = array(user_ids => $user_ids));
+				$params = array(userIds => $userIds));
 		}
 	} else {
 		$params = array(
