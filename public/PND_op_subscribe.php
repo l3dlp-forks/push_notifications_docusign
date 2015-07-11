@@ -91,15 +91,15 @@ class PND_op_subscribe implements PND_Request
 			# Store in Google Datastore
 			$params2 = array(
 				'subscription_url' => $params['subscription'],
-				'subscription_browser' => $params['browser'],
-				'cookie_notify_id' => $cookies->cookie_notify_id,
+				'subscription_type' => $params['browser'],
+				'instance_id' => $cookies->cookie_notify_id,
 				'ds_account_id' => $loginAccount->accountId,
 				'ds_account_name' => $loginAccount->name,
 				'ds_email' => $loginAccount->email,
 				'ds_user_name' => $loginAccount->userName,
 				'ds_user_id' => $loginAccount->userId
 			);			
-			$pnd_utils->pnd_google_db()->subscribe($params2);
+			$status = $pnd_utils->pnd_google_db()->subscribe($params2);
 			# Add to the results
 			$subscribed_accounts[] = array(
 				'user_name' => $loginAccount->userName,
