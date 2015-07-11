@@ -134,7 +134,7 @@ class PND_utils {
 			$connect_service->updateConnectConfiguration(	
 				$accountId, # string	Account Id
 				$connection->connectId, # string	Connection Id
-				$params = array('userIds' => $userIds);
+				$params = array('userIds' => $userIds));
 		}
 	} else {
 		$params = array(
