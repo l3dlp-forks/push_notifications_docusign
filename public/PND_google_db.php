@@ -58,7 +58,7 @@ class PND_google_db {
 		# Whenever the page is loaded, if the service worker is already installed,
 		# we need to update our db since the notification url may have changed. 
 		#
-		$ RETURNS setting for set_cookie
+		# RETURNS setting for set_cookie
 		$notifications = 
 			$this->notify_db->fetchAll("SELECT * FROM Notifications WHERE instance_id = @id",
 			['id' => $instance_id]);
