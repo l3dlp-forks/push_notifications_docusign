@@ -17,10 +17,10 @@ class PND_utils {
   }
   
   public function pnd_google_db() {
-	if (! $_pnd_google_db) {
-		$_pnd_google_db = new PND_google_db();
+	if (! $this->_pnd_google_db) {
+		$this->_pnd_google_db = new PND_google_db();
 	}
-    return $_pnd_google_db;
+    return $this->_pnd_google_db;
   }
   
   private function connection_name() {
@@ -129,6 +129,7 @@ class PND_utils {
 	if ($connection) {
 		# Our new userId shouldn't be in the connection. But we'll be 
 		# conservative and make sure that it is not there.
+		$userIds = $connection->userIds;
 		if (!in_array ($userId, $userIds, true)) {
 			$userIds[] = $userId; # add the new user id
 			$connect_service->updateConnectConfiguration(	
@@ -151,7 +152,7 @@ class PND_utils {
 			'requiresAcknowledgement' => false, # boolean	true or false
 			'signMessagewithX509Certificate' => false,	# boolean	Signs message with an X509 certificate.
 			'useSoapInterface' => false, # boolean	Set to true if the urlToPublishTo is a SOAP endpoint
-			'userIds' => $userId # csv list of user Id's. Required if allUsers is false
+			'userIds' => array($userId) # user Id's array. Required if allUsers is false
 		);
 		$connect_service->createConnectConfiguration(	
 			$accountId, # string	Account Id
