@@ -317,10 +317,15 @@ var pndso = new function() {
 		// fill in account id, name and pw info.
 		pndso.accounts.forEach(function(account, i, a){
 			if (!account.available) {
-				var accountId = account.account_id;
-				emailpws.push({accountId: accountId, 
-					email: $('#e' + accountId).val(),
-					pw: $('#p' + accountId).val()});
+				var accountId = account.account_id,
+				email = $('#e' + accountId).val(),
+				pw = $('#p' + accountId).val();
+				
+				if (email !== '' && pw !== '') {
+					emailpws.push({accountId: accountId, 
+						email: email,
+						pw: pw});
+				}
 			}
 		}) // end of foreach
 
