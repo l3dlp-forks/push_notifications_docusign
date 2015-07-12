@@ -25,14 +25,18 @@ class PND_HandlerChain {
 			return;
 		}
 	} catch (Exception $e) { # catch anything
+		$msg = $e->getMessage();
+		if (!strpos($msg, ": ")===false) {
+			$msg = explode (": ", $msg, 2)[1];
+		}
 		$pnd_utils->return_data( 
-			array( 'bad_data' => array(), 'msg' => $e->getMessage() ), 503); # 503 - Service Unavailable
+			array( 'api' => true, 'bad_data' => array(), 'msg' => $msg ), 400); 
 		return;
 	}
 	
 	# bad op
 	$pnd_utils->return_data( 
-		array( 'bad_data' => array(), 'msg' => 'Bad op' ), 501); # 501 - Not implemented
+		array( 'api' => true, 'bad_data' => array(), 'msg' => 'Bad op' ), 501); # 501 - Not implemented
   }
 }
 
