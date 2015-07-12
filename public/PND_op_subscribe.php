@@ -86,7 +86,13 @@ class PND_op_subscribe implements PND_Request
 			# Subscribe to the account
 			#
 			# Update or insert the connection to DocuSign DTM
-			$pnd_utils->upsert_connection($loginAccount->accountId, $loginAccount->userId, $params['emailpws']);
+			# Handle bad user name/pw and creds
+			try {
+				$pnd_utils->upsert_connection($loginAccount->accountId, $loginAccount->userId, $params['emailpws']);
+			} catch (DocuSign_IOException $e) {
+				if ($e === "USER_NOT_ACCOUNT_ADMIN: User is not an account administrator.") {
+					throw new DocuSign_IOException("USER_NOT_ACCOUNT_ADMIN: User is not an administrator for account " . $loginAccount->account_name);
+			}
 			#
 			# Store in Google Datastore
 			$params2 = array(

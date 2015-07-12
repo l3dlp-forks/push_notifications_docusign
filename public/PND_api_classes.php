@@ -27,6 +27,7 @@ class PND_HandlerChain {
 	} catch (Exception $e) { # catch anything
 		$pnd_utils->return_data( 
 			array( 'bad_data' => array(), 'msg' => $e->getMessage() ), 503); # 503 - Service Unavailable
+		return;
 	}
 	
 	# bad op
