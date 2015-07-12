@@ -122,7 +122,8 @@ class PND_utils {
 	} else {
 		# use supplied creds
 		$ds_client = $this->new_docusign_client($email, $pw, $accountId);
-		$connect_service = new DocuSign_ConnectService($ds_client);	
+		$s = new DocuSign_ConnectService($ds_client);	
+		$connect_service = $s->connect;	
 	}
 	
 	$connection = $this->find_connection($accountId, $connect_service);
