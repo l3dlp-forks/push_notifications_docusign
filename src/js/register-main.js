@@ -347,7 +347,7 @@ var pndso = new function() {
 			this.subscribed(data);
 		})
 		.fail(function(jqXHR, textStatus, errorThrown) {
-			this.unsubscribe(); // Unsubscribe from the subscription object
+			this.unsubscribe(true); // Unsubscribe from the subscription object
 			this.isPushEnabled = false;			
 			if (jqXHR.status === 400 && jqXHR.responseJSON && jqXHR.responseJSON.hasOwnProperty('api')) {
 				// Error message from api
@@ -390,14 +390,16 @@ var pndso = new function() {
 	this.unsubscribe_click = function(e) {
 		// The user clicked the unsubscribe button
 		e.preventDefault(); // Don't submit to the server
-		pndso.unsubscribe.call(pndso);
+		pndso.unsubscribe.call(pndso, false);
 		return false;
 	}
 
-	this.unsubscribe = function() {
+	this.unsubscribe = function(quiet) {
 		this.working(true);
-		this.hide_message();
-		this.post_status();	
+		if (!quiet) {
+			this.hide_message();
+			this.post_status();
+		}
 
 		this.accounts = null;
 		navigator.serviceWorker.ready.then(function serviceWorker_ready(serviceWorkerRegistration) {
@@ -416,28 +418,34 @@ var pndso = new function() {
 				
 					// We have a subscription, so call unsubscribe on it
 					pndso.subscription = subscription;
-					pndso.internal_unsubscribe.call(pndso);
+					pndso.internal_unsubscribe.call(pndso, quiet);
 				}
 			).catch(function(e) {
-				pndso.post_message('<p>Unsubscribed.</p><small>Issue: Problem with Push Manager</small>');
+				if (!quiet) {
+					pndso.post_message('<p>Unsubscribed.</p><small>Issue: Problem with Push Manager</small>');
+				}
 				pndso.working(false);
 			});
 		});
 	}
 
-	this.internal_unsubscribe = function() {
+	this.internal_unsubscribe = function(quiet) {
 		pndso.subscription.unsubscribe().then(function subscription_unsubscribe(successful) {
-			pndso.send_unsubscribe_to_server.call(pndso);
-			pndso.post_message('<p>Unsubscribed.</p>');
+			pndso.send_unsubscribe_to_server.call(pndso, quiet);
+			if (!quiet) {
+				pndso.post_message('<p>Unsubscribed.</p>');
+			}
 		}).catch(function catch_unsubscribe(e) {
 			// We failed to unsubscribe, this can lead to an unusual state, so may be best to remove 
 			// the subscription id from your data store and inform the user that you disabled push
 			pndso.send_unsubscribe_to_server.call(pndso);
-			pndso.post_message('<p>Unsubscribed.</p><small>Issue: Problem with unsubscribing</small>');
+			if (!quiet) {
+				pndso.post_message('<p>Unsubscribed.</p><small>Issue: Problem with unsubscribing</small>');
+			}
 		});
 	}
 	
-	this.send_unsubscribe_to_server = function() {
+	this.send_unsubscribe_to_server = function(quiet) {
 		// Tell the server we've unsubscribed 
 		data = {subscription: this.subscription.endpoint};
 		
@@ -453,11 +461,13 @@ var pndso = new function() {
 		.fail(function(jqXHR, textStatus, errorThrown) {
 			this.unsubscribed();
 			this.isPushEnabled = false;			
-			if (jqXHR.status === 400 && jqXHR.responseJSON && jqXHR.responseJSON.hasOwnProperty('api')) {
-				// Error message from api
-				this.post_message("<h2>Problem: " + jqXHR.responseJSON.msg + "</h2>");
-			} else {
-				this.post_message("<h2>Problem: " + textStatus + "</h2>"); 
+			if (!quiet) {
+				if (jqXHR.status === 400 && jqXHR.responseJSON && jqXHR.responseJSON.hasOwnProperty('api')) {
+					// Error message from api
+					this.post_message("<h2>Problem: " + jqXHR.responseJSON.msg + "</h2>");
+				} else {
+					this.post_message("<h2>Problem: " + textStatus + "</h2>"); 
+				}
 			}
 		})
 		.always(function() {
