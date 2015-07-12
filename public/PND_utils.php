@@ -168,8 +168,8 @@ class PND_utils {
 		if ($configuration->name === $name) {
 			return $configuration;
 		}
-		return false; # didn't find anything
 	}
+	return false; # didn't find anything
   }
  
 	
