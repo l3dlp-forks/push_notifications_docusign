@@ -92,6 +92,9 @@ class PND_op_subscribe implements PND_Request
 			} catch (DocuSign_IOException $e) {
 				if ($e === "USER_NOT_ACCOUNT_ADMIN: User is not an account administrator.") {
 					throw new DocuSign_IOException("USER_NOT_ACCOUNT_ADMIN: User is not an administrator for account " . $loginAccount->account_name);
+				} else {
+print_r ($e);
+					throw new DocuSign_IOException($e); # repeat the exception
 				}
 			}
 			#
