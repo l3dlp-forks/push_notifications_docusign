@@ -92,6 +92,7 @@ class PND_op_subscribe implements PND_Request
 			} catch (DocuSign_IOException $e) {
 				if ($e === "USER_NOT_ACCOUNT_ADMIN: User is not an account administrator.") {
 					throw new DocuSign_IOException("USER_NOT_ACCOUNT_ADMIN: User is not an administrator for account " . $loginAccount->account_name);
+				}
 			}
 			#
 			# Store in Google Datastore
