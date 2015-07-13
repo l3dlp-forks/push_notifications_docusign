@@ -399,9 +399,9 @@ var pndso = new function() {
 		if (!quiet) {
 			this.hide_message();
 			this.post_status();
+			this.accounts = null;
 		}
 
-		this.accounts = null;
 		navigator.serviceWorker.ready.then(function serviceWorker_ready(serviceWorkerRegistration) {
 			// To unsubscribe from push messaging, we need to get the
 			// subscription object, which you can call unsubscribe() on.
@@ -456,10 +456,10 @@ var pndso = new function() {
 			 data: JSON.stringify(data),
 			 context: this})
 		.done(function(data, textStatus, jqXHR){
-			this.unsubscribed();
+			this.unsubscribed(quiet);
 		})
 		.fail(function(jqXHR, textStatus, errorThrown) {
-			this.unsubscribed();
+			this.unsubscribed(quiet);
 			this.isPushEnabled = false;			
 			if (!quiet) {
 				if (jqXHR.status === 400 && jqXHR.responseJSON && jqXHR.responseJSON.hasOwnProperty('api')) {
@@ -475,10 +475,12 @@ var pndso = new function() {
 		});		
 	}
 
-	this.unsubscribed = function() {
+	this.unsubscribed = function(quiet) {
 		pnds.isPushEnabled = false;
 		this.subscription = null;
-		this.add_subscription_enable();
+		if (!quiet) {
+			this.add_subscription_enable();
+		}
 	}
 
 	
