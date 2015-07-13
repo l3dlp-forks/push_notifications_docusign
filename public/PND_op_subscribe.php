@@ -90,12 +90,13 @@ class PND_op_subscribe implements PND_Request
 			try {
 				$pnd_utils->upsert_connection($loginAccount->accountId, $loginAccount->userId, $params['emailpws']);
 			} catch (DocuSign_IOException $e) {
-				if ($e->getMessage() === "USER_NOT_ACCOUNT_ADMIN: User is not an account administrator.") {
+				$msg = $e->getMessage();
+				$err_code = explode(": ", $msg, 2)[0];
+				if ($err_code === "USER_NOT_ACCOUNT_ADMIN") {
 					throw new DocuSign_IOException("USER_NOT_ACCOUNT_ADMIN: User is not an administrator for account " . $loginAccount->name);
-				} elseif ($e->getMessage() === "USER_NOT_ACCOUNT_ADMIN: User is not an account administrator.") {
-					throw new DocuSign_IOException("USER_NOT_ACCOUNT_ADMIN: User is not an administrator for account " . $loginAccount->name);
+				} elseif ($err_code === "USER_AUTHENTICATION_FAILED") {
+					throw new DocuSign_IOException("USER_AUTHENTICATION_FAILED: Bad Username/Password for account " . $loginAccount->name . " administrator");
 				} else {
-				echo "Error: " . $e->getMessage(); 
 					throw new DocuSign_IOException($e); # repeat the exception
 				}
 			}
