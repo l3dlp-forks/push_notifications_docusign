@@ -400,7 +400,7 @@ var pndso = new function() {
 				"</i></td></tr>")
 		});
 		results.push("</tbody></table></div>");
-		this.post_message(results.join(""));
+		this.post_status(results.join(""));
 	}
 //
 // 	10.  Browser subscription failed....		
