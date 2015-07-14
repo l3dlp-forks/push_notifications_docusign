@@ -389,15 +389,10 @@ var pndso = new function() {
 	this.show_subscribed_accounts = function(accounts){
 		var results=[];
 		results.push("<h3>Subscriptions</h3>");
-		results.push("<div class='table-responsive'><table class='table table-striped'>
-			  <caption></caption>
-			  <thead>
-				<tr>
-				  <th>Subscriber</th>
-				  <th>Account</th>
-				</tr>
-			  </thead>
-			  <tbody>");
+		results.push("<div class='table-responsive'><table class='table table-striped'>" +
+			  "<caption></caption>" +
+			  "<thead><tr><th>Subscriber</th><th>Account</th></tr></thead>" +
+			  "<tbody>");
 		
 		accounts.forEach(function(account, i, a){
 			results.push("<tr><td>" + account.user_name + ",<i>" + account.user_email +
