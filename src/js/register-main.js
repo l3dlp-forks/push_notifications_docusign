@@ -363,7 +363,10 @@ var pndso = new function() {
 //
 // 	9.  Fully subscribed. Post info to user	
 	this.subscribed = function(data) {
-		this.post_status("Subscribed!" + JSON.stringify(data)); //////////////////////////////////////////
+		this.post_message("Subscribed!");
+		window.setTimeout(pndso.hide_message, 3000);
+		this.show_subscribed_accounts(data.accounts);
+
 		// Show unsubscribe form. The subscribe button form may or may not be visible
 		$('#form-subscribe-button').on('hidden.bs.collapse', function (e) {
 			$('#form-unsubscribe').collapse('show');})	
@@ -375,7 +378,37 @@ var pndso = new function() {
 		}
 	}
 //
-// 	9.  Browser subscription failed....		
+//	9. Show subscribed accounts
+//	$subscribed_accounts[] = array(
+//				'user_name',
+//				'user_email',
+//				'user_id',
+//				'account_name',
+//				'account_id')
+//
+	this.show_subscribed_accounts = function(accounts){
+		var results=[];
+		results.push("<h3>Subscriptions</h3>");
+		results.push("<div class='table-responsive'><table class='table table-striped'>
+			  <caption></caption>
+			  <thead>
+				<tr>
+				  <th>Subscriber</th>
+				  <th>Account</th>
+				</tr>
+			  </thead>
+			  <tbody>");
+		
+		accounts.forEach(function(account, i, a){
+			results.push("<tr><td>" + account.user_name + ",<i>" + account.user_email +
+				"</i></td><td>" + account.account_name + ",<i>" + account.account_id +
+				"</i></td></tr>")
+		});
+		results.push("</tbody></table></div>");
+		this.post_message(results.join(""));
+	}
+//
+// 	10.  Browser subscription failed....		
 	this.subscription_failed = function(msg) {
 		this.post_message(msg);
 		this.working(false);
