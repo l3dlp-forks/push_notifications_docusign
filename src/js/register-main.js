@@ -87,6 +87,7 @@ var pndso = new function() {
 					pndso.post_status('Notifications are not enabled.');
 					pndso.post_message('<p>Problem: Notification issue. Please re-subscribe.</p><small>Issue: Subscribed but missing cookie</small>');
 					pndso.internal_unsubscribe.call(pndso, true);
+					pndso.add_subscription_enable();					
 					return;
 				}
 				pnds.isPushEnabled = true;
