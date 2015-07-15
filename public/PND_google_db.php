@@ -89,7 +89,6 @@ class PND_google_db {
 			foreach($notifications as $notification) {
 				$this->notify_db->delete($notification); # see https://github.com/tomwalder/php-gds/blob/master/src/GDS/Store.php
 			}
-			return false;
 			$results['ok'] = false;
 			return $results;
 		}		

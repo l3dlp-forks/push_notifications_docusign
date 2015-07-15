@@ -32,7 +32,7 @@ class PND_op_refresh implements PND_Request
 	$cookies->set_cookie($results['ok']);
 
 	if (!$cookie_on) {
-		throw new Exception("Missing cookie."); # repeat the exception
+		throw new Exception("Missing cookie.");
 	}
 
 	$pnd_utils->return_data(array('accounts' => $results['accounts'], 200 ));

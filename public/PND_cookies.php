@@ -28,9 +28,7 @@ class PND_cookies {
 	} 
 	public function cookie_is_on() {
 		# Are the cookies telling us that notification is on?
-print_r($_COOKIE);
 		$r = !$this->cookie_notify_id_created && array_key_exists ( COOKIE_NOTIFY, $_COOKIE ) && $_COOKIE[COOKIE_NOTIFY] === 'yes';
-echo "cookie? ", $r;		
 		return ($r);
 	}
 	public function set_cookie($on) {
