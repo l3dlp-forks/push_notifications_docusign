@@ -18,6 +18,7 @@ class PND_cookies {
 		global $pnd_config;
 		if (array_key_exists ( COOKIE_NOTIFY_ID , $_COOKIE ) && strlen($_COOKIE[COOKIE_NOTIFY_ID]) > 5) {
 			$this->cookie_notify_id = $_COOKIE[COOKIE_NOTIFY_ID];
+			setcookie(COOKIE_NOTIFY_ID, $this->cookie_notify_id, time()+60*60*24*365); # 1 year refresh
 			$this->cookie_notify_id_created = false;
 			return;
 		}
