@@ -58,7 +58,11 @@ class PND_google_db {
 		# Whenever the page is loaded, if the service worker is already installed,
 		# we need to update our db since the notification url may have changed. 
 		#
-		# RETURNS setting for set_cookie
+		# RETURNS results[] -- elements:
+		# 	'ok' -- use this to set the cookie.
+		#   'accounts' -- array of account information
+		$results = array('accounts' => array());
+		
 		$notifications = 
 			$this->notify_db->fetchAll("SELECT * FROM Notifications WHERE instance_id = @id",
 			['id' => $instance_id]);
@@ -69,8 +73,16 @@ class PND_google_db {
 			foreach($notifications as $notification) {
 				$notification->subscription_url = $subscription_url;
 				$this->notify_db->upsert($notification); # see https://github.com/tomwalder/php-gds/blob/master/src/GDS/Store.php
+				$results['accounts'][] = array(
+					'user_name' => $notification->ds_user_name,
+					'user_email' => $notification->ds_email,
+					'user_id' => $notification->ds_user_id,
+					'account_name' => $notification->ds_account_name,
+					'account_id' => $notification->ds_account_id);
 			}
-			return true;
+			
+			$results['ok'] = true;
+			return $results;
 		} else {
 			# If cookie_notify is off or missing, then remove any db entries that
 			# use this subscription_url
@@ -78,6 +90,8 @@ class PND_google_db {
 				$this->notify_db->delete($notification); # see https://github.com/tomwalder/php-gds/blob/master/src/GDS/Store.php
 			}
 			return false;
+			$results['ok'] = false;
+			return $results;
 		}		
 	}
 	

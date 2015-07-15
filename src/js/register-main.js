@@ -11,8 +11,6 @@ var pndso = new function() {
     this.cookie_notify = "PushNotifyDocuSign";  // yes or no
 	this.cookie_notify_ID = "PushNotifyDocuSignID"; // unique id
 	this.user_email = null;
-	this.accounts = null;
-	this.subscribed_accounts = null;	
 	this.instance = this;
 	this.subscription = null;
 	
@@ -74,7 +72,6 @@ var pndso = new function() {
 			serviceWorkerRegistration.pushManager.getSubscription().then(function(subscription) {
 				if (!subscription) {
 					// We aren’t subscribed to push, so set UI to allow the user to request push subscription
-					pndso.post_status('Notifications are not enabled.');
 					pndso.add_subscription_enable();
 					pndso.working(false);
 					return; //// early return
@@ -89,7 +86,7 @@ var pndso = new function() {
 				if (!cookie_notify_ID || cookie_notify_ID.length < 10 || !cookie_notify || cookie_notify!== "yes") {			
 					pndso.post_status('Notifications are not enabled.');
 					pndso.post_message('<p>Problem: Notification issue. Please re-subscribe.</p><small>Issue: Subscribed but missing cookie</small>');
-					pndso.internal_unsubscribe.call(pndso);
+					pndso.internal_unsubscribe.call(pndso, true);
 					return;
 				}
 				pnds.isPushEnabled = true;
@@ -106,10 +103,9 @@ var pndso = new function() {
 	}
 
 	this.refresh_subscription_to_server = function() {
-		// Refresh the server since the subscription end point could have changed 
+		// Refresh the server since our subscription end point could have changed 
 		// If it doesn't work then we need to remove the local subscription
 		//
-		// Side effect: set subscribed_accounts
 		data = {subscription: this.subscription.endpoint};
 		
 		$.ajax(pnds.api_url + "?op=refresh",  // Ajax Methods: https://github.com/jquery/api.jquery.com/issues/49
@@ -119,12 +115,10 @@ var pndso = new function() {
 			 data: JSON.stringify(data),
 			 context: this})
 		.done(function(data, textStatus, jqXHR){
-			this.subscribed_accounts = data.subscribed_accounts;
-			this.subscribed();
-			this.working(false);
+			this.show_subscribed_accounts(data.accounts);
 		})
 		.fail(function(jqXHR, textStatus, errorThrown) {
-			this.unsubscribe(); // Unsubscribe from the subscription object
+			this.unsubscribe(true); // Unsubscribe from the subscription object
 			this.isPushEnabled = false;			
 			if (jqXHR.status === 400 && jqXHR.responseJSON && jqXHR.responseJSON.hasOwnProperty('api')) {
 				// Error message from api
