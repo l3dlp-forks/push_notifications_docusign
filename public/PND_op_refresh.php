@@ -25,7 +25,7 @@ class PND_op_refresh implements PND_Request
 	
 	# parse incoming
 	$params = $pnd_api->incoming_json();
-	$cookie_on = !$cookies->cookie_is_on();
+	$cookie_on = $cookies->cookie_is_on();
 	
 	# Check record(s) in db. If cookie is off then the records will be deleted
 	$results = $pnd_utils->pnd_google_db()->refresh($params['subscription'], $cookies->cookie_notify_id, $cookie_on);
