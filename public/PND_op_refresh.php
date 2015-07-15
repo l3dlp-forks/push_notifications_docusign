@@ -35,7 +35,7 @@ class PND_op_refresh implements PND_Request
 		throw new Exception("Missing cookie."); # repeat the exception
 	}
 
-	$pnd_utils->return_data(array('accounts' => $results['accounts'], 200 );
+	$pnd_utils->return_data(array('accounts' => $results['accounts'], 200 ));
 	return true;
   }
 }
