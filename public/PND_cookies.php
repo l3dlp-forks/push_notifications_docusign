@@ -15,7 +15,6 @@ class PND_cookies {
 	}
 
 	private function setup_id_cookie() {
-print_r($_COOKIE);
 		global $pnd_config;
 		if (array_key_exists ( COOKIE_NOTIFY_ID , $_COOKIE ) && strlen($_COOKIE[COOKIE_NOTIFY_ID]) > 5) {
 			$this->cookie_notify_id = $_COOKIE[COOKIE_NOTIFY_ID];
@@ -29,7 +28,10 @@ print_r($_COOKIE);
 	} 
 	public function cookie_is_on() {
 		# Are the cookies telling us that notification is on?
-		return (!$this->cookie_notify_id_created && array_key_exists ( COOKIE_NOTIFY, $_COOKIE ) && $_COOKIE[COOKIE_NOTIFY] === 'yes');
+print_r($_COOKIE);
+		$r = !$this->cookie_notify_id_created && array_key_exists ( COOKIE_NOTIFY, $_COOKIE ) && $_COOKIE[COOKIE_NOTIFY] === 'yes';
+echo "cookie? ", $r;		
+		return ($r);
 	}
 	public function set_cookie($on) {
 		# sets the cookie to be 'yes' or 'no'
