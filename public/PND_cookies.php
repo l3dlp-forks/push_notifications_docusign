@@ -15,6 +15,7 @@ class PND_cookies {
 	}
 
 	private function setup_id_cookie() {
+print_r($_COOKIE);
 		global $pnd_config;
 		if (array_key_exists ( COOKIE_NOTIFY_ID , $_COOKIE ) && strlen($_COOKIE[COOKIE_NOTIFY_ID]) > 5) {
 			$this->cookie_notify_id = $_COOKIE[COOKIE_NOTIFY_ID];

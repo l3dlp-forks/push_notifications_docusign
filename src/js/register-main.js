@@ -115,11 +115,12 @@ var pndso = new function() {
 			 data: JSON.stringify(data),
 			 context: this})
 		.done(function(data, textStatus, jqXHR){
-			this.show_subscribed_accounts(data.accounts);
+			this.subscribed(data.accounts);
 		})
 		.fail(function(jqXHR, textStatus, errorThrown) {
 			this.unsubscribe(true); // Unsubscribe from the subscription object
-			this.isPushEnabled = false;			
+			this.isPushEnabled = false;
+			this.add_subscription_enable();
 			if (jqXHR.status === 400 && jqXHR.responseJSON && jqXHR.responseJSON.hasOwnProperty('api')) {
 				// Error message from api
 				this.post_message("<h2>Problem: " + jqXHR.responseJSON.msg + "</h2>");
@@ -338,7 +339,7 @@ var pndso = new function() {
 			 context: this})
 		.done(function(data, textStatus, jqXHR){
 			this.subscribed_accounts = data.subscribed_accounts;
-			this.subscribed(data);
+			this.subscribed(data.accounts);
 		})
 		.fail(function(jqXHR, textStatus, errorThrown) {
 			this.unsubscribe(true); // Unsubscribe from the subscription object
@@ -356,10 +357,10 @@ var pndso = new function() {
 	}
 //
 // 	9.  Fully subscribed. Post info to user	
-	this.subscribed = function(data) {
+	this.subscribed = function(accounts) {
 		this.post_message("Subscribed!");
 		window.setTimeout(pndso.hide_message, 3000);
-		this.show_subscribed_accounts(data.accounts);
+		this.show_subscribed_accounts(accounts);
 
 		// Show unsubscribe form. The subscribe button form may or may not be visible
 		$('#form-subscribe-button').on('hidden.bs.collapse', function (e) {
