@@ -350,7 +350,7 @@ var pndso = new function() {
 			 data: JSON.stringify(data),
 			 context: this})
 		.done(function(data, textStatus, jqXHR){
-			this.accounts = data.subscribed_accounts;
+			this.accounts = data.accounts;
 			this.subscribed();
 		})
 		.fail(function(jqXHR, textStatus, errorThrown) {

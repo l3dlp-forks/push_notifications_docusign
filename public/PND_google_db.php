@@ -126,7 +126,7 @@ class PND_google_db {
         $notification->instance_id = $params['instance_id'];
         $notification->ds_account_id = $params['ds_account_id'];
         $notification->ds_account_name = $params['ds_account_name'];
-        $notification->ds_account_name = $params['ds_account_admin_email'];
+        $notification->ds_account_admin_email = $params['ds_account_admin_email'];
 		$notification->ds_email = $params['ds_email'];
 		$notification->ds_user_name = $params['ds_user_name'];
 		$notification->ds_user_id = $params['ds_user_id'];
