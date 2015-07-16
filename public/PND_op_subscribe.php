@@ -102,11 +102,8 @@ class PND_op_subscribe implements PND_Request
 				}
 			}
 			# Determine ds_account_admin_email
-			if ($user_is_an_admin) {
-				$ds_account_admin_email = $pnd_api->email();
-			} else {
-				$ds_account_admin_email = $pnd_utils->find_account_in_emailpws($emailpws, $accountId)['email'];
-			}
+			$ds_account_admin_email = $pnd_utils->find_account_in_emailpws($emailpws, $accountId)['email'];
+			if ($ds_account_admin_email === null) {$ds_account_admin_email = $pnd_api->email();}
 			#
 			# Store in Google Datastore
 			$params2 = array(

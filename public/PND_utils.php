@@ -156,7 +156,7 @@ class PND_utils {
   
   public function find_account_in_emailpws($emailpws, $accountId) {
 	// returns array with email and pw fields.
-	$r = array();
+	$r = array('email' => null, 'pw' => null);
 	foreach ($emailpws as $emailpw) {
 		if ($emailpw['accountId'] === $accountId &&
 			strlen($emailpw['email']) > 2 &&
