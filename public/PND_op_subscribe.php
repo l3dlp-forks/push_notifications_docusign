@@ -82,6 +82,7 @@ class PND_op_subscribe implements PND_Request
 	# user is an account admin or we were given an account-specific email/pw
 	foreach ($login_info->loginAccounts as $loginAccount) {
 		$accountId = $loginAccount->accountId;
+		$emailpws = $params['emailpws'];
 		$user_is_an_admin = $pnd_utils->account_admin($accountId, $loginAccount->userId);
 		if ($user_is_an_admin||in_array ($accountId, $emailpw_accounts, true)) {
 			# Subscribe to the account
@@ -89,7 +90,7 @@ class PND_op_subscribe implements PND_Request
 			# Update or insert the connection to DocuSign DTM
 			# Handle bad user name/pw and creds
 			try {
-				$pnd_utils->upsert_connection($loginAccount->accountId, $loginAccount->userId, $params['emailpws']);
+				$pnd_utils->upsert_connection($loginAccount->accountId, $loginAccount->userId, $emailpws);
 			} catch (DocuSign_IOException $e) {
 				$msg = $e->getMessage();
 				$err_code = explode(": ", $msg, 2)[0];
