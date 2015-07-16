@@ -13,6 +13,8 @@ var pndso = new function() {
 	this.user_email = null;
 	this.instance = this;
 	this.subscription = null;
+	this.accounts = null; // The accounts that we're subscribed to
+	this.potential_accounts = null; // The accounts that we might subscribe to
 	
 	this.send_unsubscribe_to_server = function(subscription) {
 	  // TODO: Send the subscription.subscriptionId and 
@@ -116,7 +118,8 @@ var pndso = new function() {
 			 data: JSON.stringify(data),
 			 context: this})
 		.done(function(data, textStatus, jqXHR){
-			this.subscribed(data.accounts);
+			this.accounts = data.accounts;
+			this.subscribed();
 		})
 		.fail(function(jqXHR, textStatus, errorThrown) {
 			this.unsubscribe(true); // Unsubscribe from the subscription object
@@ -216,8 +219,8 @@ var pndso = new function() {
 // 	5. 	The user authenticated successfully.
 // Show the do-subscribe form with the potential subscription information
 	this.authenticated = function(data) {
-		// Store the accounts information for future use
-		pndso.accounts = data.accounts;
+		// Save the potential accounts
+		pndso.potential_accounts = data.accounts;
 		// Populate the form
 		var add_admin = 0, can_subscribe = false, row = [];
 		$('#account-table tbody').html(""); // clear any prior information
@@ -311,7 +314,7 @@ var pndso = new function() {
 		var browser = browser_detect.split(" ",1)[0]; // Chrome browser notify is different from standard
 		var emailpws = [];
 		// fill in account id, name and pw info.
-		pndso.accounts.forEach(function(account, i, a){
+		pndso.potential_accounts.forEach(function(account, i, a){
 			if (!account.available) {
 				var accountId = account.account_id,
 				email = $('#e' + accountId).val(),
@@ -339,8 +342,8 @@ var pndso = new function() {
 			 data: JSON.stringify(data),
 			 context: this})
 		.done(function(data, textStatus, jqXHR){
-			this.subscribed_accounts = data.subscribed_accounts;
-			this.subscribed(data.accounts);
+			this.accounts = data.subscribed_accounts;
+			this.subscribed();
 		})
 		.fail(function(jqXHR, textStatus, errorThrown) {
 			this.unsubscribe(true); // Unsubscribe from the subscription object
@@ -358,10 +361,10 @@ var pndso = new function() {
 	}
 //
 // 	9.  Fully subscribed. Post info to user	
-	this.subscribed = function(accounts) {
+	this.subscribed = function() {
 		this.post_message("Subscribed!");
 		window.setTimeout(pndso.hide_message, 3000);
-		this.show_subscribed_accounts(accounts);
+		this.show_subscribed_accounts();
 
 		// Show unsubscribe form. The subscribe button form may or may not be visible
 		$('#form-subscribe-button').on('hidden.bs.collapse', function (e) {
@@ -382,7 +385,7 @@ var pndso = new function() {
 //				'account_name',
 //				'account_id')
 //
-	this.show_subscribed_accounts = function(accounts){
+	this.show_subscribed_accounts = function(){
 		var results=[];
 		results.push("<h4>Subscriptions</h4>");
 		results.push("<div class='table-responsive'><table class='table table-striped'>" +
@@ -390,7 +393,7 @@ var pndso = new function() {
 			  "<thead><tr><th>Subscriber</th><th>Account</th></tr></thead>" +
 			  "<tbody>");
 		
-		accounts.forEach(function(account, i, a){
+		this.accounts.forEach(function(account, i, a){
 			results.push("<tr><td>" + account.user_name + ", <i>" + account.user_email +
 				"</i></td><td>" + account.account_name + ", <i>" + account.account_id +
 				"</i></td></tr>")
