@@ -118,8 +118,16 @@ var pndso = new function() {
 			 data: JSON.stringify(data),
 			 context: this})
 		.done(function(data, textStatus, jqXHR){
-			this.accounts = data.accounts;
-			this.subscribed();
+			if (data.accounts.length === 0) {
+				pndso.post_status('Notifications are not enabled.');
+				this.unsubscribe(true); // Unsubscribe from the subscription object
+				this.accounts = null;
+				this.isPushEnabled = false;
+				this.add_subscription_enable();
+			} else {	
+				this.accounts = data.accounts;
+				this.subscribed();
+			}
 		})
 		.fail(function(jqXHR, textStatus, errorThrown) {
 			this.unsubscribe(true); // Unsubscribe from the subscription object
