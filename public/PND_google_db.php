@@ -20,6 +20,7 @@
 #   ds_email -- A DocuSign email for someone in the ds_account who wants notifications
 #		ds_email is indexed  
 #	ds_account_name -- the account's name
+#	ds_account_admin_email -- the admin email used to create the record
 #   subscription_url -- how to notify the browser instance
 #   subscription_type -- the type of browser
 #   	-- Since the browser manufacturers seem to be diverging, this is browser type.
@@ -78,7 +79,8 @@ class PND_google_db {
 					'user_email' => $notification->ds_email,
 					'user_id' => $notification->ds_user_id,
 					'account_name' => $notification->ds_account_name,
-					'account_id' => $notification->ds_account_id);
+					'account_id' => $notification->ds_account_id,
+					'account_admin_email' => $notification->ds_account_admin_email);
 			}
 			
 			$results['ok'] = true;
@@ -124,6 +126,7 @@ class PND_google_db {
         $notification->instance_id = $params['instance_id'];
         $notification->ds_account_id = $params['ds_account_id'];
         $notification->ds_account_name = $params['ds_account_name'];
+        $notification->ds_account_name = $params['ds_account_admin_email'];
 		$notification->ds_email = $params['ds_email'];
 		$notification->ds_user_name = $params['ds_user_name'];
 		$notification->ds_user_id = $params['ds_user_id'];
@@ -174,6 +177,7 @@ class PND_google_db {
 				'instance_id' => $notification->instance_id,
 				'ds_account_id' => $notification->ds_account_id,
 				'ds_account_name' => $notification->ds_account_name,
+				'ds_account_admin_email' => $notification->ds_account_admin_email,
 				'ds_email' => $notification->ds_email,
 				'ds_user_name' => $notification->ds_user_name,
 				'ds_user_id' => $notification->ds_user_id
@@ -199,6 +203,7 @@ class NotifyDB extends GDS\Store {
 			->addString('subscription_type')
             ->addString('ds_account_id')
             ->addString('ds_account_name')
+			->addString('ds_account_admin_email')
 			->addString('ds_email')
 			->addString('ds_user_name')
 			->addString('ds_user_id');

@@ -82,7 +82,8 @@ class PND_op_subscribe implements PND_Request
 	# user is an account admin or we were given an account-specific email/pw
 	foreach ($login_info->loginAccounts as $loginAccount) {
 		$accountId = $loginAccount->accountId;
-		if ($pnd_utils->account_admin($accountId, $loginAccount->userId)||in_array ($accountId, $emailpw_accounts, true)) {
+		$user_is_an_admin = $pnd_utils->account_admin($accountId, $loginAccount->userId);
+		if ($user_is_an_admin||in_array ($accountId, $emailpw_accounts, true)) {
 			# Subscribe to the account
 			#
 			# Update or insert the connection to DocuSign DTM
@@ -100,6 +101,12 @@ class PND_op_subscribe implements PND_Request
 					throw new DocuSign_IOException($e); # repeat the exception
 				}
 			}
+			# Determine ds_account_admin_email
+			if ($user_is_an_admin) {
+				$ds_account_admin_email = $pnd_api->email();
+			} else {
+				$ds_account_admin_email = $pnd_utils->find_account_in_emailpws($emailpws, $accountId)['email'];
+			}
 			#
 			# Store in Google Datastore
 			$params2 = array(
@@ -108,6 +115,7 @@ class PND_op_subscribe implements PND_Request
 				'instance_id' => $cookies->cookie_notify_id,
 				'ds_account_id' => $loginAccount->accountId,
 				'ds_account_name' => $loginAccount->name,
+				'ds_account_admin_email' => $ds_account_admin_email,
 				'ds_email' => $loginAccount->email,
 				'ds_user_name' => $loginAccount->userName,
 				'ds_user_id' => $loginAccount->userId
@@ -119,7 +127,8 @@ class PND_op_subscribe implements PND_Request
 				'user_email' => $loginAccount->email,
 				'user_id' => $loginAccount->userId,
 				'account_name' => $loginAccount->name,
-				'account_id' => $loginAccount->accountId);
+				'account_id' => $loginAccount->accountId,
+				'account_admin_email' => $ds_account_admin_email);
 		}
 	}
 	$pnd_utils->return_data(array('accounts' => $subscribed_accounts), 200 );

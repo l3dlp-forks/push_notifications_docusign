@@ -105,17 +105,10 @@ class PND_utils {
 	# emailpws is a limited list of email and pw for specific accounts. If $accountId is in
 	# emailpws then use that email pw. Otherwise use the default credentials.
 	
-	$email = null;
-	$pw = null;
-	foreach ($emailpws as $emailpw) {
-		if ($emailpw['accountId'] === $accountId &&
-			strlen($emailpw['email']) > 2 &&
-			strlen($emailpw['pw']) > 2) {
-				$email = $emailpw['email'];
-				$pw = $emailpw['pw'];
-		}
-	}
-	
+	$r = $this->find_account_in_emailpws($emailpws, $accountId);
+	$email = $r['email'];
+	$pw = $r['pw'];
+
 	if ($email === null && $pw === null) {
 		# use default creds
 		$connect_service = $this->get_ds_connect_service();
@@ -159,6 +152,20 @@ class PND_utils {
 			$accountId, # string	Account Id
 			$params);
 	}
+  }
+  
+  public function find_account_in_emailpws($emailpws, $accountId) {
+	// returns array with email and pw fields.
+	$r = array();
+	foreach ($emailpws as $emailpw) {
+		if ($emailpw['accountId'] === $accountId &&
+			strlen($emailpw['email']) > 2 &&
+			strlen($emailpw['pw']) > 2) {
+				$r['email'] = $emailpw['email'];
+				$r['pw'] = $emailpw['pw'];
+		}
+	}
+	return $r;
   }
  
   private function find_connection($accountId, $connect_service) {
