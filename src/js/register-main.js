@@ -120,13 +120,13 @@ var pndso = new function() {
 		.done(function(data, textStatus, jqXHR){
 			if (data.accounts.length === 0) {
 				pndso.post_status('Notifications are not enabled.');
-				this.unsubscribe(true); // Unsubscribe from the subscription object
-				this.accounts = null;
-				this.isPushEnabled = false;
-				this.add_subscription_enable();
+				pndso.unsubscribe(true); // Unsubscribe from the subscription object
+				pndso.accounts = null;
+				pndso.isPushEnabled = false;
+				pndso.add_subscription_enable();
 			} else {	
-				this.accounts = data.accounts;
-				this.subscribed();
+				pndso.accounts = data.accounts;
+				pndso.subscribed();
 			}
 		})
 		.fail(function(jqXHR, textStatus, errorThrown) {
