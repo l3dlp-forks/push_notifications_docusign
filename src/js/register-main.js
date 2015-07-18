@@ -508,7 +508,7 @@ var pndso = new function() {
 	//   authenticate -- asks for email/pw
 	//   subscribe-button -- subscribe button and possibly additional email/pw infor for specific accounts
 	//   subscribed -- Send test notification and can start unsubscribe process
-	this.show_pane (pane) {
+	this.show_pane = function(pane) {
 		if (this.changing_pane) {
 			return; // something's already happening
 		}
