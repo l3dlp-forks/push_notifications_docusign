@@ -591,7 +591,7 @@ var pndso = new function() {
 		pnds.isPushEnabled = false;
 		pnds.service_worker_url = "service-worker.js";
 		this.add_events();
-		this.pane_add_listeners
+		this.pane_add_listeners();
 		this.prepare_invisible();
 		// Check that service workers are supported, if so, progressively
 		// enhance and add push messaging support, otherwise continue without it.
