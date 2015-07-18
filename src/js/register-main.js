@@ -74,7 +74,7 @@ var pndso = new function() {
 			serviceWorkerRegistration.pushManager.getSubscription().then(function(subscription) {
 				if (!subscription) {
 					// We aren’t subscribed to push, so set UI to allow the user to request push subscription
-					pndso.add_subscription_enable();
+					pndso.show_pane.call(pndso, 'subscribe');
 					pndso.working(false);
 					return; //// early return
 				}
@@ -89,7 +89,7 @@ var pndso = new function() {
 					pndso.post_status('Notifications are not enabled.');
 					pndso.post_message('<p>Problem: Notification issue. Please re-subscribe.</p><small>Issue: Subscribed but missing cookie</small>');
 					pndso.internal_unsubscribe.call(pndso, true);
-					pndso.add_subscription_enable();					
+					pndso.show_pane.call(pndso, 'subscribe');
 					return;
 				}
 				pnds.isPushEnabled = true;
@@ -99,7 +99,7 @@ var pndso = new function() {
 			.catch(function(err) {
 				pndso.post_status('Notifications are not enabled.');
 				pndso.post_message('<p>Problem with current notification subscription</p><small>Issue: Error from Push Manager.</small>');
-				pndso.add_subscription_enable();
+				pndso.show_pane.call(pndso, 'subscribe');
 				pndso.working(false);
 			});
 		});
@@ -122,8 +122,8 @@ var pndso = new function() {
 				pndso.post_status('Notifications are not enabled.');
 				pndso.unsubscribe(true); // Unsubscribe from the subscription object
 				pndso.accounts = null;
-				pndso.isPushEnabled = false;
-				pndso.add_subscription_enable();
+				pnds.isPushEnabled = false;
+				pndso.show_pane.call(pndso, 'subscribe');
 			} else {	
 				pndso.accounts = data.accounts;
 				pndso.subscribed();
@@ -131,8 +131,8 @@ var pndso = new function() {
 		})
 		.fail(function(jqXHR, textStatus, errorThrown) {
 			this.unsubscribe(true); // Unsubscribe from the subscription object
-			this.isPushEnabled = false;
-			this.add_subscription_enable();
+			pnds.isPushEnabled = false;
+			pndso.show_pane.call(pndso, 'subscribe');
 			if (jqXHR.status === 400 && jqXHR.responseJSON && jqXHR.responseJSON.hasOwnProperty('api')) {
 				// Error message from api
 				this.post_message("<h2>Problem: " + jqXHR.responseJSON.msg + "</h2>");
@@ -154,21 +154,8 @@ var pndso = new function() {
 //
 //  Subscription functions
 //
-// 	1. Enable user to start the subscription process:
-//     Show the form that confirms this is a private browser
-	this.add_subscription_enable = function () {
-		// if the unsubscribe form is visible, then first make it go away
-		$('#form-unsubscribe').on('hidden.bs.collapse', function (e) {
-			$('#form-subscribe').collapse('show');})	
-
-		if ($('#form-unsubscribe').is(':visible')) {
-			$('#form-unsubscribe').collapse('hide');		
-		} else {
-			$('#form-subscribe').collapse('show');
-		}
-	}
 //
-// 	2. The user clicked the Private checkbox. 
+// 	1. The user clicked the Private checkbox. 
 //     Enable/disable the subscribe pushbutton
 	this.private_click = function(e) {
 		if ($('#private').is(':checked')) {
@@ -178,18 +165,14 @@ var pndso = new function() {
 		}
     }
 //
-// 	3. Show the Authentication form to get the user's email and pw
+// 	2. Show the Authentication form to get the user's email and pw
 	this.subscribe_click = function(e) {
-		$('#form-subscribe').on('hidden.bs.collapse', function (e) {
-			$('#pw').val(''); // clear the pw
-			
-			$('#form-authenticate').collapse('show');})	
-
+		pndso.show_pane.call(pndso, 'authenticate');
+		$('#pw').val(''); // clear the pw
 		pndso.hide_message();
-		$('#form-subscribe').collapse('hide');		
     }
 //
-// 	3a. <cr> in the pw field triggers form
+// 	3. <cr> in the pw field triggers form
 	this.pw_keydown = function(e) {
 		if (e.which === 13) {
 			pndso.authenticate_click(false);
@@ -266,10 +249,7 @@ var pndso = new function() {
 		}
 		
 		// Show the modal
-		$('#form-authenticate').on('hidden.bs.collapse', function (e) {
-			$('#form-subscribe-button').collapse('show');})	
-
-		$('#form-authenticate').collapse('hide');		
+		pndso.show_pane.call(pndso, 'subscribe-button');
 	}
 //
 // 	6. 	The user wants to subscribe.
@@ -355,7 +335,7 @@ var pndso = new function() {
 		})
 		.fail(function(jqXHR, textStatus, errorThrown) {
 			this.unsubscribe(true); // Unsubscribe from the subscription object
-			this.isPushEnabled = false;			
+			pnds.isPushEnabled = false;			
 			if (jqXHR.status === 400 && jqXHR.responseJSON && jqXHR.responseJSON.hasOwnProperty('api')) {
 				// Error message from api
 				this.post_message("<h2>Problem: " + jqXHR.responseJSON.msg + "</h2>");
@@ -373,16 +353,7 @@ var pndso = new function() {
 		this.post_message("Subscribed!");
 		window.setTimeout(pndso.hide_message, 3000);
 		this.show_subscribed_accounts();
-
-		// Show unsubscribe form. The subscribe button form may or may not be visible
-		$('#form-subscribe-button').on('hidden.bs.collapse', function (e) {
-			$('#form-unsubscribe').collapse('show');})	
-
-		if ($('#form-subscribe-button').is(':visible')) {
-			$('#form-subscribe-button').collapse('hide');		
-		} else {
-			$('#form-unsubscribe').collapse('show');
-		}
+		this.show_pane ('subscribed');
 	}
 //
 //	9. Show subscribed accounts
@@ -447,7 +418,7 @@ var pndso = new function() {
 					if (!subscription) {
 						// No subscription object, so reset state
 						pnds.isPushEnabled = false;
-						pndso.add_subscription_enable.call(pndso);
+						pndso.show_pane.call(pndso, 'subscribe');
 						pndso.working(false);
 						return;
 					}
@@ -496,7 +467,7 @@ var pndso = new function() {
 		})
 		.fail(function(jqXHR, textStatus, errorThrown) {
 			this.unsubscribed(quiet);
-			this.isPushEnabled = false;			
+			pnds.isPushEnabled = false;			
 			if (!quiet) {
 				if (jqXHR.status === 400 && jqXHR.responseJSON && jqXHR.responseJSON.hasOwnProperty('api')) {
 					// Error message from api
@@ -515,11 +486,63 @@ var pndso = new function() {
 		pnds.isPushEnabled = false;
 		this.subscription = null;
 		if (!quiet) {
-			this.add_subscription_enable();
+			pndso.show_pane.call(pndso, 'subscribe');
 		}
 	}
 
 	
+///////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////
+//
+// manage the window panes (small modals
+//
+	this.current_pane = null;
+	this.next_pane = false;
+	this.changing_pane = false;
+	this.panes = ['subscribe', 'authenticate', 'subscribe-button', 'subscribed'];
+	//
+	// panes: 
+	//   subscribe -- starts the subscription process by confirming that the browser is private
+	//   authenticate -- asks for email/pw
+	//   subscribe-button -- subscribe button and possibly additional email/pw infor for specific accounts
+	//   subscribed -- Send test notification and can start unsubscribe process
+	this.show_pane (pane) {
+		if (this.changing_pane) {
+			return; // something's already happening
+		}
+		if (this.current_pane === pane) {
+			return; // nop
+		}
+		
+		if (this.current_pane) {
+			this.next_pane = pane;
+			this.changing_pane = true;
+			$('#form-' + this.current_pane).collapse('hide');
+		} else {
+			// Immediately show next pane...
+			$('#form-' + pane).collapse('show');
+			this.current_pane = pane;
+		}
+	}
+	this.pane_closed = function(e) {
+		// A pane finished closing. Open the next one.
+		if (pndso.next_pane) {
+			$('#form-' + pndso.next_pane).collapse('show');
+			pndso.current_pane = pndso.next_pane;
+			pndso.next_pane = false;
+			pndso.changing_pane = false;
+		}
+	}
+	this.pane_add_listeners = function() {
+		this.panes.foreach(function(value, i, a) {
+			$('#form-' + value).on('hidden.bs.collapse', pndso.pane_closed);})
+	}
+			
+	
+///////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////
 //
@@ -568,6 +591,7 @@ var pndso = new function() {
 		pnds.isPushEnabled = false;
 		pnds.service_worker_url = "service-worker.js";
 		this.add_events();
+		this.pane_add_listeners
 		this.prepare_invisible();
 		// Check that service workers are supported, if so, progressively
 		// enhance and add push messaging support, otherwise continue without it.
