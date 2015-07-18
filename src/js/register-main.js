@@ -536,7 +536,7 @@ var pndso = new function() {
 		}
 	}
 	this.pane_add_listeners = function() {
-		this.panes.foreach(function(value, i, a) {
+		this.panes.forEach(function(value, i, a) {
 			$('#form-' + value).on('hidden.bs.collapse', pndso.pane_closed);})
 	}
 			
