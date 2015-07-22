@@ -185,6 +185,17 @@ class PND_google_db {
 		}
 		return ($results);
 	}
+
+	public function delete($instance_id) {
+		# Delete all the notifications for this id
+		$_notifications = 
+			$this->notify_db->fetchAll("SELECT * FROM Notifications WHERE instance_id = @id",
+			['id' => $instance_id]);
+		
+		$this->notify_db->delete($_notifications);
+	}
+	
+	
 }
 
 class Notifications extends GDS\Entity {}
