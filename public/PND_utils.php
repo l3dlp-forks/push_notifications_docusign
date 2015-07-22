@@ -180,6 +180,38 @@ class PND_utils {
 	return false; # didn't find anything
   }
  
+  public function remove_connection($account_id, $user_id, $account_admin_email, $account_admin_pw){
+	$ds_client = $this->new_docusign_client($account_admin_email, $account_admin_pw, $accountId);
+	$s = new DocuSign_ConnectService($ds_client);	
+	$connect_service = $s->connect;	
+	
+	$connection = $this->find_connection($account_id, $connect_service);
+	if (! $connection) {
+		return;
+	}
+	
+	# Remove user_id from the connection.
+	$userIds = $connection->userIds;
+	$user_key = array_search($user_id, $userIds, true
+	if ($user_key === false) {
+		return; # nuthin' here!
+	} else {
+		if (count($userIds) === 1) {
+			$connect_service->deleteConnectConfiguration(	
+				$account_id, # string	Account Id
+				$connection->connectId # string	Connection Id
+			);
+		} else {
+			array_splice($userIds, $user_key, 1);
+			$connect_service->updateConnectConfiguration(	
+				$account_Id, # string	Account Id
+				$connection->connectId, # string	Connection Id
+				$params = array('userIds' => $userIds));
+		}
+	}
+  }
+ 
+ 
 	
 }
 

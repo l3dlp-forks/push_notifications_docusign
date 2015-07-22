@@ -405,7 +405,7 @@ var pndso = new function() {
 		pndso.accounts.forEach(function(account, i, a){
 			row = [];
 			var accountId = account.account_id;
-			row.push("<tr><td>* " + account.account_name + "</td><td>");
+			row.push("<tr><td>" + account.account_name + "</td><td>");
 			row.push( 
 			"<input id='ce" + accountId + "' type='text'     name='ce" + accountId + "' class='tablee' />",
 			"</td><td>",
@@ -416,7 +416,8 @@ var pndso = new function() {
 				// no escaping of apostrophes/quotes is needed.
 		}) // end of foreach
 			
-		$('#cancel-accounts-table caption').text("Account Information for " + pndso.accounts[0].user_name + ", " + pndso.accounts[0].user_email); 
+		$('#cancel-accounts-table caption').text("Account Information for " + pndso.accounts[0].user_name + ", <i>" +
+			pndso.accounts[0].user_email + "</i>"); 
 		
 		// Show the modal
 		pndso.show_pane.call(pndso, 'unsubscribe');
@@ -425,15 +426,14 @@ var pndso = new function() {
 	}
 
 	this.do_unsubscribe_click = function (){
-
-	echo("Doing the unsubscribe");
+		pndso.unsubscribe.call(pndso, false);
 	}
+	
 	this.unsubscribe = function(quiet) {
 		this.working(true);
 		if (!quiet) {
 			this.hide_message();
 			this.post_status();
-			this.accounts = null;
 		}
 
 		navigator.serviceWorker.ready.then(function serviceWorker_ready(serviceWorkerRegistration) {
@@ -480,10 +480,25 @@ var pndso = new function() {
 	}
 	
 	this.send_unsubscribe_to_server = function(quiet) {
-		// Tell the server we've unsubscribed 
-		data = {subscription: this.subscription.endpoint};
-		
-		$.ajax(pnds.api_url + "?op=unsubscribe",  // Ajax Methods: https://github.com/jquery/api.jquery.com/issues/49
+		// Tell the server we've unsubscribed
+		data = {subscription: this.subscription.endpoint,
+			accounts: []};
+		if (this.current+pane === 'unsubscribe') {
+			pndso.accounts.forEach(function(account, i, a){
+				var accountId = account.account_id;
+
+				data.accounts.push({
+					user_name: account.user_name,
+					user_email: account.user_email,
+					user_id: account.user_id,
+					account_name: account.account_name,
+					account_id: account_id,
+					account_admin_email: $('#ce' + account_id).val(),
+					account_admin_pw: $('#cp' + account_id).val()
+				});
+			}
+			
+		$.ajax(pnds.api_url + "?op=unsubscribe",
 			{method: "POST",
 			 contentType: "application/json; charset=UTF-8",
 			 processData: false,
@@ -494,7 +509,6 @@ var pndso = new function() {
 		})
 		.fail(function(jqXHR, textStatus, errorThrown) {
 			this.unsubscribed(quiet);
-			pnds.isPushEnabled = false;			
 			if (!quiet) {
 				if (jqXHR.status === 400 && jqXHR.responseJSON && jqXHR.responseJSON.hasOwnProperty('api')) {
 					// Error message from api
@@ -528,7 +542,7 @@ var pndso = new function() {
 	this.current_pane = null;
 	this.next_pane = false;
 	this.changing_pane = false;
-	this.panes = ['subscribe', 'authenticate', 'subscribe-button', 'subscribed'];
+	this.panes = ['subscribe', 'authenticate', 'subscribe-button', 'subscribed', 'unsubscribe'];
 	//
 	// panes: 
 	//   subscribe -- starts the subscription process by confirming that the browser is private

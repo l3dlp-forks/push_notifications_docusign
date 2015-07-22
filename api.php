@@ -25,6 +25,7 @@ $pnd_api = new PND_API();
 $pnd_handlers = new PND_HandlerChain();
 $pnd_handlers->addHandler( new PND_op_authenticate() );
 $pnd_handlers->addHandler( new PND_op_subscribe() );
+$pnd_handlers->addHandler( new PND_op_unsubscribe() );
 $pnd_handlers->addHandler( new PND_op_refresh() );
 
 # Here we go...
