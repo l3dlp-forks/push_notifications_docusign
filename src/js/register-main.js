@@ -126,6 +126,7 @@ var pndso = new function() {
 				pndso.show_pane.call(pndso, 'subscribe');
 			} else {	
 				pndso.accounts = data.accounts;
+				pndso.user_email = data.accounts[0].user_email;
 				pndso.subscribed();
 			}
 		})
@@ -411,9 +412,11 @@ var pndso = new function() {
 			"<input id='cp" + accountId + "' type='password' name='cp" + accountId + "' class='tablep' />",
 			"</td></tr>");
 			$('#cancel-accounts-table tbody').append(row.join(""));
+			$('#ce' + accountId).attr('value', account.account_admin_email); // add default programmatically so
+				// no escaping of apostrophes/quotes is needed.
 		}) // end of foreach
 			
-		$('#cancel-accounts-table caption').text("Account Information for " + pndso.user_email); 
+		$('#cancel-accounts-table caption').text("Account Information for " + pndso.accounts[0].user_name + ", " + pndso.accounts[0].user_email); 
 		
 		// Show the modal
 		pndso.show_pane.call(pndso, 'unsubscribe');
