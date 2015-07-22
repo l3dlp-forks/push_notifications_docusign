@@ -394,10 +394,37 @@ var pndso = new function() {
 ///////////////////////////////////////////////////////////////////////
 //
 // unsubscribe
-	this.unsubscribe_click = function(e) {
+
+
+this.show_unsubscribe_click);
+this.do_unsubscribe_click
+
+
+	this.show_unsubscribe_click = function(e) {
 		// The user clicked the unsubscribe button
 		e.preventDefault(); // Don't submit to the server
-		pndso.unsubscribe.call(pndso, false);
+
+		// Populate the form
+		var row = [];
+		$('#cancel-accounts-table tbody').html(""); // clear any prior information
+		pndso.accounts.forEach(function(account, i, a){
+			row = [];
+			var accountId = account.account_id;
+			row.push("<tr><td>* " + account.account_name + "</td><td>");
+			row.push( 
+			"<input id='ce" + accountId + "' type='text'     name='ce" + accountId + "' class='tablee' />",
+			"</td><td>",
+			"<input id='cp" + accountId + "' type='password' name='cp" + accountId + "' class='tablep' />",
+			"</td></tr>");
+			$('#cancel-accounts-table tbody').append(row.join(""));
+		}) // end of foreach
+			
+		$('#cancel-accounts-table caption').text("Account Information for " + pndso.user_email); 
+		$('#cancel-accounts-table').html("<p>* Optional: to cancel the Connect configurations on a DocuSign account, please enter an administrator's email and password for the account.</p>");
+		
+		// Show the modal
+		pndso.show_pane.call(pndso, 'unsubscribe');
+	}		
 		return false;
 	}
 
@@ -556,9 +583,10 @@ var pndso = new function() {
 	}
 	this.add_events = function(){
         $('#btn-subscribe').on('click', this.subscribe_click);
-		$('#btn-unsubscribe').on('click', this.unsubscribe_click);
         $('#btn-authenticate').on('click', this.authenticate_click);
 		$('#btn-do-subscribe').on('click', this.do_subscribe_click);
+		$('#btn-unsubscribe').on('click', this.show_unsubscribe_click);
+		$('#btn-do-unsubscribe').on('click', this.do_unsubscribe_click);
 		$('#private').on('change', this.private_click);
 		$('#pw').keydown(this.pw_keydown );
       }
