@@ -414,7 +414,6 @@ var pndso = new function() {
 		}) // end of foreach
 			
 		$('#cancel-accounts-table caption').text("Account Information for " + pndso.user_email); 
-		$('#cancel-accounts-table').html("<p>* Optional: to cancel the Connect configurations on a DocuSign account, please enter an administrator's email and password for the account.</p>");
 		
 		// Show the modal
 		pndso.show_pane.call(pndso, 'unsubscribe');
