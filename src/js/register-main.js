@@ -394,12 +394,6 @@ var pndso = new function() {
 ///////////////////////////////////////////////////////////////////////
 //
 // unsubscribe
-
-
-this.show_unsubscribe_click);
-this.do_unsubscribe_click
-
-
 	this.show_unsubscribe_click = function(e) {
 		// The user clicked the unsubscribe button
 		e.preventDefault(); // Don't submit to the server
@@ -424,10 +418,14 @@ this.do_unsubscribe_click
 		
 		// Show the modal
 		pndso.show_pane.call(pndso, 'unsubscribe');
-	}		
+			
 		return false;
 	}
 
+	this.do_unsubscribe_click = function (){
+
+	echo("Doing the unsubscribe");
+	}
 	this.unsubscribe = function(quiet) {
 		this.working(true);
 		if (!quiet) {
