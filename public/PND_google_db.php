@@ -188,11 +188,19 @@ class PND_google_db {
 
 	public function delete($instance_id) {
 		# Delete all the notifications for this id
-		$_notifications = 
+		$notifications = 
 			$this->notify_db->fetchAll("SELECT * FROM Notifications WHERE instance_id = @id",
 			['id' => $instance_id]);
 		
-		$this->notify_db->delete($_notifications);
+		$this->notify_db->delete($notifications);
+	}
+	
+	// returns TRUE if there are 2 or more notifications for the account/user
+	public function multiple_user_notifications($account_id, $user_id) {
+		$notifications = $this->notify_db->fetchAll(
+			"SELECT * FROM Notifications WHERE ds_account_id = @account AND ds_user_id = @user",
+			['account' => $account_id, 'user' => $user_id]);
+		return(count($notifications) > 1);	
 	}
 	
 	

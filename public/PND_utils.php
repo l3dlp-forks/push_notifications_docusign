@@ -190,9 +190,14 @@ class PND_utils {
 		return;
 	}
 	
-	# Remove user_id from the connection.
+	# Remove user_id from the connection only if there less than two 
+	# Google notification instance for the account/user_id
+	if ($this->pnd_google_db()->multiple_user_notifications($account_id, $user_id)) {
+		return;
+	}
+	
 	$userIds = $connection->userIds;
-	$user_key = array_search($user_id, $userIds, true
+	$user_key = array_search($user_id, $userIds, true);
 	if ($user_key === false) {
 		return; # nuthin' here!
 	} else {
