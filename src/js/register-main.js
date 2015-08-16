@@ -497,6 +497,7 @@ var pndso = new function() {
 					account_admin_pw: $('#cp' + account_id).val()
 				});
 			}
+		}
 			
 		$.ajax(pnds.api_url + "?op=unsubscribe",
 			{method: "POST",
