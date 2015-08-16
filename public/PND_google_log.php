@@ -48,9 +48,9 @@ class PND_google_log {
 		
 		$entry = $this->log_db->createEntity([
 			'timestamp' => $timestamp,
-			'severity' => $severity,
-			'subject' => $subject,
-			'details' => $details
+			'severity' => 'debug',
+			'subject' => 'Test log entry',
+			'details' => 'Details go here'
 		]);
 		$bol_result1 = $this->log_db->upsert($entry);
 		echo "Store result: ";
