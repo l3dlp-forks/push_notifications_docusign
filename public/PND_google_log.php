@@ -41,6 +41,7 @@ class PND_google_log {
 		]);
 		$bol_result1 = $this->log_db->upsert($entry);
 	}
+}
 	
 
 class LogEntries extends GDS\Entity {}
