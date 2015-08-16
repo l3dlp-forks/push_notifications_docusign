@@ -24,12 +24,15 @@ require 'vendor_lsk/DocuSign-PHP-Client/src/service/DocuSign_UserService.php';
 require 'vendor_lsk/DocuSign-PHP-Client/src/service/DocuSign_ConnectService.php';
 
 require (LIB_PATH . "PND_utils.php");
+require (LIB_PATH . "PND_file_utils.php");
 require (LIB_PATH . "PND_api_classes.php");
 require (LIB_PATH . "PND_op_authenticate.php");
 require (LIB_PATH . "PND_op_subscribe.php");
 require (LIB_PATH . "PND_op_unsubscribe.php");
 require (LIB_PATH . "PND_op_refresh.php");
+require (LIB_PATH . "PND_op_webhook.php");
 require (LIB_PATH . "PND_google_db.php");
+require (LIB_PATH . "PND_google_log.php");
 require (LIB_PATH . "PND_cookies.php");
 
 

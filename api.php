@@ -27,6 +27,7 @@ $pnd_handlers->addHandler( new PND_op_authenticate() );
 $pnd_handlers->addHandler( new PND_op_subscribe() );
 $pnd_handlers->addHandler( new PND_op_unsubscribe() );
 $pnd_handlers->addHandler( new PND_op_refresh() );
+$pnd_handlers->addHandler( new PND_op_webhook() );
 
 # Here we go...
 if (!isset($_GET['op']) || strlen($_GET['op']) < 1) {

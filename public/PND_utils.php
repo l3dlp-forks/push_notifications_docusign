@@ -7,6 +7,8 @@ define("WEBHOOK_SUFFIX", '?op=webhook');
  
 class PND_utils {
   private $_pnd_google_db = null;
+  private $_pnd_google_log = null;
+  private $_pnd_file_utils = null;
   private $_ds_client = null;
   private $_ds_connect_service = null;
   
@@ -16,11 +18,29 @@ class PND_utils {
 	echo json_encode($data);
   }
   
+  public function pnd_file_utils() {
+	if (! $this->_pnd_file_utils) {
+		$this->_pnd_file_utils = new PND_file_utils();
+	}
+    return $this->_pnd_file_utils;
+  }
+  
   public function pnd_google_db() {
 	if (! $this->_pnd_google_db) {
 		$this->_pnd_google_db = new PND_google_db();
 	}
     return $this->_pnd_google_db;
+  }
+
+  public function log($severity, $subject, $details) {  # severity: debug, warning, critical
+    $this->pnd_google_db()->log($severity, $subject, $details);
+  }
+	
+  private function pnd_google_log() {
+	if (! $this->_pnd_google_log) {
+		$this->_pnd_google_log = new PND_google_log();
+	}
+    return $this->_pnd_google_log;
   }
   
   private function connection_name() {
@@ -138,7 +158,7 @@ class PND_utils {
 			'allowEnvelopePublish' => true, # boolean	Enables users to publish processed events.
 			'enableLog' => true, # boolean	Enables logging on prcoessed events. Log only maintains the last 100 events.
 			'envelopeEvents' => array('Sent', 'Delivered', 'Signed', 'Completed', 'Declined', 'Voided'), # Envelope related events to track.
-			'includeDocuments' => false, # boolean	Include envelope documents
+			'includeDocuments' => true, # boolean	Include envelope documents
 			'includeSenderAccountasCustomField' => true, # boolean	Include sender account as Custom Field.
 			'includeTimeZoneInformation' => true, # boolean	Include time zone information.
 			'name' => $this->connection_name(), # string	name of the connection
