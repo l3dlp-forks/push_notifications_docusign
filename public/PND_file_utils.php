@@ -100,7 +100,7 @@ class PND_file_utils {
 	  $dir_name = $this->files_dir();
 	  if(! is_dir($dir_name)) {
 		 $err = mkdir ($dir_name, 0755);
-		 if ($err) {die("Couldn't create dir " . $dir_name);}
+		 if ($err) {die("Couldn't create dir " . $dir_name . $err);}
 	  }	 
 	}
 

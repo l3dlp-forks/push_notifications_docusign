@@ -9,7 +9,7 @@ cp ../push_notifications_docusign_private/manifest.json assets/manifest.json
 
 cat src/js/browser-detect.js src/js/js.cookie.js src/js/register-main.js > assets/register.js
 
-
+# mkdir downloads;
 
 # bring in repos for server
 composer update
