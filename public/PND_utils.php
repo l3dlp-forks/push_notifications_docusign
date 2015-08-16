@@ -33,7 +33,7 @@ class PND_utils {
   }
 
   public function log($severity, $subject, $details) {  # severity: debug, warning, critical
-    $this->pnd_google_db()->log($severity, $subject, $details);
+    $this->pnd_google_log()->log($severity, $subject, $details);
   }
 	
   private function pnd_google_log() {
