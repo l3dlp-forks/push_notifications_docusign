@@ -483,7 +483,7 @@ var pndso = new function() {
 		// Tell the server we've unsubscribed
 		data = {subscription: this.subscription.endpoint,
 			accounts: []};
-		if (this.current+pane === 'unsubscribe') {
+		if (this.current_pane === 'unsubscribe') {
 			pndso.accounts.forEach(function(account, i, a){
 				var accountId = account.account_id;
 
