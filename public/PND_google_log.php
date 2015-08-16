@@ -36,8 +36,8 @@ class PND_google_log {
 		$entry = $this->log_db->createEntity([
 			'timestamp' => $timestamp,
 			'severity' => $severity,
-			'subject' = $subject,
-			'details' = $details
+			'subject' => $subject,
+			'details' => $details
 		]);
 		$bol_result1 = $this->log_db->upsert($entry);
 	}
