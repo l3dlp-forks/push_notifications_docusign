@@ -41,6 +41,23 @@ class PND_google_log {
 		]);
 		$bol_result1 = $this->log_db->upsert($entry);
 	}
+
+	public function test() {
+		$microtime_parts = explode ( ' ', microtime());
+		$timestamp = intval($microtime_parts[1]) + intval($microtime_parts[0]);
+		
+		$entry = $this->log_db->createEntity([
+			'timestamp' => $timestamp,
+			'severity' => $severity,
+			'subject' => $subject,
+			'details' => $details
+		]);
+		$bol_result1 = $this->log_db->upsert($entry);
+		echo "Store result: ";
+		var_dump($bol_result1);
+	}
+	
+	
 }
 	
 

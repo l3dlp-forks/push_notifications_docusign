@@ -15,7 +15,9 @@ class PND_utils {
   public function return_data( $data, $code = 200 ) {
 	http_response_code($code);  # in php 5.4 and later
 	header('Content-Type: application/json');
-	echo json_encode($data);
+	if ($data !== null) {
+		echo json_encode($data);
+	}
   }
   
   public function pnd_file_utils() {
