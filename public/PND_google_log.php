@@ -30,11 +30,12 @@ class PND_google_log {
 		#
 		# For the timestamp, we want int64 timestamp_microseconds_value (since Jan 1 1970)
 		# See https://cloud.google.com/datastore/docs/concepts/entities#Datastore_Properties_and_value_types
-		$microtime_parts = explode ( ' ', microtime());
-		$timestamp = intval($microtime_parts[1]) + intval($microtime_parts[0]);
+		# $microtime_parts = explode ( ' ', microtime());
+		# $timestamp = intval($microtime_parts[1]) + intval($microtime_parts[0]);
+		# Never mind! The library is casting everything through DateTime so no sub-second resolution
 		
 		$entry = $this->log_db->createEntity([
-			'timestamp' => $timestamp,
+			'timestamp' => new DateTime(),
 			'severity' => $severity,
 			'subject' => $subject,
 			'details' => $details
@@ -42,12 +43,9 @@ class PND_google_log {
 		$bol_result1 = $this->log_db->upsert($entry);
 	}
 
-	public function test() {
-		$microtime_parts = explode ( ' ', microtime());
-		$timestamp = intval($microtime_parts[1]) + intval($microtime_parts[0]);
-		
+	public function test() {		
 		$entry = $this->log_db->createEntity([
-			'timestamp' => $timestamp,
+			'timestamp' => new DateTime(),
 			'severity' => 'debug',
 			'subject' => 'Test log entry',
 			'details' => 'Details go here'
