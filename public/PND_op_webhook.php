@@ -24,7 +24,7 @@ class PND_op_webhook implements PND_Request
 	$pnd_utils->log('debug', 'Webhook wrote file', 'File: ' . $filename);  # severity: debug, warning, critical
 	
 	
-	$pnd_utils->return_data(null, 200 ));
+	$pnd_utils->return_data(null, 200);
 	return true;
   }
 }
