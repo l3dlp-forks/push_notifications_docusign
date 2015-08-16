@@ -8,6 +8,7 @@
 //
 if (!defined('APP')) {exit("Buzz off");}
 define ("FILES_DIR", "downloads");
+define ("GC_TIME", 3 * 24 * 60 * 60); # 3 days
 
 class PND_file_utils {
 
