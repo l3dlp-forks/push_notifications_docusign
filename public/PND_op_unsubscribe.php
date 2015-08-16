@@ -38,7 +38,7 @@ class PND_op_unsubscribe implements PND_Request
 			# if a name and pw were supplied then try to use them...
 			if ($account->account_admin_email && strlen($account->account_admin_email) > 2 &&
 				$account->account_admin_pw && strlen($account->account_admin_pw) > 2) {
-				$pnd_utils->remove_connection($account->account_id, $account->user_id, $account->account_admin_email, account->account_admin_pw);
+				$pnd_utils->remove_connection($account->account_id, $account->user_id, $account->account_admin_email, $account->account_admin_pw);
 			}
 		} catch (DocuSign_IOException $e) {
 			$msg = $e->getMessage();
