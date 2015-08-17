@@ -1,7 +1,7 @@
 <?php
 if (!defined('APP')) {exit("Buzz off");}
  
-define("CONNECTION_NAME_PREFIX", 'Browser Push Notification - ');
+define("CONNECTION_NAME_PREFIX", 'Connection Gateway Example--');
 define("WEBHOOK_SUFFIX", '?op=webhook');
 
  
@@ -119,7 +119,8 @@ class PND_utils {
   # returns the url for the incoming web_hook calls
   private function web_hook_url(){
 	$uri = explode ('?', $_SERVER['REQUEST_URI'])[0];
-	return "http".(!empty($_SERVER['HTTPS'])?"s":"") . "://".$_SERVER['SERVER_NAME']. $uri . WEBHOOK_SUFFIX;
+	$this->log('debug', 'web_hook_url', $_SERVER['REQUEST_URI'] . ' ==> ' . $uri);
+	return "https://".$_SERVER['SERVER_NAME']. $uri . WEBHOOK_SUFFIX;
   }
   
   # Update or Insert a connection for the account and userId
