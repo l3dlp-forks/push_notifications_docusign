@@ -416,7 +416,7 @@ var pndso = new function() {
 				// no escaping of apostrophes/quotes is needed.
 		}) // end of foreach
 			
-		$('#cancel-accounts-table caption').text("Account Information for " + pndso.accounts[0].user_name + ", <i>" +
+		$('#cancel-accounts-table caption').html("Account Information for " + pndso.accounts[0].user_name + ", <i>" +
 			pndso.accounts[0].user_email + "</i>"); 
 		
 		// Show the modal
