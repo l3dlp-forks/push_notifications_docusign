@@ -45,3 +45,19 @@ http://www.levmuchnik.net/Content/ProgrammingTips/WEB/XMLDisplay/DisplayXMLFileW
 http://www.subchild.com/
 -- Live XML Editor
 -- Interesting blog
+
+Envelope Status Display
+Envelope Status: Completed
+(Don't show by default) Envelope ID: 4ABB8E36-E3AD-4A23-86C9-3176940D08E1
+Envelope Subject: Larry Kluger PERSONAL DETAILS.pdf, Larry Kluger Tedaut Zehut com...
+Pages: 3
+	1.	Sent by Larry Kluger (larry@kluger.com) | 8/24/2015 12:02:40 PM PT
+	2.	Signed by Lawrence S Kluger (larry@kluger.com) | 8/24/2015 12:03:42 PM PT | Signed in Location
+	3.	Copy sent to Simcha Becker (Simcha@aboulafia.co.il) | 8/24/2015 12:03:43 PM PT
+(PT time zone is in a span: <span title="Pacific Standard Time">PT</span>
+ This causes the time zone to be shown when mouse is hovered.)
+	
+	
+	
+	
+	

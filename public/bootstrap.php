@@ -25,6 +25,7 @@ require 'vendor_lsk/DocuSign-PHP-Client/src/service/DocuSign_ConnectService.php'
 
 require (LIB_PATH . "PND_utils.php");
 require (LIB_PATH . "PND_file_utils.php");
+require (LIB_PATH . "DocuSign_Connect_utils.php");
 require (LIB_PATH . "PND_api_classes.php");
 require (LIB_PATH . "PND_op_authenticate.php");
 require (LIB_PATH . "PND_op_subscribe.php");
