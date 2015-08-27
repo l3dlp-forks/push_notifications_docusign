@@ -6,9 +6,6 @@
 //
 // Utility Library for DocuSign Connect XML messages
 //
-if (!defined('APP')) {exit("Buzz off");}
-define ("FILES_DIR", "downloads");
-define ("GC_TIME", 3 * 24 * 60 * 60); # 3 days
 
 class DocuSign_Connect_utils {
 
