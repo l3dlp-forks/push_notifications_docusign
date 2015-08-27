@@ -38,7 +38,7 @@ class DocuSign_Connect_utils {
 	//                
 	//============================================================+
 	public function load_connect_message($basename, $directory, $input = 'php://input') {
-		$slash = substr($director, -1) === '/' ? '' : '/';
+		$slash = substr($directory, -1) === '/' ? '' : '/';
 		$directory .= $slash;
 		$this->directory = $directory;
 		$this->basename = $basename;
@@ -50,7 +50,7 @@ class DocuSign_Connect_utils {
 
 		$this->extract_pdf_files();
 		$this->xml_filename = $directory . $basename . '.xml'; // set the xml filename
-		$xml->asXML($this->xml_filename); // save the xml minus the pdf content
+		$this->xml->asXML($this->xml_filename); // save the xml minus the pdf content
 		return true;
 	}
 
