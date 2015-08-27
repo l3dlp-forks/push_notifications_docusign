@@ -34,7 +34,7 @@ class PND_op_webhook implements PND_Request
 	
 	$pnd_utils->log('debug', 'Webhook xml file', $ds_connect_utils->get_xml_filename());  # severity: debug, warning, critical
 	$pdf_filenames = $ds_connect_utils->get_pdf_filenames();
-	foreach (pdf_filenames as $key => $value) {
+	foreach ($pdf_filenames as $key => $value) {
 		$pnd_utils->log('debug', 'Webhook pdf file [' . $key . ']', $value);  # severity: debug, warning, critical
 	}
 	
