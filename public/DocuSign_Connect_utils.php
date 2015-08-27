@@ -42,7 +42,7 @@ class DocuSign_Connect_utils {
 	//============================================================+
 	public function load_connect_message($basename, $directory, $input = 'php://input') {
 		$slash = substr($director, -1) === '/' ? '' : '/';
-		$directory .= $slash
+		$directory .= $slash;
 		$this->directory = $directory;
 		$this->basename = $basename;
 
