@@ -73,7 +73,7 @@ class DocuSign_Connect_utils {
 		$i = 0;
 		foreach ($this->xml->DocumentPDFs->DocumentPDF as $pdf) {
 			$filename = $this->directory . $this->basename . '_' . $i . '.pdf';
-			file_put_contents($filename, base64_decode ( (string)$pdf );
+			file_put_contents($filename, base64_decode ( (string)$pdf ));
 			$pdf = "Content elided.";
 			$this->pdf_filenames[$i] = $filename;
 			$i++;
