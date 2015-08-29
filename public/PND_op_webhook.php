@@ -28,7 +28,7 @@ class PND_op_webhook implements PND_Request
 	
 	# Are we in test mode?
 	$test_sender = isset($_GET['test_sender']) && $_GET['test_sender']; 
-	$input = $test_sender : '../assets/connect_example.xml' ? 'php://input';
+	$input = $test_sender ? '../assets/connect_example.xml' : 'php://input';
 	$result = $ds_connect_utils->load_connect_message($basename, $directory, $input);
 	if (!$result) {
 		$pnd_utils->log('critical', 'Webhook incoming', 'Bad parse result for xml');  # severity: debug, warning, critical
