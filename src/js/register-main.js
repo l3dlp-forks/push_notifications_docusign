@@ -628,7 +628,7 @@ var pndso = new function() {
 	this.do_send_test = function(e) { // send a test notification
 		e.preventDefault(); // Don't submit to the server
 
-		$.ajax(pnds.api_url + "?op=webhook&test_sender=" + pnds.user_email,  // Ajax Methods: https://github.com/jquery/api.jquery.com/issues/49
+		$.ajax(pnds.api_url + "?op=webhook&test_sender=" + pndso.user_email,  // Ajax Methods: https://github.com/jquery/api.jquery.com/issues/49
 			{method: "GET",
 			 context: pndso})
 		.done(function(data, textStatus, jqXHR){
