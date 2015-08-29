@@ -630,7 +630,7 @@ var pndso = new function() {
 
 		$.ajax(pnds.api_url + "?op=webhook&test_sender=" + pnds.user_email,  // Ajax Methods: https://github.com/jquery/api.jquery.com/issues/49
 			{method: "GET",
-			 context: this})
+			 context: pndso})
 		.done(function(data, textStatus, jqXHR){
 			this.post_message("Test notification sent.");
 		})
