@@ -32,9 +32,19 @@ class DocuSign_Connect_utils {
 	// Actions
 	// The method loads the connect message and parses it.
 	// The enclosed files, if there are any, are stored as $directory/$basename_n.pdf 
-	// where n is 0 through the last file name.
-	// The filebytes are removed from the XML and the result is written out as
+	// where n is DocumentID from the XML.
+	// The filebytes are removed from the XML and the remaining XML is written out as
 	// $directory/$basename.xml
+	//
+	// Connect XML format for included files:
+	// 	<DocumentPDFs>
+	//		<DocumentPDF>
+	//			<Name>NDA Example Template - Two Signers v3_PP.pdf</Name>
+	//			<PDFBytes>...</PDFBytes>
+	//			<DocumentID>1</DocumentID>
+	//			<DocumentType>CONTENT</DocumentType>
+	//		</DocumentPDF>
+	//	</DocumentPDFs>
 	//                
 	//============================================================+
 	public function load_connect_message($basename, $directory, $input = 'php://input') {
@@ -64,14 +74,24 @@ class DocuSign_Connect_utils {
 	
 	// Extract the PDF files and store them.
 	// Replace the PDF files with a text note.
+	//
+	// Connect XML format for included files:
+	// 	<DocumentPDFs>
+	//		<DocumentPDF>
+	//			<Name>NDA Example Template - Two Signers v3_PP.pdf</Name>
+	//			<PDFBytes>...</PDFBytes>
+	//			<DocumentID>1</DocumentID>
+	//			<DocumentType>CONTENT</DocumentType>
+	//		</DocumentPDF>
+	//	</DocumentPDFs>
 	private function extract_pdf_files(){
 		// see http://php.net/manual/en/simplexml.examples-basic.php
 		
 		$i = 0;
 		foreach ($this->xml->DocumentPDFs->DocumentPDF as $pdf) {
-			$filename = $this->directory . $this->basename . '_' . $i . '.pdf';
-			file_put_contents($filename, base64_decode ( (string)$pdf ));
-			$pdf = "Content elided.";
+			$filename = $this->directory . $this->basename . '_' . (string)$pdf->DocumentID . '.pdf';
+			file_put_contents($filename, base64_decode ( (string)$pdf->PDFBytes ));
+			$pdf->PDFBytes = $filename;
 			$this->pdf_filenames[$i] = $filename;
 			$i++;
 		}
