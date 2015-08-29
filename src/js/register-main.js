@@ -352,7 +352,7 @@ var pndso = new function() {
 // 	9.  Fully subscribed. Post info to user	
 	this.subscribed = function() {
 		this.post_message("Subscribed!");
-		window.setTimeout(pndso.hide_message, 3000);
+		window.setTimeout(pndso.hide_message, 4000);
 		this.show_subscribed_accounts();
 		this.show_pane ('subscribed');
 	}
@@ -601,6 +601,8 @@ var pndso = new function() {
         $('#btn-authenticate').on('click', this.authenticate_click);
 		$('#btn-do-subscribe').on('click', this.do_subscribe_click);
 		$('#btn-unsubscribe').on('click', this.show_unsubscribe_click);
+		$('#btn-send-test').on('click', this.do_send_test);
+
 		$('#btn-do-unsubscribe').on('click', this.do_unsubscribe_click);
 		$('#private').on('change', this.private_click);
 		$('#pw').keydown(this.pw_keydown );
@@ -622,6 +624,24 @@ var pndso = new function() {
 			$('#working').modal('hide');
 		}
 	}
+	
+	this.do_send_test = function(e) { // send a test notification
+		e.preventDefault(); // Don't submit to the server
+
+		$.ajax(pnds.api_url + "?op=webhook&test_sender=" + pnds.user_email,  // Ajax Methods: https://github.com/jquery/api.jquery.com/issues/49
+			{method: "GET",
+			 context: this})
+		.done(function(data, textStatus, jqXHR){
+			this.post_message("Test notification sent.");
+		})
+		.fail(function(jqXHR, textStatus, errorThrown) {
+			this.post_message("Problem sending test notification: " + textStatus); 
+		})
+		.always(function() {
+			window.setTimeout(pndso.hide_message, 4000);
+		});		
+	}
+
 	
 
 ///////////////////////////////////////////////////////////////////////

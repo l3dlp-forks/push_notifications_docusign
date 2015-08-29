@@ -89,8 +89,9 @@ class DocuSign_Connect_utils {
 		
 		$i = 0;
 		foreach ($this->xml->DocumentPDFs->DocumentPDF as $pdf) {
-			$filename = $this->directory . $this->basename . '_' . (string)$pdf->DocumentID . '.pdf';
-			file_put_contents($filename, base64_decode ( (string)$pdf->PDFBytes ));
+			$filename = $this->basename . '_' . (string)$pdf->DocumentID . '.pdf';
+			$full_filename = $this->directory . $filename;
+			file_put_contents($full_filename, base64_decode ( (string)$pdf->PDFBytes ));
 			$pdf->PDFBytes = $filename;
 			$this->pdf_filenames[$i] = $filename;
 			$i++;
