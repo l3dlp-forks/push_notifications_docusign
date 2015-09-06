@@ -97,7 +97,7 @@ $pnd_utils->log('debug', 'Got subscriptions', $email);  # severity: debug, warni
 	
 $pnd_utils->log('debug', 'Entering foreach', $email);  # severity: debug, warning, critical
 	foreach($notify_subscriptions as $subscription) {
-		if (strcmp ($subscription->subscription_type, "chrome") === 0) {
+		if (strcmp ($subscription->subscription_type, "Chrome") === 0) {
 			$this->send_chrome_notification($subscription, $email);
 		} else {
 			exit;
