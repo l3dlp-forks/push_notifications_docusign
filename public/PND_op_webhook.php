@@ -59,6 +59,7 @@ class PND_op_webhook implements PND_Request
 	# Send notification to the Email and (mayne) the ACHolderEmail 
     global $pnd_utils;
 	$email = $this->ds_connect_utils->get_email();
+$pnd_utils->log('debug', 'Got email', $email);  # severity: debug, warning, critical
 	
 	$start = microtime(true);
 		$notifications = $this->notify($email);

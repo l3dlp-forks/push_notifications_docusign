@@ -79,11 +79,11 @@ class DocuSign_Connect_utils {
 	}
 	
 	public function get_email() {
-	  return $this->xml ? $this->xml->EnvelopeStatus->Email : false;
+	  return $this->xml ? (string)$this->xml->EnvelopeStatus->Email : false;
 	}
 	
 	public function get_ac_holder() {
-	  return $this->xml ? $this->xml->EnvelopeStatus->ACHolderEmail : false;
+	  return $this->xml ? (string)$this->xml->EnvelopeStatus->ACHolderEmail : false;
 	}
 	
 	
