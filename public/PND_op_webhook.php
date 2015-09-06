@@ -107,7 +107,7 @@ class PND_op_webhook implements PND_Request
 	
 	$ch = curl_init();
     curl_setopt( $ch, CURLOPT_HTTPHEADER, array('Content-type: application/json', 
-		'Authorization: key=' . $pnd_config["google_api_key"]);
+		'Authorization: key=' . $pnd_config["google_api_key"]));
     curl_setopt( $ch, CURLOPT_URL, $url );
 	$content = curl_exec( $ch );
     $response = curl_getinfo( $ch );
