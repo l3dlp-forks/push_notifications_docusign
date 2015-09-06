@@ -58,10 +58,7 @@ class PND_op_webhook implements PND_Request
   private function process_xml() {
 	# Send notification to the Email and (mayne) the ACHolderEmail 
     global $pnd_utils;
-		$pnd_utils->log('debug', 'Get Email from XML', '');  # severity: debug, warning, critical
 	$email = $this->ds_connect_utils->get_email();
-		$pnd_utils->log('debug', 'Got Email from XML', $email);  # severity: debug, warning, critical
-
 	
 	$start = microtime(true);
 		$notifications = $this->notify($email);
@@ -86,12 +83,18 @@ class PND_op_webhook implements PND_Request
 	# RETURNS notifications -- count of how many were found
 	#
     global $pnd_utils, $pnd_api, $pnd_config;	
+$pnd_utils->log('debug', 'Getting subscriptions', $email);  # severity: debug, warning, critical
 	$notify_subscriptions = $pnd_utils->pnd_google_db()->get_unique_subscriptions_for_email($email);
+	
+$pnd_utils->log('debug', 'Got subscriptions', $email);  # severity: debug, warning, critical
+
+	
 	$notifications = count ($notify_subscriptions);
 	if ($notifications === 0) {
 		return $notifications; ### Early return
 	}
 	
+$pnd_utils->log('debug', 'Entering foreach', $email);  # severity: debug, warning, critical
 	foreach($notify_subscriptions as $subscription) {
 		if (strcmp ($subscription->subscription_type, "chrome") === 0) {
 			$this->send_chrome_notification($subscription, $email);
@@ -105,6 +108,8 @@ class PND_op_webhook implements PND_Request
   private function send_chrome_notification($subscription, $email) {
 	# notifies via chrome
     global $pnd_utils, $pnd_config;
+
+$pnd_utils->log('debug', 'Sending subscription', $email);  # severity: debug, warning, critical
 	
 	$url = $subscription->subscription_url;
 	
