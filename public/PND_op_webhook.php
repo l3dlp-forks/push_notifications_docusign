@@ -58,7 +58,10 @@ class PND_op_webhook implements PND_Request
   private function process_xml() {
 	# Send notification to the Email and (mayne) the ACHolderEmail 
     global $pnd_utils;
+		$pnd_utils->log('debug', 'Get Email from XML', '');  # severity: debug, warning, critical
 	$email = $this->ds_connect_utils->get_email();
+		$pnd_utils->log('debug', 'Got Email from XML', $email);  # severity: debug, warning, critical
+
 	
 	$start = microtime(true);
 		$notifications = $this->notify($email);
