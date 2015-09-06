@@ -140,7 +140,7 @@ class PND_google_db {
 	public function get_unique_subscriptions_for_email($email) {
 	  # See https://cloud.google.com/datastore/docs/concepts/queries
 	  return $this->notify_db->fetchAll(
-		"SELECT  subscription_type, subscription_url FROM Notifications WHERE ds_email = @ds_email ORDER BY subscription_url",
+		"SELECT  subscription_type, subscription_url FROM Notifications WHERE ds_email = @ds_email",
 		['ds_email' => $email]);
 		# nb. Can't use Distinct keyword since we don't have the right index defined. Sigh.
 	}
