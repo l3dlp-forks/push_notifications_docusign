@@ -79,9 +79,13 @@ class DocuSign_Connect_utils {
 	}
 	
 	public function get_email() {
-	  return $this->xml && ;
-
-	get_ac_holder
+	  return $this->xml ? $this->xml->EnvelopeStatus->Email : false;
+	}
+	
+	public function get_ac_holder() {
+	  return $this->xml ? $this->xml->EnvelopeStatus->ACHolderEmail : false;
+	}
+	
 	
 	// Extract the PDF files and store them.
 	// Replace the PDF files with a text note.
