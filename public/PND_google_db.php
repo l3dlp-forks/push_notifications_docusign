@@ -3,14 +3,9 @@
 #
 # 
 # The notify url records the information needed to send a notification.
-# Since different browsers are using different information, we're encoding the
-# info in the subscription_url
-# 
-# Google notification format:  google_notify://notification_service_point:id
-#
 #
 # DB schema
-#   instance_id -- a unique id for an instance of a browser. Stored on the
+#   instance_id -- a unique id for an instance of a browser/subscriber. Stored on the
 #       browser as cookie
 #   ds_account_id -- A DocuSign account number whose member wants to receive notifications
 #		ds_account_id is indexed  
@@ -73,6 +68,8 @@ class PND_google_db {
 			# then update the db entries with the new subscription_url
 			foreach($notifications as $notification) {
 				$notification->subscription_url = $subscription_url;
+				$notification->ds_email = strtolower ($notification->ds_email);
+				
 				$this->notify_db->upsert($notification); # see https://github.com/tomwalder/php-gds/blob/master/src/GDS/Store.php
 				$results['accounts'][] = array(
 					'user_name' => $notification->ds_user_name,
@@ -127,7 +124,7 @@ class PND_google_db {
         $notification->ds_account_id = $params['ds_account_id'];
         $notification->ds_account_name = $params['ds_account_name'];
         $notification->ds_account_admin_email = $params['ds_account_admin_email'];
-		$notification->ds_email = $params['ds_email'];
+		$notification->ds_email = strtolower ($params['ds_email']);
 		$notification->ds_user_name = $params['ds_user_name'];
 		$notification->ds_user_id = $params['ds_user_id'];
 		return $this->notify_db->upsert($notification); # boolean
@@ -139,6 +136,14 @@ class PND_google_db {
 		['instance_id' => $instance_id,
 		'ds_account_id' => $ds_account_id]);
 	}
+	
+	public function get_unique_subscriptions_for_email($email) {
+	  # See https://cloud.google.com/datastore/docs/concepts/queries
+	  return $this->notify_db->fetchAll(
+		"SELECT DISTINCT subscription_type, subscription_url FROM Notifications WHERE ds_email = @email",
+		['ds_email' => $email]);
+	}
+	
 
 	public function test() {
 		$notification = $this->notify_db->createEntity([

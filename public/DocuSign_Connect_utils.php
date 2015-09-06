@@ -23,6 +23,8 @@ class DocuSign_Connect_utils {
 	//                 Connect messages include transaction data and one or more PDF
 	//   $directory -- where the files will be stored
 	//   $input     -- a filename for reading the incoming message
+	//   $test_sender -- an email address that shall be substituted for the 
+	//	 				incoming <Email> and <ACHolderEmail> values. Used for testing
 	// 
 	// RETURNS
 	//   $success boolean    
@@ -47,7 +49,7 @@ class DocuSign_Connect_utils {
 	//	</DocumentPDFs>
 	//                
 	//============================================================+
-	public function load_connect_message($basename, $directory, $input = 'php://input') {
+	public function load_connect_message($basename, $directory, $input = 'php://input', $test_sender = false) {
 		$slash = substr($directory, -1) === '/' ? '' : '/';
 		$directory .= $slash;
 		$this->directory = $directory;
@@ -59,6 +61,10 @@ class DocuSign_Connect_utils {
 		}
 
 		$this->extract_pdf_files();
+		if ($test_sender) {
+			$this->xml->EnvelopeStatus->Email = $test_sender;
+			$this->xml->EnvelopeStatus->ACHolderEmail = $test_sender;
+			}
 		$this->xml_filename = $directory . $basename . '.xml'; // set the xml filename
 		$this->xml->asXML($this->xml_filename); // save the xml minus the pdf content
 		return true;
@@ -71,6 +77,11 @@ class DocuSign_Connect_utils {
 	public function get_pdf_filenames() {
 		return $this->pdf_filenames;
 	}
+	
+	public function get_email() {
+	  return $this->xml && ;
+
+	get_ac_holder
 	
 	// Extract the PDF files and store them.
 	// Replace the PDF files with a text note.

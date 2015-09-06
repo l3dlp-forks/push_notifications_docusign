@@ -24,7 +24,8 @@ define('GDS_SERVICE_ACCOUNT_NAME', '');
 define('GDS_DATASET_ID', GDS_APP_NAME);
  
 $pnd_config = array(
-    "google_api_key" => '123',
+    "google_api_key" => '123', # Used to send notifications. See 
+		# https://developers.google.com/web/updates/2015/03/push-notificatons-on-the-open-web
 	"cookie_salt" = '123', # Use a long salt from https://api.wordpress.org/secret-key/1.1/salt/  or similar.
 	"instance_id" = '123', # 5 - 15 character long ID for this instance of the push notifications gateway. Eg use your name 
 

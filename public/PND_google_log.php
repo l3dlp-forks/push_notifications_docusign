@@ -38,7 +38,7 @@ class PND_google_log {
 			'timestamp' => new DateTime(),
 			'severity' => $severity,
 			'subject' => $subject,
-			'details' => $details
+			'x_details' => $details
 		]);
 		$bol_result1 = $this->log_db->upsert($entry);
 	}
@@ -48,7 +48,7 @@ class PND_google_log {
 			'timestamp' => new DateTime(),
 			'severity' => 'debug',
 			'subject' => 'Test log entry',
-			'details' => 'Details go here'
+			'x_details' => 'Details go here'
 		]);
 		$bol_result1 = $this->log_db->upsert($entry);
 		echo "Store result: ";
@@ -66,14 +66,15 @@ class LogDB extends GDS\Store {
      *
      * @return \GDS\Schema
      */
+	 ## Note: The Google tool displays the columns alphabetically by column name...
     protected function buildSchema()
     {
         $this->setEntityClass('\\LogEntries');
         return (new GDS\Schema('LogEntries'))
-            ->addDatetime('timestamp')
-            ->addString('severity')
 			->addString('subject')
-            ->addString('details');
+            ->addString('severity')
+            ->addDatetime('timestamp')
+            ->addString('x_details');
     }
 }
 	

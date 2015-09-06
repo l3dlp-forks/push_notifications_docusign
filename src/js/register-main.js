@@ -23,17 +23,6 @@ var pndso = new function() {
 	  console.log('TODO: Implement send_subscription_to_server()');
 	}
 
-	this.showCurlCommand = function(subscription) {
-	  // The curl command to trigger a push message straight from GCM
-	  var subscriptionId = subscription.subscriptionId;
-	  var endpoint = subscription.endpoint;
-	  var curlCommand = 'curl --header "Authorization: key=' + pnds.API_KEY +
-		'" --header Content-Type:"application/json" ' + endpoint + 
-		' -d "{\\"registration_ids\\":[\\"' + subscriptionId + '\\"]}"';
-
-	  curlCommandDiv.textContent = curlCommand;
-	}
-
 
 ///////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////
