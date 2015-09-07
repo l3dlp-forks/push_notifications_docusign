@@ -100,7 +100,7 @@ $pnd_utils->log('debug', 'Entering foreach', $email);  # severity: debug, warnin
 		if (strcmp ($subscription->subscription_type, "Chrome") === 0) {
 			$this->send_chrome_notification($subscription, $email);
 		} else {
-			exit;
+			throw new Exception('Unrecogonized subscription type: ' . $subscription->subscription_type);
 		}
 	}
 	return $notifications;
@@ -113,11 +113,31 @@ $pnd_utils->log('debug', 'Entering foreach', $email);  # severity: debug, warnin
 $pnd_utils->log('debug', 'Sending subscription', $email);  # severity: debug, warning, critical
 	
 	$url = $subscription->subscription_url;
+	# Example url: https://android.googleapis.com/gcm/send/APA91bFyEk2E31i1-Gk1Ask9hO8ucO6xHGa0zQTImQH_0H
+	# Follow section "Sending a Push Message" in
+	#   https://developers.google.com/web/updates/2015/03/push-notificatons-on-the-open-web
+	
+	$chrome_endpoint = "https://android.googleapis.com/gcm/send";
+	if (stripos($url, $chrome_endpoint) !== 0) {
+		# Since we're sending to Chrome, the url should start with the Chrome endpoint.
+		throw new Exception('Chrome endpoint not in url! url: ' . $url);
+	}
+	$parts = explode ("/" , $url);
+	$reg_id = $parts[count($parts) - 1];
+	$reg_data = array("registration_ids" => array($reg_id));
+	$data_string = json_encode($reg_data);
 	
 	$ch = curl_init();
-    curl_setopt( $ch, CURLOPT_HTTPHEADER, array('Content-type: application/json', 
-		'Authorization: key=' . $pnd_config["google_api_key"]));
-    curl_setopt( $ch, CURLOPT_URL, $url );
+    curl_setopt( $ch, CURLOPT_HTTPHEADER, array(
+		'Content-type: application/json', 
+		'Authorization: key=' . $pnd_config["google_api_key"],
+		'Content-Length: ' . strlen($data_string)
+		);
+	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+    curl_setopt($ch, CURLOPT_URL, $chrome_endpoint );
+	curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);   
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);                                                                      
+	
 	$content = curl_exec( $ch );
     $response = curl_getinfo( $ch );
     curl_close ( $ch );
