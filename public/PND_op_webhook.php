@@ -72,18 +72,13 @@ class PND_op_webhook implements PND_Request
     global $pnd_utils, $pnd_api, $pnd_config;	
 $pnd_utils->log('debug', 'Getting subscriptions', $email);  # severity: debug, warning, critical
 	$notify_subscriptions = $pnd_utils->pnd_google_db()->get_unique_subscriptions_for_email($email);
-	
-$pnd_utils->log('debug', 'Got subscriptions', $email);  # severity: debug, warning, critical
-
-	
+		
 	$notifications = count ($notify_subscriptions);
 	if ($notifications === 0) {
 		return $notifications; ### Early return
 	}
-	
-$pnd_utils->log('debug', 'Entering foreach', $email);  # severity: debug, warning, critical
-	foreach($notify_subscriptions as $subscription) {
-		if (strcmp ($subscription->subscription_type, "Chrome") === 0) {
+		foreach($notify_subscriptions as $subscription) {
+		if ($subscription['subscription_type'] === "Chrome") {
 			$this->send_chrome_notification($subscription, $email);
 		} else {
 			throw new Exception('Unrecogonized subscription type: ' . $subscription->subscription_type);
@@ -98,7 +93,7 @@ $pnd_utils->log('debug', 'Entering foreach', $email);  # severity: debug, warnin
 
 $pnd_utils->log('debug', 'Sending subscription', $email);  # severity: debug, warning, critical
 	
-	$url = $subscription->subscription_url;
+	$url = $subscription['subscription_url'];
 	# Example url: https://android.googleapis.com/gcm/send/APA91bFyEk2E31i1-Gk1Ask9hO8ucO6xHGa0zQTImQH_0H
 	# Follow section "Sending a Push Message" in
 	#   https://developers.google.com/web/updates/2015/03/push-notificatons-on-the-open-web

@@ -139,12 +139,33 @@ class PND_google_db {
 	
 	public function get_unique_subscriptions_for_email($email) {
 	  # See https://cloud.google.com/datastore/docs/concepts/queries
-	  return $this->notify_db->fetchAll(
-		"SELECT  * FROM Notifications WHERE ds_email = @ds_email",
-		['ds_email' => $email]);
+	  
+		$all = $this->notify_db->fetchAll(
+			"SELECT * FROM Notifications WHERE ds_email = @ds_email",
+			['ds_email' => $email]);
 		# nb. Can't use Distinct keyword since we don't have the right index defined. Sigh.
+		# Also ordering didn't work, neither did projecting. Double sigh...
+		
+		# We only want the unique subscription_type / subscription_url pairs
+		$results = array();
+		foreach ($all as $row) {
+			if (! $this->in_subscription_array($results, $row->subscription_type, $row->subscription_url)) {
+				$results[] = array('subscription_type' => $row->subscription_type, 
+									'subscription_url' => $row->subscription_url)
+			}
+		}
+		return $results;
 	}
 	
+	private function in_subscription_array($a, $subscription_type, $subscription_url) {
+		foreach ($a as $item) {
+			if ($item['subscription_type'] === $subscription_type &&
+				$item['subscription_url'] === $subscription_url) {
+					return true;
+				}
+		}
+		return false;
+	}
 
 	public function test() {
 		$notification = $this->notify_db->createEntity([
