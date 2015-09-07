@@ -1,9 +1,6 @@
 <?php
 if (!defined('APP')) {exit("Buzz off");}
 
-# Should we send a notification to the ACHolderEmail (if different from the Email field)?
-define("SEND_TO_ACHOLDER", true); 
-
 
 class PND_op_webhook implements PND_Request
 {
@@ -59,24 +56,13 @@ class PND_op_webhook implements PND_Request
 	# Send notification to the Email and (mayne) the ACHolderEmail 
     global $pnd_utils;
 	$email = $this->ds_connect_utils->get_email();
-$pnd_utils->log('debug', 'Got email', $email);  # severity: debug, warning, critical
 	
 	$start = microtime(true);
 		$notifications = $this->notify($email);
 	$time_elapsed_secs = microtime(true) - $start;
 	if ($notifications > 0) {
 		$pnd_utils->log('debug', 'Notification time', $time_elapsed_secs . ' sec for ' . $notifications . ' notification(s)');  # severity: debug, warning, critical
-	}
-	
-	$ac_holder = $this->ds_connect_utils->get_ac_holder();
-    if (SEND_TO_ACHOLDER && strcasecmp ($email, $ac_holder) !== 0 ) {
-		$start = microtime(true);
-			$notifications = $this->notify($ac_holder);
-		$time_elapsed_secs = microtime(true) - $start;
-		if ($notifications > 0) {
-			$pnd_utils->log('debug', 'Notification time', $time_elapsed_secs . ' sec for ' . $notifications . ' notification(s)');  # severity: debug, warning, critical
-		}
-	}
+	}	
   }
   
   private function notify($email) {
@@ -132,7 +118,7 @@ $pnd_utils->log('debug', 'Sending subscription', $email);  # severity: debug, wa
 		'Content-type: application/json', 
 		'Authorization: key=' . $pnd_config["google_api_key"],
 		'Content-Length: ' . strlen($data_string)
-		);
+		));
 	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
     curl_setopt($ch, CURLOPT_URL, $chrome_endpoint );
 	curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);   
