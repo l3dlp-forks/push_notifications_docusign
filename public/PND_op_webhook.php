@@ -123,7 +123,7 @@ $pnd_utils->log('debug', 'Sending subscription', $email);  # severity: debug, wa
     $response = curl_getinfo( $ch );
     curl_close ( $ch );
 		
-	$pnd_utils->log('debug', 'Sent Chrome notification', 'To: ' . $email . ' ' . $response . ': ' . $content);  # severity: debug, warning, critical
+	$pnd_utils->log('debug', 'Sent Chrome notification', 'To: ' . $email . ' ' . $response['http_code'] . ': ' . $content);  # severity: debug, warning, critical
 	
 	}
 	
