@@ -151,7 +151,7 @@ class PND_google_db {
 		foreach ($all as $row) {
 			if (! $this->in_subscription_array($results, $row->subscription_type, $row->subscription_url)) {
 				$results[] = array('subscription_type' => $row->subscription_type, 
-									'subscription_url' => $row->subscription_url)
+									'subscription_url' => $row->subscription_url);
 			}
 		}
 		return $results;
