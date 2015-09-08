@@ -11,7 +11,7 @@ self.addEventListener('push', function(event) {
   // of push messages, we'll grab some data from  
   // an API and use it to populate a notification  
   event.waitUntil(  
-    fetch(SOME_API_ENDPOINT).then(function(response) {  
+    fetch('https://widgetsign.com/push_notifications_docusign/api.php?op=notify_info).then(function(response) {  
       if (false && response.status !== 200) {  
         // Either show a message to the user explaining the error  
         // or enter a generic message and handle the   
