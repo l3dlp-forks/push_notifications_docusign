@@ -39,7 +39,7 @@ class PND_op_notify_info implements PND_Request
 	$pnd_utils->return_data([
 		'cookie_id' => $cookie_id, 
 		'title' => 'XYZ document signed!', 
-		'message' => 'This is the message. Cookie: ' $cookie_id . ' This is the message. This is the message. This is the message.' , 
+		'message' => 'This is the message. Cookie: ' . $cookie_id . ' This is the message. This is the message. This is the message.' , 
 		'icon' => true,
 		'notificationTag' => 123
 		], 200);
