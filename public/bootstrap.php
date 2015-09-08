@@ -32,7 +32,7 @@ require (LIB_PATH . "PND_op_subscribe.php");
 require (LIB_PATH . "PND_op_unsubscribe.php");
 require (LIB_PATH . "PND_op_refresh.php");
 require (LIB_PATH . "PND_op_webhook.php");
-require (LIB_PATH . "PND_op_notify_info");
+require (LIB_PATH . "PND_op_notify_info.php");
 require (LIB_PATH . "PND_google_db.php");
 require (LIB_PATH . "PND_google_log.php");
 require (LIB_PATH . "PND_cookies.php");
