@@ -13,7 +13,7 @@ $uri = explode ('?', $_SERVER['REQUEST_URI'])[0];
 $base_dir = implode('/',explode ('/', $uri, -1)); # pop off the last part
 $add_slash = $base_dir === '' ? '' : '/'; # only add slash if not at root of domain.
 
-$url = "https://" . $_SERVER['SERVER_NAME'] . '/' . $base_dir . $add_slash . "?op=notify_info&id=" . $cookies->cookie_notify_id;
+$url = "https://" . $_SERVER['SERVER_NAME'] . $base_dir . $add_slash . "api.php?op=notify_info&id=" . $cookies->cookie_notify_id;
 # $url is used below....
 ?>
 // Based on https://github.com/GoogleChrome/samples/blob/gh-pages/push-messaging-and-notifications/service-worker.js
