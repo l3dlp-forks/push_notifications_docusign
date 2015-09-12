@@ -1,4 +1,4 @@
-<%php
+<?php
 # Create a slightly customized version of the service-worker Javascript file.
 #
 # The JS is customized to include the PND cookie ID
@@ -15,7 +15,7 @@ $add_slash = $base_dir === '' ? '' : '/'; # only add slash if not at root of dom
 
 $url = "https://" . $_SERVER['SERVER_NAME'] . '/' . $base_dir . $add_slash . "?op=notify_info&id=" . $cookies->cookie_notify_id;
 # $url is used below....
-%>
+?>
 // Based on https://github.com/GoogleChrome/samples/blob/gh-pages/push-messaging-and-notifications/service-worker.js
 // More information:
 // Spec - http://slightlyoff.github.io/ServiceWorker/spec/service_worker
@@ -29,7 +29,7 @@ self.addEventListener('push', function(event) {
   // of push messages, we'll grab some data from  
   // an API and use it to populate a notification  
   event.waitUntil(  
-    fetch('<?php echo $url; %>').then(function(response) {  
+    fetch('<?php echo $url; ?>').then(function(response) {  
       if (false && response.status !== 200) {  
         // Either show a message to the user explaining the error  
         // or enter a generic message and handle the   
