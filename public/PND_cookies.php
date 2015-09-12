@@ -20,7 +20,7 @@ class PND_cookies {
 			$this->cookie_notify_id = $_COOKIE[COOKIE_NOTIFY_ID];
 			setcookie(COOKIE_NOTIFY_ID, $this->cookie_notify_id, time()+60*60*24*365); # 1 year refresh
 			$this->cookie_notify_id_created = false;
-			return;
+			return; ### Early return
 		}
 		# No cookie: create and set the id cookie
 		$this->cookie_notify_id = md5(uniqid($pnd_config['cookie_salt'], true)); # see http://stackoverflow.com/a/1293860/64904

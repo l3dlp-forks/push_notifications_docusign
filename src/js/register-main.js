@@ -641,7 +641,7 @@ var pndso = new function() {
 		pnds = {};
 		pnds.api_url = 'api.php'; // the api.php url relative to the index page
 		pnds.isPushEnabled = false;
-		pnds.service_worker_url = "service-worker.js";
+		pnds.service_worker_url = "service-worker.php";
 		this.add_events();
 		this.pane_add_listeners();
 		this.prepare_invisible();

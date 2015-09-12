@@ -58,6 +58,27 @@ Pages: 3
  This causes the time zone to be shown when mouse is hovered.)
 	
 	
+ServiceWorkers 
+https://github.com/slightlyoff/ServiceWorker/blob/master/explainer.md
+
+Service Worker recipes
+https://github.com/GoogleChrome/samples/tree/gh-pages/service-worker
+
+Post message to the service worker: https://googlechrome.github.io/samples/service-worker/post-message/
+
+Google articles
+https://developers.google.com/web/updates/2015/03/push-notificatons-on-the-open-web
+https://developers.google.com/web/updates/2015/05/Notifying-you-of-notificiation-changes
 	
-	
-	
+Google query languag
+https://cloud.google.com/datastore/docs/apis/gql/gql_reference
+
+CHrome feature status map
+https://www.chromestatus.com/features/5651917954875392
+
+Google developer console
+https://console.developers.google.com/project/lsk-push-ds1/datastore/query?queryType=KindQuery&namespace=&kind=LogEntries
+
+
+
+

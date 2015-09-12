@@ -13,7 +13,7 @@ class PND_op_notify_info implements PND_Request
 	# the instance--that enables the data lookup
 	#
 	# params: 
-	#   none
+	#   id
 	#
 	# RETURNS
 	#   200 - good results:
@@ -29,11 +29,10 @@ class PND_op_notify_info implements PND_Request
     global $pnd_utils, $pnd_api, $pnd_config;
 	if ( $op != 'notify_info' ) {return false;}
 	
-	$pnd_utils->log('debug', 'Notify_info incoming', '');  # severity: debug, warning, critical
-	$cookies = new PND_cookies();
-	$cookie_id = $cookies->cookie_notify_id_created ? null : $cookies->cookie_notify_id;
-	
-	
+	$cookie_id = array_key_exists ( "id" , $_GET ) ? $_GET["id"] : null;
+
+	$pnd_utils->log('debug', 'Notify_info incoming', 'id = ' . $cookie_id);  # severity: debug, warning, critical
+
 	$directory = $pnd_utils->pnd_file_utils()->files_dir() . '/';
 	
 	$pnd_utils->return_data([
